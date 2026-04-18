@@ -1,8 +1,8 @@
 {
   "repo": "AlotfyDev/LoggingSystem",
   "branch": "master",
-  "last_updated": "2026-04-18T22:52:38Z",
-  "file_count": 125,
+  "last_updated": "2026-04-18T23:13:50Z",
+  "file_count": 126,
   "files": [
     {
       "path": ".github/scripts/generate_repo_index.py",
@@ -1233,6 +1233,16 @@
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/N_System/system_runtime_context.hpp",
       "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/N_System/system_runtime_context.hpp"
+    },
+    {
+      "path": "Project_Initial_Tree.md",
+      "filename": "Project_Initial_Tree.md",
+      "extension": "md",
+      "size_bytes": 6254,
+      "top_level_dir": "Project_Initial_Tree.md",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/Project_Initial_Tree.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/Project_Initial_Tree.md"
     },
     {
       "path": "ProjectManagement/Docs/A_Cpp_Architectural_Skelton.md",
