@@ -1,0 +1,1258 @@
+{
+  "repo": "AlotfyDev/LoggingSystem",
+  "branch": "master",
+  "last_updated": "2026-04-18T22:52:38Z",
+  "file_count": 125,
+  "files": [
+    {
+      "path": ".github/scripts/generate_repo_index.py",
+      "filename": "generate_repo_index.py",
+      "extension": "py",
+      "size_bytes": 2513,
+      "top_level_dir": ".github",
+      "category": "repo_meta",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/.github/scripts/generate_repo_index.py",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/.github/scripts/generate_repo_index.py"
+    },
+    {
+      "path": ".github/workflows/create-repo-index.yml",
+      "filename": "create-repo-index.yml",
+      "extension": "yml",
+      "size_bytes": 1121,
+      "top_level_dir": ".github",
+      "category": "repo_meta",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/.github/workflows/create-repo-index.yml",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/.github/workflows/create-repo-index.yml"
+    },
+    {
+      "path": "apps/placeholder.txt",
+      "filename": "placeholder.txt",
+      "extension": "txt",
+      "size_bytes": 70,
+      "top_level_dir": "apps",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/apps/placeholder.txt",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/apps/placeholder.txt"
+    },
+    {
+      "path": "include/logging_system/A_Core/binding_concepts.hpp",
+      "filename": "binding_concepts.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/A_Core/binding_concepts.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/A_Core/binding_concepts.hpp"
+    },
+    {
+      "path": "include/logging_system/A_Core/binding_tags.hpp",
+      "filename": "binding_tags.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/A_Core/binding_tags.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/A_Core/binding_tags.hpp"
+    },
+    {
+      "path": "include/logging_system/A_Core/binding_traits.hpp",
+      "filename": "binding_traits.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/A_Core/binding_traits.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/A_Core/binding_traits.hpp"
+    },
+    {
+      "path": "include/logging_system/A_Core/compile_time_registry.hpp",
+      "filename": "compile_time_registry.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/A_Core/compile_time_registry.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/A_Core/compile_time_registry.hpp"
+    },
+    {
+      "path": "include/logging_system/A_Core/component_pack.hpp",
+      "filename": "component_pack.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/A_Core/component_pack.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/A_Core/component_pack.hpp"
+    },
+    {
+      "path": "include/logging_system/A_Core/component_ref.hpp",
+      "filename": "component_ref.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/A_Core/component_ref.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/A_Core/component_ref.hpp"
+    },
+    {
+      "path": "include/logging_system/A_Core/dispatch_binding.hpp",
+      "filename": "dispatch_binding.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/A_Core/dispatch_binding.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/A_Core/dispatch_binding.hpp"
+    },
+    {
+      "path": "include/logging_system/A_Core/pipeline_binding.hpp",
+      "filename": "pipeline_binding.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/A_Core/pipeline_binding.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/A_Core/pipeline_binding.hpp"
+    },
+    {
+      "path": "include/logging_system/A_Core/preparation_binding.hpp",
+      "filename": "preparation_binding.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/A_Core/preparation_binding.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/A_Core/preparation_binding.hpp"
+    },
+    {
+      "path": "include/logging_system/A_Core/resolver_binding.hpp",
+      "filename": "resolver_binding.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/A_Core/resolver_binding.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/A_Core/resolver_binding.hpp"
+    },
+    {
+      "path": "include/logging_system/B_Models/content_contracts.hpp",
+      "filename": "content_contracts.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/B_Models/content_contracts.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/B_Models/content_contracts.hpp"
+    },
+    {
+      "path": "include/logging_system/B_Models/default_content_schema_catalog.hpp",
+      "filename": "default_content_schema_catalog.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/B_Models/default_content_schema_catalog.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/B_Models/default_content_schema_catalog.hpp"
+    },
+    {
+      "path": "include/logging_system/B_Models/log_envelope.hpp",
+      "filename": "log_envelope.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/B_Models/log_envelope.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/B_Models/log_envelope.hpp"
+    },
+    {
+      "path": "include/logging_system/B_Models/log_record.hpp",
+      "filename": "log_record.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/B_Models/log_record.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/B_Models/log_record.hpp"
+    },
+    {
+      "path": "include/logging_system/B_Models/utc_now_iso.hpp",
+      "filename": "utc_now_iso.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/B_Models/utc_now_iso.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/B_Models/utc_now_iso.hpp"
+    },
+    {
+      "path": "include/logging_system/C_Contracts/adapter_emission_concept.hpp",
+      "filename": "adapter_emission_concept.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/C_Contracts/adapter_emission_concept.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/C_Contracts/adapter_emission_concept.hpp"
+    },
+    {
+      "path": "include/logging_system/C_Contracts/dispatch_executor_concept.hpp",
+      "filename": "dispatch_executor_concept.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/C_Contracts/dispatch_executor_concept.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/C_Contracts/dispatch_executor_concept.hpp"
+    },
+    {
+      "path": "include/logging_system/C_Contracts/dispatcher_resolver_concept.hpp",
+      "filename": "dispatcher_resolver_concept.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/C_Contracts/dispatcher_resolver_concept.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/C_Contracts/dispatcher_resolver_concept.hpp"
+    },
+    {
+      "path": "include/logging_system/C_Contracts/envelope_assembler_concept.hpp",
+      "filename": "envelope_assembler_concept.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/C_Contracts/envelope_assembler_concept.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/C_Contracts/envelope_assembler_concept.hpp"
+    },
+    {
+      "path": "include/logging_system/C_Contracts/metadata_injector_concept.hpp",
+      "filename": "metadata_injector_concept.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/C_Contracts/metadata_injector_concept.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/C_Contracts/metadata_injector_concept.hpp"
+    },
+    {
+      "path": "include/logging_system/C_Contracts/readonly_resolver_concept.hpp",
+      "filename": "readonly_resolver_concept.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/C_Contracts/readonly_resolver_concept.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/C_Contracts/readonly_resolver_concept.hpp"
+    },
+    {
+      "path": "include/logging_system/C_Contracts/record_stabilizer_concept.hpp",
+      "filename": "record_stabilizer_concept.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/C_Contracts/record_stabilizer_concept.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/C_Contracts/record_stabilizer_concept.hpp"
+    },
+    {
+      "path": "include/logging_system/C_Contracts/repository_route_concept.hpp",
+      "filename": "repository_route_concept.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/C_Contracts/repository_route_concept.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/C_Contracts/repository_route_concept.hpp"
+    },
+    {
+      "path": "include/logging_system/C_Contracts/schema_applier_concept.hpp",
+      "filename": "schema_applier_concept.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/C_Contracts/schema_applier_concept.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/C_Contracts/schema_applier_concept.hpp"
+    },
+    {
+      "path": "include/logging_system/C_Contracts/state_admission_sink_concept.hpp",
+      "filename": "state_admission_sink_concept.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/C_Contracts/state_admission_sink_concept.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/C_Contracts/state_admission_sink_concept.hpp"
+    },
+    {
+      "path": "include/logging_system/C_Contracts/timestamp_stabilizer_concept.hpp",
+      "filename": "timestamp_stabilizer_concept.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/C_Contracts/timestamp_stabilizer_concept.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/C_Contracts/timestamp_stabilizer_concept.hpp"
+    },
+    {
+      "path": "include/logging_system/C_Contracts/writer_resolver_concept.hpp",
+      "filename": "writer_resolver_concept.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/C_Contracts/writer_resolver_concept.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/C_Contracts/writer_resolver_concept.hpp"
+    },
+    {
+      "path": "include/logging_system/D_Preparation/content_schema_applier.hpp",
+      "filename": "content_schema_applier.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/D_Preparation/content_schema_applier.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/D_Preparation/content_schema_applier.hpp"
+    },
+    {
+      "path": "include/logging_system/D_Preparation/debug_preparation_binding.hpp",
+      "filename": "debug_preparation_binding.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/D_Preparation/debug_preparation_binding.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/D_Preparation/debug_preparation_binding.hpp"
+    },
+    {
+      "path": "include/logging_system/D_Preparation/default_content_schema_applier.hpp",
+      "filename": "default_content_schema_applier.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/D_Preparation/default_content_schema_applier.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/D_Preparation/default_content_schema_applier.hpp"
+    },
+    {
+      "path": "include/logging_system/D_Preparation/default_envelope_assembler.hpp",
+      "filename": "default_envelope_assembler.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/D_Preparation/default_envelope_assembler.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/D_Preparation/default_envelope_assembler.hpp"
+    },
+    {
+      "path": "include/logging_system/D_Preparation/default_metadata_injector.hpp",
+      "filename": "default_metadata_injector.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/D_Preparation/default_metadata_injector.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/D_Preparation/default_metadata_injector.hpp"
+    },
+    {
+      "path": "include/logging_system/D_Preparation/default_record_stabilizer.hpp",
+      "filename": "default_record_stabilizer.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/D_Preparation/default_record_stabilizer.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/D_Preparation/default_record_stabilizer.hpp"
+    },
+    {
+      "path": "include/logging_system/D_Preparation/default_timestamp_stabilizer.hpp",
+      "filename": "default_timestamp_stabilizer.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/D_Preparation/default_timestamp_stabilizer.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/D_Preparation/default_timestamp_stabilizer.hpp"
+    },
+    {
+      "path": "include/logging_system/D_Preparation/envelope_assembler.hpp",
+      "filename": "envelope_assembler.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/D_Preparation/envelope_assembler.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/D_Preparation/envelope_assembler.hpp"
+    },
+    {
+      "path": "include/logging_system/D_Preparation/error_preparation_binding.hpp",
+      "filename": "error_preparation_binding.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/D_Preparation/error_preparation_binding.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/D_Preparation/error_preparation_binding.hpp"
+    },
+    {
+      "path": "include/logging_system/D_Preparation/fatal_preparation_binding.hpp",
+      "filename": "fatal_preparation_binding.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/D_Preparation/fatal_preparation_binding.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/D_Preparation/fatal_preparation_binding.hpp"
+    },
+    {
+      "path": "include/logging_system/D_Preparation/info_preparation_binding.hpp",
+      "filename": "info_preparation_binding.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/D_Preparation/info_preparation_binding.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/D_Preparation/info_preparation_binding.hpp"
+    },
+    {
+      "path": "include/logging_system/D_Preparation/metadata_injector.hpp",
+      "filename": "metadata_injector.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/D_Preparation/metadata_injector.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/D_Preparation/metadata_injector.hpp"
+    },
+    {
+      "path": "include/logging_system/D_Preparation/record_stabilizer.hpp",
+      "filename": "record_stabilizer.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/D_Preparation/record_stabilizer.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/D_Preparation/record_stabilizer.hpp"
+    },
+    {
+      "path": "include/logging_system/D_Preparation/timestamp_stabilizer.hpp",
+      "filename": "timestamp_stabilizer.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/D_Preparation/timestamp_stabilizer.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/D_Preparation/timestamp_stabilizer.hpp"
+    },
+    {
+      "path": "include/logging_system/D_Preparation/trace_preparation_binding.hpp",
+      "filename": "trace_preparation_binding.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/D_Preparation/trace_preparation_binding.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/D_Preparation/trace_preparation_binding.hpp"
+    },
+    {
+      "path": "include/logging_system/D_Preparation/warn_preparation_binding.hpp",
+      "filename": "warn_preparation_binding.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/D_Preparation/warn_preparation_binding.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/D_Preparation/warn_preparation_binding.hpp"
+    },
+    {
+      "path": "include/logging_system/E_Resolvers/debug_resolver_binding.hpp",
+      "filename": "debug_resolver_binding.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/E_Resolvers/debug_resolver_binding.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/E_Resolvers/debug_resolver_binding.hpp"
+    },
+    {
+      "path": "include/logging_system/E_Resolvers/default_dispatcher_resolver.hpp",
+      "filename": "default_dispatcher_resolver.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/E_Resolvers/default_dispatcher_resolver.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/E_Resolvers/default_dispatcher_resolver.hpp"
+    },
+    {
+      "path": "include/logging_system/E_Resolvers/default_readonly_resolver.hpp",
+      "filename": "default_readonly_resolver.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/E_Resolvers/default_readonly_resolver.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/E_Resolvers/default_readonly_resolver.hpp"
+    },
+    {
+      "path": "include/logging_system/E_Resolvers/default_writer_resolver.hpp",
+      "filename": "default_writer_resolver.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/E_Resolvers/default_writer_resolver.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/E_Resolvers/default_writer_resolver.hpp"
+    },
+    {
+      "path": "include/logging_system/E_Resolvers/dispatcher_resolver.hpp",
+      "filename": "dispatcher_resolver.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/E_Resolvers/dispatcher_resolver.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/E_Resolvers/dispatcher_resolver.hpp"
+    },
+    {
+      "path": "include/logging_system/E_Resolvers/error_resolver_binding.hpp",
+      "filename": "error_resolver_binding.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/E_Resolvers/error_resolver_binding.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/E_Resolvers/error_resolver_binding.hpp"
+    },
+    {
+      "path": "include/logging_system/E_Resolvers/fatal_resolver_binding.hpp",
+      "filename": "fatal_resolver_binding.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/E_Resolvers/fatal_resolver_binding.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/E_Resolvers/fatal_resolver_binding.hpp"
+    },
+    {
+      "path": "include/logging_system/E_Resolvers/info_resolver_binding.hpp",
+      "filename": "info_resolver_binding.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/E_Resolvers/info_resolver_binding.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/E_Resolvers/info_resolver_binding.hpp"
+    },
+    {
+      "path": "include/logging_system/E_Resolvers/readonly_resolver.hpp",
+      "filename": "readonly_resolver.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/E_Resolvers/readonly_resolver.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/E_Resolvers/readonly_resolver.hpp"
+    },
+    {
+      "path": "include/logging_system/E_Resolvers/trace_resolver_binding.hpp",
+      "filename": "trace_resolver_binding.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/E_Resolvers/trace_resolver_binding.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/E_Resolvers/trace_resolver_binding.hpp"
+    },
+    {
+      "path": "include/logging_system/E_Resolvers/warn_resolver_binding.hpp",
+      "filename": "warn_resolver_binding.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/E_Resolvers/warn_resolver_binding.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/E_Resolvers/warn_resolver_binding.hpp"
+    },
+    {
+      "path": "include/logging_system/E_Resolvers/writer_resolver.hpp",
+      "filename": "writer_resolver.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/E_Resolvers/writer_resolver.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/E_Resolvers/writer_resolver.hpp"
+    },
+    {
+      "path": "include/logging_system/F_Dispatch/adapter_emission.hpp",
+      "filename": "adapter_emission.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/F_Dispatch/adapter_emission.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/F_Dispatch/adapter_emission.hpp"
+    },
+    {
+      "path": "include/logging_system/F_Dispatch/debug_dispatch_binding.hpp",
+      "filename": "debug_dispatch_binding.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/F_Dispatch/debug_dispatch_binding.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/F_Dispatch/debug_dispatch_binding.hpp"
+    },
+    {
+      "path": "include/logging_system/F_Dispatch/default_adapter_emission.hpp",
+      "filename": "default_adapter_emission.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/F_Dispatch/default_adapter_emission.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/F_Dispatch/default_adapter_emission.hpp"
+    },
+    {
+      "path": "include/logging_system/F_Dispatch/dispatch_context.hpp",
+      "filename": "dispatch_context.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/F_Dispatch/dispatch_context.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/F_Dispatch/dispatch_context.hpp"
+    },
+    {
+      "path": "include/logging_system/F_Dispatch/dispatch_executor.hpp",
+      "filename": "dispatch_executor.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/F_Dispatch/dispatch_executor.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/F_Dispatch/dispatch_executor.hpp"
+    },
+    {
+      "path": "include/logging_system/F_Dispatch/dispatch_failure_policy.hpp",
+      "filename": "dispatch_failure_policy.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/F_Dispatch/dispatch_failure_policy.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/F_Dispatch/dispatch_failure_policy.hpp"
+    },
+    {
+      "path": "include/logging_system/F_Dispatch/error_dispatch_binding.hpp",
+      "filename": "error_dispatch_binding.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/F_Dispatch/error_dispatch_binding.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/F_Dispatch/error_dispatch_binding.hpp"
+    },
+    {
+      "path": "include/logging_system/F_Dispatch/fatal_dispatch_binding.hpp",
+      "filename": "fatal_dispatch_binding.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/F_Dispatch/fatal_dispatch_binding.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/F_Dispatch/fatal_dispatch_binding.hpp"
+    },
+    {
+      "path": "include/logging_system/F_Dispatch/info_dispatch_binding.hpp",
+      "filename": "info_dispatch_binding.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/F_Dispatch/info_dispatch_binding.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/F_Dispatch/info_dispatch_binding.hpp"
+    },
+    {
+      "path": "include/logging_system/F_Dispatch/inline_dispatch_executor.hpp",
+      "filename": "inline_dispatch_executor.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/F_Dispatch/inline_dispatch_executor.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/F_Dispatch/inline_dispatch_executor.hpp"
+    },
+    {
+      "path": "include/logging_system/F_Dispatch/queue_policy.hpp",
+      "filename": "queue_policy.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/F_Dispatch/queue_policy.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/F_Dispatch/queue_policy.hpp"
+    },
+    {
+      "path": "include/logging_system/F_Dispatch/thread_pool_dispatch_executor.hpp",
+      "filename": "thread_pool_dispatch_executor.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/F_Dispatch/thread_pool_dispatch_executor.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/F_Dispatch/thread_pool_dispatch_executor.hpp"
+    },
+    {
+      "path": "include/logging_system/F_Dispatch/trace_dispatch_binding.hpp",
+      "filename": "trace_dispatch_binding.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/F_Dispatch/trace_dispatch_binding.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/F_Dispatch/trace_dispatch_binding.hpp"
+    },
+    {
+      "path": "include/logging_system/F_Dispatch/warn_dispatch_binding.hpp",
+      "filename": "warn_dispatch_binding.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/F_Dispatch/warn_dispatch_binding.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/F_Dispatch/warn_dispatch_binding.hpp"
+    },
+    {
+      "path": "include/logging_system/G_Routing/debug_repository_route.hpp",
+      "filename": "debug_repository_route.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/G_Routing/debug_repository_route.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/G_Routing/debug_repository_route.hpp"
+    },
+    {
+      "path": "include/logging_system/G_Routing/error_repository_route.hpp",
+      "filename": "error_repository_route.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/G_Routing/error_repository_route.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/G_Routing/error_repository_route.hpp"
+    },
+    {
+      "path": "include/logging_system/G_Routing/fatal_repository_route.hpp",
+      "filename": "fatal_repository_route.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/G_Routing/fatal_repository_route.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/G_Routing/fatal_repository_route.hpp"
+    },
+    {
+      "path": "include/logging_system/G_Routing/info_repository_route.hpp",
+      "filename": "info_repository_route.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/G_Routing/info_repository_route.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/G_Routing/info_repository_route.hpp"
+    },
+    {
+      "path": "include/logging_system/G_Routing/repository_route.hpp",
+      "filename": "repository_route.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/G_Routing/repository_route.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/G_Routing/repository_route.hpp"
+    },
+    {
+      "path": "include/logging_system/G_Routing/route_context.hpp",
+      "filename": "route_context.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/G_Routing/route_context.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/G_Routing/route_context.hpp"
+    },
+    {
+      "path": "include/logging_system/G_Routing/trace_repository_route.hpp",
+      "filename": "trace_repository_route.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/G_Routing/trace_repository_route.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/G_Routing/trace_repository_route.hpp"
+    },
+    {
+      "path": "include/logging_system/G_Routing/warn_repository_route.hpp",
+      "filename": "warn_repository_route.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/G_Routing/warn_repository_route.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/G_Routing/warn_repository_route.hpp"
+    },
+    {
+      "path": "include/logging_system/H_State/level_containers.hpp",
+      "filename": "level_containers.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/H_State/level_containers.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/H_State/level_containers.hpp"
+    },
+    {
+      "path": "include/logging_system/H_State/listener_registry.hpp",
+      "filename": "listener_registry.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/H_State/listener_registry.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/H_State/listener_registry.hpp"
+    },
+    {
+      "path": "include/logging_system/H_State/log_container_module.hpp",
+      "filename": "log_container_module.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/H_State/log_container_module.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/H_State/log_container_module.hpp"
+    },
+    {
+      "path": "include/logging_system/H_State/pending_record_queue.hpp",
+      "filename": "pending_record_queue.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/H_State/pending_record_queue.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/H_State/pending_record_queue.hpp"
+    },
+    {
+      "path": "include/logging_system/H_State/retention_policy.hpp",
+      "filename": "retention_policy.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/H_State/retention_policy.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/H_State/retention_policy.hpp"
+    },
+    {
+      "path": "include/logging_system/H_State/slot_lifecycle.hpp",
+      "filename": "slot_lifecycle.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/H_State/slot_lifecycle.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/H_State/slot_lifecycle.hpp"
+    },
+    {
+      "path": "include/logging_system/H_State/state_snapshot.hpp",
+      "filename": "state_snapshot.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/H_State/state_snapshot.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/H_State/state_snapshot.hpp"
+    },
+    {
+      "path": "include/logging_system/I_Adapters/adapter_binding_state.hpp",
+      "filename": "adapter_binding_state.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/I_Adapters/adapter_binding_state.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/I_Adapters/adapter_binding_state.hpp"
+    },
+    {
+      "path": "include/logging_system/I_Adapters/adapter_concepts.hpp",
+      "filename": "adapter_concepts.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/I_Adapters/adapter_concepts.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/I_Adapters/adapter_concepts.hpp"
+    },
+    {
+      "path": "include/logging_system/I_Adapters/adapter_registry.hpp",
+      "filename": "adapter_registry.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/I_Adapters/adapter_registry.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/I_Adapters/adapter_registry.hpp"
+    },
+    {
+      "path": "include/logging_system/I_Adapters/noop_adapter.hpp",
+      "filename": "noop_adapter.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/I_Adapters/noop_adapter.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/I_Adapters/noop_adapter.hpp"
+    },
+    {
+      "path": "include/logging_system/I_Adapters/observability_viewer_adapter.hpp",
+      "filename": "observability_viewer_adapter.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/I_Adapters/observability_viewer_adapter.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/I_Adapters/observability_viewer_adapter.hpp"
+    },
+    {
+      "path": "include/logging_system/I_Adapters/otel_adapter.hpp",
+      "filename": "otel_adapter.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/I_Adapters/otel_adapter.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/I_Adapters/otel_adapter.hpp"
+    },
+    {
+      "path": "include/logging_system/J_Governance/policy_registry.hpp",
+      "filename": "policy_registry.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/J_Governance/policy_registry.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/J_Governance/policy_registry.hpp"
+    },
+    {
+      "path": "include/logging_system/J_Governance/production_profile.hpp",
+      "filename": "production_profile.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/J_Governance/production_profile.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/J_Governance/production_profile.hpp"
+    },
+    {
+      "path": "include/logging_system/J_Governance/production_profile_service.hpp",
+      "filename": "production_profile_service.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/J_Governance/production_profile_service.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/J_Governance/production_profile_service.hpp"
+    },
+    {
+      "path": "include/logging_system/J_Governance/provider_catalog.hpp",
+      "filename": "provider_catalog.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/J_Governance/provider_catalog.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/J_Governance/provider_catalog.hpp"
+    },
+    {
+      "path": "include/logging_system/J_Governance/provider_catalog_service.hpp",
+      "filename": "provider_catalog_service.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/J_Governance/provider_catalog_service.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/J_Governance/provider_catalog_service.hpp"
+    },
+    {
+      "path": "include/logging_system/J_Governance/runtime_binding_catalog.hpp",
+      "filename": "runtime_binding_catalog.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/J_Governance/runtime_binding_catalog.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/J_Governance/runtime_binding_catalog.hpp"
+    },
+    {
+      "path": "include/logging_system/J_Governance/schema_registry.hpp",
+      "filename": "schema_registry.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/J_Governance/schema_registry.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/J_Governance/schema_registry.hpp"
+    },
+    {
+      "path": "include/logging_system/J_Governance/typed_configuration_gateway.hpp",
+      "filename": "typed_configuration_gateway.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/J_Governance/typed_configuration_gateway.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/J_Governance/typed_configuration_gateway.hpp"
+    },
+    {
+      "path": "include/logging_system/K_Pipelines/debug_pipeline_binding.hpp",
+      "filename": "debug_pipeline_binding.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/K_Pipelines/debug_pipeline_binding.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/K_Pipelines/debug_pipeline_binding.hpp"
+    },
+    {
+      "path": "include/logging_system/K_Pipelines/error_pipeline_binding.hpp",
+      "filename": "error_pipeline_binding.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/K_Pipelines/error_pipeline_binding.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/K_Pipelines/error_pipeline_binding.hpp"
+    },
+    {
+      "path": "include/logging_system/K_Pipelines/fatal_pipeline_binding.hpp",
+      "filename": "fatal_pipeline_binding.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/K_Pipelines/fatal_pipeline_binding.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/K_Pipelines/fatal_pipeline_binding.hpp"
+    },
+    {
+      "path": "include/logging_system/K_Pipelines/info_pipeline_binding.hpp",
+      "filename": "info_pipeline_binding.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/K_Pipelines/info_pipeline_binding.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/K_Pipelines/info_pipeline_binding.hpp"
+    },
+    {
+      "path": "include/logging_system/K_Pipelines/ingest_pipeline_facade.hpp",
+      "filename": "ingest_pipeline_facade.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/K_Pipelines/ingest_pipeline_facade.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/K_Pipelines/ingest_pipeline_facade.hpp"
+    },
+    {
+      "path": "include/logging_system/K_Pipelines/pipeline_binding_aliases.hpp",
+      "filename": "pipeline_binding_aliases.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/K_Pipelines/pipeline_binding_aliases.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/K_Pipelines/pipeline_binding_aliases.hpp"
+    },
+    {
+      "path": "include/logging_system/K_Pipelines/pipeline_runner.hpp",
+      "filename": "pipeline_runner.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/K_Pipelines/pipeline_runner.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/K_Pipelines/pipeline_runner.hpp"
+    },
+    {
+      "path": "include/logging_system/K_Pipelines/trace_pipeline_binding.hpp",
+      "filename": "trace_pipeline_binding.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/K_Pipelines/trace_pipeline_binding.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/K_Pipelines/trace_pipeline_binding.hpp"
+    },
+    {
+      "path": "include/logging_system/K_Pipelines/warn_pipeline_binding.hpp",
+      "filename": "warn_pipeline_binding.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/K_Pipelines/warn_pipeline_binding.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/K_Pipelines/warn_pipeline_binding.hpp"
+    },
+    {
+      "path": "include/logging_system/L_Level_api/log_debug.hpp",
+      "filename": "log_debug.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/L_Level_api/log_debug.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/L_Level_api/log_debug.hpp"
+    },
+    {
+      "path": "include/logging_system/L_Level_api/log_error.hpp",
+      "filename": "log_error.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/L_Level_api/log_error.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/L_Level_api/log_error.hpp"
+    },
+    {
+      "path": "include/logging_system/L_Level_api/log_fatal.hpp",
+      "filename": "log_fatal.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/L_Level_api/log_fatal.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/L_Level_api/log_fatal.hpp"
+    },
+    {
+      "path": "include/logging_system/L_Level_api/log_info.hpp",
+      "filename": "log_info.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/L_Level_api/log_info.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/L_Level_api/log_info.hpp"
+    },
+    {
+      "path": "include/logging_system/L_Level_api/log_trace.hpp",
+      "filename": "log_trace.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/L_Level_api/log_trace.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/L_Level_api/log_trace.hpp"
+    },
+    {
+      "path": "include/logging_system/L_Level_api/log_warn.hpp",
+      "filename": "log_warn.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/L_Level_api/log_warn.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/L_Level_api/log_warn.hpp"
+    },
+    {
+      "path": "include/logging_system/M_Surfaces/administrative_surface.hpp",
+      "filename": "administrative_surface.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/M_Surfaces/administrative_surface.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/M_Surfaces/administrative_surface.hpp"
+    },
+    {
+      "path": "include/logging_system/M_Surfaces/consuming_surface.hpp",
+      "filename": "consuming_surface.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/M_Surfaces/consuming_surface.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/M_Surfaces/consuming_surface.hpp"
+    },
+    {
+      "path": "include/logging_system/M_Surfaces/managerial_surface.hpp",
+      "filename": "managerial_surface.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/M_Surfaces/managerial_surface.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/M_Surfaces/managerial_surface.hpp"
+    },
+    {
+      "path": "include/logging_system/N_System/logging_system_builder.hpp",
+      "filename": "logging_system_builder.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/N_System/logging_system_builder.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/N_System/logging_system_builder.hpp"
+    },
+    {
+      "path": "include/logging_system/N_System/logging_system_core.hpp",
+      "filename": "logging_system_core.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/N_System/logging_system_core.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/N_System/logging_system_core.hpp"
+    },
+    {
+      "path": "include/logging_system/N_System/system_bindings.hpp",
+      "filename": "system_bindings.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/N_System/system_bindings.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/N_System/system_bindings.hpp"
+    },
+    {
+      "path": "include/logging_system/N_System/system_runtime_context.hpp",
+      "filename": "system_runtime_context.hpp",
+      "extension": "hpp",
+      "size_bytes": 0,
+      "top_level_dir": "include",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/N_System/system_runtime_context.hpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/N_System/system_runtime_context.hpp"
+    },
+    {
+      "path": "ProjectManagement/Docs/A_Cpp_Architectural_Skelton.md",
+      "filename": "A_Cpp_Architectural_Skelton.md",
+      "extension": "md",
+      "size_bytes": 14934,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Docs/A_Cpp_Architectural_Skelton.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Docs/A_Cpp_Architectural_Skelton.md"
+    },
+    {
+      "path": "ProjectManagement/Docs/B_Python_To_Cpp.md",
+      "filename": "B_Python_To_Cpp.md",
+      "extension": "md",
+      "size_bytes": 12392,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Docs/B_Python_To_Cpp.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Docs/B_Python_To_Cpp.md"
+    }
+  ]
+}
