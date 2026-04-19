@@ -1,5 +1,168 @@
 # Architectural Analysis: content_contracts.hpp
 
+## Architectural Diagrams
+
+### Graphviz (.dot) - Schema Metamodel
+```dot
+digraph content_contracts_metamodel {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    contracts [label="Content Contracts\nSchema Metamodel"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    enumerations [label="Type Enumerations"];
+    
+    contracts -> enumerations [label="defines"];
+    
+    subgraph cluster_enums {
+        label="Core Enumerations";
+        color=lightgrey;
+        content_form [label="ContentForm\n(Scalar, Object, Sequence, NativeStructLike)"];
+        primitive_kind [label="PrimitiveKind\n(StringUtf8, Boolean, Int32, Int64,\nUInt32, UInt64, Float32, Float64,\nBytes, Object, Sequence)"];
+    }
+    
+    enumerations -> content_form;
+    enumerations -> primitive_kind;
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    structures [label="Schema Structures"];
+    
+    contracts -> structures [label="provides"];
+    
+    subgraph cluster_structures {
+        label="Contract Structures";
+        color=lightgrey;
+        field_contract [label="FieldContract\nField specifications"];
+        content_contract [label="ContentContract\nComplete schemas"];
+    }
+    
+    structures -> field_contract;
+    structures -> content_contract;
+    
+    subgraph cluster_relationships {
+        label="Type Relationships";
+        color=lightgreen;
+        field_to_contract [label="FieldContract[] fields"];
+        lookup_method [label="find_field(name) const"];
+    }
+    
+    content_contract -> field_to_contract;
+    content_contract -> lookup_method;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightblue;
+        preparation [label="Preparation Layer"];
+        schema_validation [label="Schema Validation"];
+        cross_language [label="Cross-Language Marshalling"];
+    }
+    
+    contracts -> preparation [label="used in"];
+    contracts -> schema_validation [label="enables"];
+    contracts -> cross_language [label="supports"];
+}
+
+### Mermaid - Type Relationships Flow
+```mermaid
+graph TD
+    A[Content Contracts Metamodel] --> B[Type Enumerations]
+    A --> C[Schema Structures]
+    
+    B --> D[ContentForm]
+    B --> E[PrimitiveKind]
+    
+    D --> F[Scalar]
+    D --> G[Object]
+    D --> H[Sequence]
+    D --> I[NativeStructLike]
+    
+    E --> J[StringUtf8]
+    E --> K[Boolean]
+    E --> L[Int32]
+    E --> M[Int64]
+    E --> N[UInt32]
+    E --> O[UInt64]
+    E --> P[Float32]
+    E --> Q[Float64]
+    E --> R[Bytes]
+    E --> S[Object]
+    E --> T[Sequence]
+    
+    C --> U[FieldContract]
+    C --> V[ContentContract]
+    
+    U --> W[name: string]
+    U --> X[ordinal: size_t]
+    U --> Y[required: bool]
+    U --> Z[logical_form: ContentForm]
+    U --> AA[primitive_kind: PrimitiveKind]
+    U --> BB[enum_values: vector<string>]
+    U --> CC[min_text_length: optional<size_t>]
+    U --> DD[fixed_width_bytes: optional<size_t>]
+    U --> EE[alignment_bytes: optional<size_t>]
+    U --> FF[padding_sensitive: bool]
+    U --> GG[notes: string]
+    
+    V --> HH[schema_id: string]
+    V --> II[schema_name: string]
+    V --> JJ[content_form: ContentForm]
+    V --> KK[allow_additional_fields: bool]
+    V --> LL[fields: vector<FieldContract>]
+    V --> MM[notes: string]
+    V --> NN[find_field(name): FieldContract*]
+    
+    NN --> OO[Field Lookup]
+    OO --> PP[Schema Validation]
+    PP --> QQ[Content Processing]
+    QQ --> RR[Cross-Language Marshalling]
+    
+    subgraph "Content Form Types"
+        F
+        G
+        H
+        I
+    end
+    
+    subgraph "Primitive Data Types"
+        J
+        K
+        L
+        M
+        N
+        O
+        P
+        Q
+        R
+        S
+        T
+    end
+    
+    subgraph "Field Specifications"
+        W
+        X
+        Y
+        Z
+        AA
+        BB
+        CC
+        DD
+        EE
+        FF
+        GG
+    end
+    
+    subgraph "Schema Definitions"
+        HH
+        II
+        JJ
+        KK
+        LL
+        MM
+        NN
+    end
+```
+
 ## File Overview
 **Location:** `D:\CppBridgeVSC\LoggingSystem\include\logging_system\B_Models\content_contracts.hpp`  
 **Purpose:** Defines data structures and enumerations for content schema contracts and field specifications.  

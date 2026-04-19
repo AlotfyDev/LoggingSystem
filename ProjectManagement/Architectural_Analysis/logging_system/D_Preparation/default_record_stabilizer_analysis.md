@@ -1,5 +1,115 @@
 # Architectural Analysis: default_record_stabilizer.hpp
 
+## Architectural Diagrams
+
+### Graphviz (.dot) - Stabilization Structure
+```dot
+digraph record_stabilizer_structure {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    stabilizer [label="DefaultRecordStabilizer\nPolicy Class"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    methods [label="Stabilization Methods"];
+    
+    stabilizer -> methods [label="provides"];
+    
+    subgraph cluster_methods {
+        label="Method Variants";
+        color=lightgrey;
+        direct_stabilize [label="stabilize(record_id, payload, ...)\n-> LogRecord"];
+        envelope_stabilize [label="stabilize_from_envelope(...)\n-> LogRecord"];
+    }
+    
+    methods -> direct_stabilize;
+    methods -> envelope_stabilize;
+    
+    subgraph cluster_construction {
+        label="Record Construction";
+        color=lightyellow;
+        record_template [label="LogRecord<T...> template"];
+        type_deduction [label="std::decay_t for payload"];
+        move_construction [label="Move construct record"];
+    }
+    
+    direct_stabilize -> record_template;
+    envelope_stabilize -> record_template;
+    record_template -> type_deduction;
+    type_deduction -> move_construction;
+    
+    subgraph cluster_payload_extraction {
+        label="Payload Extraction";
+        color=lightgrey;
+        direct_payload [label="Use provided payload"];
+        envelope_builder [label="Use payload_builder(envelope)"];
+    }
+    
+    direct_stabilize -> direct_payload;
+    envelope_stabilize -> envelope_builder;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgreen;
+        preparation [label="PreparationBinding"];
+        b_models [label="B_Models::LogRecord"];
+        envelope [label="LogEnvelope"];
+    }
+    
+    stabilizer -> preparation [label="used as TRecordStabilizer"];
+    record_template -> b_models [label="instantiates"];
+    envelope_stabilize -> envelope [label="extracts from"];
+}
+
+### Mermaid - Record Creation Flow
+```mermaid
+flowchart TD
+    A[DefaultRecordStabilizer] --> B{stabilize method variant}
+    
+    B --> C[Direct stabilize\nrecord_id + payload + timestamps]
+    B --> D[Envelope stabilize\nrecord_id + envelope + builder]
+    
+    C --> E[Use provided payload]
+    D --> F[Extract payload from envelope]
+    F --> G[Call payload_builder(envelope)]
+    
+    E --> H[Common record construction]
+    G --> H
+    
+    H --> I[Determine record type]
+    I --> J[LogRecord<std::decay_t<TPayload>>]
+    
+    J --> K[Construct record]
+    K --> L[new LogRecord{\n  record_id,\n  payload,\n  created_at_utc,\n  dispatched_at_utc,\n  adapter_key\n}]
+    
+    L --> M[Return stabilized record]
+    
+    M --> N[Record Ready]
+    N --> O[Used in dispatch pipeline]
+    
+    subgraph "Payload Sources"
+        E
+        F
+        G
+    end
+    
+    subgraph "Record Construction"
+        I
+        J
+        K
+        L
+        M
+    end
+    
+    P[PreparationBinding] --> A
+    P --> Q[Other Policies]
+    Q --> R[Complete Preparation]
+    R --> O
+    
+    S[Envelope-based] --> D
+    T[Direct construction] --> C
+```
+
 ## File Overview
 **Location:** `D:\CppBridgeVSC\LoggingSystem\include\logging_system\D_Preparation\default_record_stabilizer.hpp`  
 **Purpose:** Provides default record stabilization policy for creating stable log records from envelopes.  

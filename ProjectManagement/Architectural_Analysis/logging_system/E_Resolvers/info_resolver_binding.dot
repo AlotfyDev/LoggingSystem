@@ -1,0 +1,37 @@
+digraph info_resolver_instantiation {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    info_binding [label="InfoResolverBinding\nConcrete Type Alias"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    template [label="ResolverBinding<T...>\nA_Core Template"];
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    resolvers [label="Default Resolver Implementations"];
+    
+    info_binding -> template [label="instantiates"];
+    template -> resolvers [label="parameterized with"];
+    
+    subgraph cluster_resolvers {
+        label="Resolver Components";
+        color=lightgrey;
+        writer [label="DefaultWriterResolver"];
+        dispatcher [label="DefaultDispatcherResolver"];
+        readonly [label="DefaultReadonlyResolver"];
+    }
+    
+    resolvers -> writer;
+    resolvers -> dispatcher;
+    resolvers -> readonly;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgrey;
+        pipeline [label="InfoPipelineBinding"];
+        system [label="Logging System"];
+    }
+    
+    info_binding -> pipeline [label="composed in"];
+    pipeline -> system [label="used by"];
+}

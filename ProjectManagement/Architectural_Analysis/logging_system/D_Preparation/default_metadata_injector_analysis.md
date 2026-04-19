@@ -1,5 +1,90 @@
 # Architectural Analysis: default_metadata_injector.hpp
 
+## Architectural Diagrams
+
+### Graphviz (.dot) - Policy Structure
+```dot
+digraph metadata_injector_policy {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    policy [label="DefaultMetadataInjector\nPolicy Class"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    methods [label="Injection Methods"];
+    
+    policy -> methods [label="provides"];
+    
+    subgraph cluster_methods {
+        label="Method Signatures";
+        color=lightgrey;
+        inject [label="inject(TMetadata)\n-> TMetadata"];
+        inject_into [label="inject_into(TEnvelope, TMetadata)\n-> TEnvelope"];
+    }
+    
+    methods -> inject;
+    methods -> inject_into;
+    
+    subgraph cluster_behavior {
+        label="Default Behavior";
+        color=lightyellow;
+        passthrough [label="Pass-through\n(no modification)"];
+        assignment [label="Field Assignment\nenvelope.metadata = metadata"];
+    }
+    
+    inject -> passthrough;
+    inject_into -> assignment;
+    
+    subgraph cluster_usage {
+        label="Usage Context";
+        color=lightgreen;
+        preparation [label="PreparationBinding"];
+        pipeline [label="Preparation Pipeline"];
+    }
+    
+    policy -> preparation [label="used as TMetadataInjector"];
+    preparation -> pipeline [label="part of"];
+}
+
+### Mermaid - Injection Flow
+```mermaid
+flowchart TD
+    A[DefaultMetadataInjector] --> B{inject method}
+    A --> C{inject_into method}
+    
+    B --> D[Receive metadata]
+    C --> E[Receive envelope + metadata]
+    
+    D --> F[Return metadata unchanged]
+    E --> G[Assign metadata to envelope.metadata]
+    
+    G --> H[Return modified envelope]
+    
+    F --> I[Metadata Ready]
+    H --> J[Envelope with Metadata]
+    
+    I --> K[Used in preparation pipeline]
+    J --> K
+    
+    subgraph "Pass-through Behavior"
+        D
+        F
+        I
+    end
+    
+    subgraph "Envelope Integration"
+        E
+        G
+        H
+        J
+    end
+    
+    L[PreparationBinding] --> A
+    L --> M[Other Policies]
+    M --> N[Complete Preparation]
+    N --> K
+```
+
 ## File Overview
 **Location:** `D:\CppBridgeVSC\LoggingSystem\include\logging_system\D_Preparation\default_metadata_injector.hpp`  
 **Purpose:** Provides default metadata injection policy for log preparation operations.  

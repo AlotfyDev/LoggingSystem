@@ -1,5 +1,160 @@
 # Architectural Analysis: log_envelope.hpp
 
+## Architectural Diagrams
+
+### Graphviz (.dot) - Data Structure Relationships
+```dot
+digraph log_envelope_structure {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    envelope [label="LogEnvelope<TContent, TContext, TMetadata>\nTemplate Structure"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    template_params [label="Template Parameters"];
+    
+    envelope -> template_params [label="parameterized by"];
+    
+    subgraph cluster_params {
+        label="Type Parameters";
+        color=lightgrey;
+        content_type [label="TContent\nPrimary log data"];
+        context_type [label="TContext\nExecution context"];
+        metadata_type [label="TMetadata\nDescriptive information"];
+    }
+    
+    template_params -> content_type;
+    template_params -> context_type;
+    template_params -> metadata_type;
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    data_fields [label="Data Fields"];
+    
+    envelope -> data_fields [label="contains"];
+    
+    subgraph cluster_fields {
+        label="Envelope Fields";
+        color=lightgrey;
+        content_field [label="content: TContent"];
+        context_field [label="context: TContext"];
+        metadata_field [label="metadata: TMetadata"];
+        timestamp_field [label="created_at_utc: string"];
+        schema_field [label="content_schema_id: string"];
+    }
+    
+    data_fields -> content_field;
+    data_fields -> context_field;
+    data_fields -> metadata_field;
+    data_fields -> timestamp_field;
+    data_fields -> schema_field;
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    type_aliases [label="Type Aliases"];
+    
+    envelope -> type_aliases [label="provides"];
+    
+    subgraph cluster_aliases {
+        label="Type Access";
+        color=lightgrey;
+        content_alias [label="ContentType = TContent"];
+        context_alias [label="ContextType = TContext"];
+        metadata_alias [label="MetadataType = TMetadata"];
+    }
+    
+    type_aliases -> content_alias;
+    type_aliases -> context_alias;
+    type_aliases -> metadata_alias;
+    
+    subgraph cluster_constructors {
+        label="Construction Methods";
+        color=lightblue;
+        default_ctor [label="LogEnvelope()"];
+        param_ctor [label="LogEnvelope(content, context, metadata, timestamp, schema)"];
+    }
+    
+    envelope -> default_ctor;
+    envelope -> param_ctor;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgreen;
+        preparation [label="Preparation Layer"];
+        assembler [label="EnvelopeAssembler"];
+        injector [label="Various Injectors"];
+    }
+    
+    envelope -> preparation [label="used throughout"];
+    preparation -> assembler [label="constructs"];
+    preparation -> injector [label="modifies"];
+}
+
+### Mermaid - Field Relationships Flow
+```mermaid
+graph TD
+    A[LogEnvelope Template] --> B[Template Parameters]
+    A --> C[Data Fields]
+    A --> D[Type Aliases]
+    A --> E[Constructors]
+    
+    B --> F[TContent - Primary log data]
+    B --> G[TContext - Execution context]
+    B --> H[TMetadata - Descriptive information]
+    
+    C --> I[content: TContent]
+    C --> J[context: TContext]
+    C --> K[metadata: TMetadata]
+    C --> L[created_at_utc: string]
+    C --> M[content_schema_id: string]
+    
+    D --> N[ContentType = TContent]
+    D --> O[ContextType = TContext]
+    D --> P[MetadataType = TMetadata]
+    
+    E --> Q[Default Constructor]
+    E --> R[Parameterized Constructor]
+    
+    R --> S[Move construct all fields]
+    
+    S --> T[Envelope Ready]
+    T --> U[Used in preparation pipeline]
+    
+    subgraph "Template Type System"
+        F
+        G
+        H
+    end
+    
+    subgraph "Envelope Content"
+        I
+        J
+        K
+        L
+        M
+    end
+    
+    subgraph "Type Access"
+        N
+        O
+        P
+    end
+    
+    subgraph "Construction"
+        Q
+        R
+        S
+    end
+    
+    V[EnvelopeAssembler] --> R
+    W[MetadataInjector] --> K
+    X[TimestampStabilizer] --> L
+    Y[SchemaApplier] --> M
+    
+    Z[Preparation Pipeline] --> V
+    Z --> W
+    Z --> X
+    Z --> Y
+```
+
 ## File Overview
 **Location:** `D:\CppBridgeVSC\LoggingSystem\include\logging_system\B_Models\log_envelope.hpp`  
 **Purpose:** Defines the LogEnvelope template structure for containing structured log data with metadata.  

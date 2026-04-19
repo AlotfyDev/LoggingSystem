@@ -1,0 +1,83 @@
+digraph log_envelope_structure {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    envelope [label="LogEnvelope<TContent, TContext, TMetadata>\nTemplate Structure"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    template_params [label="Template Parameters"];
+    
+    envelope -> template_params [label="parameterized by"];
+    
+    subgraph cluster_params {
+        label="Type Parameters";
+        color=lightgrey;
+        content_type [label="TContent\nPrimary log data"];
+        context_type [label="TContext\nExecution context"];
+        metadata_type [label="TMetadata\nDescriptive information"];
+    }
+    
+    template_params -> content_type;
+    template_params -> context_type;
+    template_params -> metadata_type;
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    data_fields [label="Data Fields"];
+    
+    envelope -> data_fields [label="contains"];
+    
+    subgraph cluster_fields {
+        label="Envelope Fields";
+        color=lightgrey;
+        content_field [label="content: TContent"];
+        context_field [label="context: TContext"];
+        metadata_field [label="metadata: TMetadata"];
+        timestamp_field [label="created_at_utc: string"];
+        schema_field [label="content_schema_id: string"];
+    }
+    
+    data_fields -> content_field;
+    data_fields -> context_field;
+    data_fields -> metadata_field;
+    data_fields -> timestamp_field;
+    data_fields -> schema_field;
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    type_aliases [label="Type Aliases"];
+    
+    envelope -> type_aliases [label="provides"];
+    
+    subgraph cluster_aliases {
+        label="Type Access";
+        color=lightgrey;
+        content_alias [label="ContentType = TContent"];
+        context_alias [label="ContextType = TContext"];
+        metadata_alias [label="MetadataType = TMetadata"];
+    }
+    
+    type_aliases -> content_alias;
+    type_aliases -> context_alias;
+    type_aliases -> metadata_alias;
+    
+    subgraph cluster_constructors {
+        label="Construction Methods";
+        color=lightblue;
+        default_ctor [label="LogEnvelope()"];
+        param_ctor [label="LogEnvelope(content, context, metadata, timestamp, schema)"];
+    }
+    
+    envelope -> default_ctor;
+    envelope -> param_ctor;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgreen;
+        preparation [label="Preparation Layer"];
+        assembler [label="EnvelopeAssembler"];
+        injector [label="Various Injectors"];
+    }
+    
+    envelope -> preparation [label="used throughout"];
+    preparation -> assembler [label="constructs"];
+    preparation -> injector [label="modifies"];
+}

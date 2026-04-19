@@ -1,0 +1,75 @@
+digraph level_api_architecture {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    log_info [label="LogInfo\nINFO Level API Entry Point"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    pipeline_binding [label="Pipeline Binding"];
+    
+    log_info -> pipeline_binding [label="uses"];
+    
+    subgraph cluster_binding {
+        label="InfoPipelineBinding";
+        color=lightgrey;
+        info_pipeline [label="PipelineBinding =\nInfoPipelineBinding"];
+    }
+    
+    pipeline_binding -> info_pipeline;
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    runner_integration [label="Pipeline Runner"];
+    
+    log_info -> runner_integration [label="uses"];
+    
+    subgraph cluster_runner {
+        label="PipelineRunner";
+        color=lightgrey;
+        runner [label="Runner =\nPipelineRunner<PipelineBinding>"];
+    }
+    
+    runner_integration -> runner;
+    
+    node [shape=box, style=filled, fillcolor=orange];
+    api_operations [label="API Operations"];
+    
+    log_info -> api_operations [label="provides"];
+    
+    subgraph cluster_operations {
+        label="INFO Level Operations";
+        color=lightgrey;
+        level_key_op [label="level_key()\nReturns \"INFO\""];
+        resolve_target_op [label="resolve_write_target(module, record)"];
+        build_handoff_op [label="build_write_handoff_event(target)"];
+        resolve_route_op [label="resolve_default_route()"];
+    }
+    
+    api_operations -> level_key_op;
+    api_operations -> resolve_target_op;
+    api_operations -> build_handoff_op;
+    api_operations -> resolve_route_op;
+    
+    subgraph cluster_delegation {
+        label="Operation Delegation";
+        color=lightgreen;
+        runner_delegation [label="Delegates to Runner methods"];
+        level_parameter [label="Passes \"INFO\" as level_key"];
+    }
+    
+    resolve_target_op -> runner_delegation;
+    build_handoff_op -> runner_delegation;
+    resolve_route_op -> runner_delegation;
+    resolve_target_op -> level_parameter;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightblue;
+        external_code [label="External INFO Logging Code"];
+        pipeline_system [label="INFO Pipeline System"];
+        state_management [label="H_State LogContainerModule"];
+    }
+    
+    external_code -> log_info [label="uses"];
+    log_info -> pipeline_system [label="provides access to"];
+    state_management -> log_info [label="provides state for"];
+}

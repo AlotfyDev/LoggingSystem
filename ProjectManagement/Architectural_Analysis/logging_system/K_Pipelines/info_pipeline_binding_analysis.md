@@ -1,5 +1,122 @@
 # Architectural Analysis: info_pipeline_binding.hpp
 
+## Architectural Diagrams
+
+### Graphviz (.dot) - Complete Composition Architecture
+```dot
+digraph info_pipeline_composition {
+    rankdir=LR;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    info_pipeline [label="InfoPipelineBinding\nComplete System Composition"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    template [label="PipelineBinding<T...>\nA_Core Template"];
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    components [label="Architectural Components"];
+    
+    info_pipeline -> template [label="instantiates"];
+    template -> components [label="composes"];
+    
+    subgraph cluster_components {
+        label="Component Layers";
+        color=lightgrey;
+        preparation [label="InfoPreparationBinding\nD_Preparation Layer"];
+        resolver [label="InfoResolverBinding\nE_Resolvers Layer"];
+        dispatch [label="InfoDispatchBinding\nF_Dispatch Layer"];
+        routing [label="InfoRepositoryRoute\nG_Routing Layer"];
+    }
+    
+    components -> preparation;
+    components -> resolver;
+    components -> dispatch;
+    components -> routing;
+    
+    subgraph cluster_validation {
+        label="Validation Phase";
+        color=red;
+        concept_checks [label="Static Concept Validation\npreparation_binding_concept_v\nresolver_binding_concept_v\ndispatch_binding_concept_v"];
+    }
+    
+    template -> concept_checks [label="enforces"];
+    
+    subgraph cluster_integration {
+        label="System Integration";
+        color=lightgreen;
+        system_init [label="System Initialization"];
+        runtime [label="Runtime Operation"];
+        monitoring [label="Monitoring & Inspection"];
+    }
+    
+    info_pipeline -> system_init [label="provides"];
+    system_init -> runtime [label="enables"];
+    runtime -> monitoring [label="supports"];
+}
+
+### Mermaid - System Integration Flow
+```mermaid
+flowchart TD
+    A[InfoPipelineBinding] --> B[PipelineBinding Template]
+    
+    B --> C[Preparation =\nInfoPreparationBinding]
+    B --> D[Resolver =\nInfoResolverBinding]
+    B --> E[Dispatch =\nInfoDispatchBinding]
+    B --> F[RepositoryRoute =\nInfoRepositoryRoute]
+    
+    C --> G[Metadata Injection]
+    C --> H[Timestamp Stabilization]
+    C --> I[Schema Application]
+    C --> J[Envelope Assembly]
+    C --> K[Record Stabilization]
+    
+    D --> L[Writer Resolution]
+    D --> M[Dispatcher Resolution]
+    D --> N[Readonly Resolution]
+    
+    E --> O[Thread Pool Execution]
+    E --> P[Queue Management]
+    E --> Q[Failure Handling]
+    E --> R[Output Adaptation]
+    
+    F --> S[Repository Routing]
+    F --> T[Storage Selection]
+    F --> U[Persistence Strategy]
+    
+    G --> V[Prepared Data]
+    H --> V
+    I --> V
+    J --> V
+    K --> V
+    
+    L --> W[Resolution Results]
+    M --> W
+    N --> W
+    
+    O --> X[Dispatch Operations]
+    P --> X
+    Q --> X
+    R --> X
+    
+    S --> Y[Storage Operations]
+    T --> Y
+    U --> Y
+    
+    V --> Z[Envelope Ready]
+    W --> AA[Targets Resolved]
+    X --> BB[Records Dispatched]
+    Y --> CC[Data Persisted]
+    
+    Z --> DD[Complete Pipeline]
+    AA --> DD
+    BB --> DD
+    CC --> DD
+    
+    DD --> EE[System Ready]
+    EE --> FF[Logging Operations]
+    FF --> GG[Monitoring & Inspection]
+```
+
 ## File Overview
 **Location:** `D:\CppBridgeVSC\LoggingSystem\include\logging_system\K_Pipelines\info_pipeline_binding.hpp`  
 **Purpose:** Provides the complete concrete instantiation of logging pipeline binding, composing all architectural layers.  

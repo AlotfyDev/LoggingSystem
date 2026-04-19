@@ -1,0 +1,56 @@
+digraph record_stabilizer_structure {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    stabilizer [label="DefaultRecordStabilizer\nPolicy Class"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    methods [label="Stabilization Methods"];
+    
+    stabilizer -> methods [label="provides"];
+    
+    subgraph cluster_methods {
+        label="Method Variants";
+        color=lightgrey;
+        direct_stabilize [label="stabilize(record_id, payload, ...)\n-> LogRecord"];
+        envelope_stabilize [label="stabilize_from_envelope(...)\n-> LogRecord"];
+    }
+    
+    methods -> direct_stabilize;
+    methods -> envelope_stabilize;
+    
+    subgraph cluster_construction {
+        label="Record Construction";
+        color=lightyellow;
+        record_template [label="LogRecord<T...> template"];
+        type_deduction [label="std::decay_t for payload"];
+        move_construction [label="Move construct record"];
+    }
+    
+    direct_stabilize -> record_template;
+    envelope_stabilize -> record_template;
+    record_template -> type_deduction;
+    type_deduction -> move_construction;
+    
+    subgraph cluster_payload_extraction {
+        label="Payload Extraction";
+        color=lightgrey;
+        direct_payload [label="Use provided payload"];
+        envelope_builder [label="Use payload_builder(envelope)"];
+    }
+    
+    direct_stabilize -> direct_payload;
+    envelope_stabilize -> envelope_builder;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgreen;
+        preparation [label="PreparationBinding"];
+        b_models [label="B_Models::LogRecord"];
+        envelope [label="LogEnvelope"];
+    }
+    
+    stabilizer -> preparation [label="used as TRecordStabilizer"];
+    record_template -> b_models [label="instantiates"];
+    envelope_stabilize -> envelope [label="extracts from"];
+}

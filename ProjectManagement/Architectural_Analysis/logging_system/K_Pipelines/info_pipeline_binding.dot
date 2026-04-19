@@ -1,0 +1,49 @@
+digraph info_pipeline_composition {
+    rankdir=LR;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    info_pipeline [label="InfoPipelineBinding\nComplete System Composition"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    template [label="PipelineBinding<T...>\nA_Core Template"];
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    components [label="Architectural Components"];
+    
+    info_pipeline -> template [label="instantiates"];
+    template -> components [label="composes"];
+    
+    subgraph cluster_components {
+        label="Component Layers";
+        color=lightgrey;
+        preparation [label="InfoPreparationBinding\nD_Preparation Layer"];
+        resolver [label="InfoResolverBinding\nE_Resolvers Layer"];
+        dispatch [label="InfoDispatchBinding\nF_Dispatch Layer"];
+        routing [label="InfoRepositoryRoute\nG_Routing Layer"];
+    }
+    
+    components -> preparation;
+    components -> resolver;
+    components -> dispatch;
+    components -> routing;
+    
+    subgraph cluster_validation {
+        label="Validation Phase";
+        color=red;
+        concept_checks [label="Static Concept Validation\npreparation_binding_concept_v\nresolver_binding_concept_v\ndispatch_binding_concept_v"];
+    }
+    
+    template -> concept_checks [label="enforces"];
+    
+    subgraph cluster_integration {
+        label="System Integration";
+        color=lightgreen;
+        system_init [label="System Initialization"];
+        runtime [label="Runtime Operation"];
+        monitoring [label="Monitoring & Inspection"];
+    }
+    
+    info_pipeline -> system_init [label="provides"];
+    system_init -> runtime [label="enables"];
+    runtime -> monitoring [label="supports"];
+}

@@ -1,0 +1,44 @@
+digraph schema_applier_structure {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    applier [label="DefaultContentSchemaApplier\nPolicy Class"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    methods [label="Application Methods"];
+    
+    applier -> methods [label="provides"];
+    
+    subgraph cluster_methods {
+        label="Method Variants";
+        color=lightgrey;
+        simple_apply [label="apply(TEnvelope, schema_id)\n-> TEnvelope"];
+        catalog_apply [label="apply(TEnvelope, schema_id, TSchemaCatalog)\n-> TEnvelope"];
+    }
+    
+    methods -> simple_apply;
+    methods -> catalog_apply;
+    
+    subgraph cluster_behavior {
+        label="Application Behavior";
+        color=lightyellow;
+        schema_assign [label="envelope.content_schema_id = schema_id"];
+        catalog_ignore [label="Ignore catalog parameter"];
+    }
+    
+    simple_apply -> schema_assign;
+    catalog_apply -> schema_assign;
+    catalog_apply -> catalog_ignore;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgreen;
+        preparation [label="PreparationBinding"];
+        envelope [label="LogEnvelope"];
+        future_catalog [label="Future Schema Catalog"];
+    }
+    
+    applier -> preparation [label="used as TSchemaApplier"];
+    schema_assign -> envelope [label="modifies"];
+    catalog_ignore -> future_catalog [label="prepared for"];
+}

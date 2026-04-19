@@ -1,0 +1,65 @@
+digraph dispatcher_resolver_concept_architecture {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    dispatcher_concept [label="dispatcher_resolver_concept\nDispatcher Resolver Validation"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    operation_validation [label="Operation Validation"];
+    
+    dispatcher_concept -> operation_validation [label="validates"];
+    
+    subgraph cluster_operations {
+        label="Required Operations";
+        color=lightgrey;
+        resolve_candidate_op [label="resolve_dispatch_candidate(module, level_key, record)"];
+        resolve_receiver_op [label="resolve_dispatch_receiver_binding(candidate)"];
+    }
+    
+    operation_validation -> resolve_candidate_op;
+    operation_validation -> resolve_receiver_op;
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    trait_system [label="Trait Detection System"];
+    
+    dispatcher_concept -> trait_system [label="implements"];
+    
+    subgraph cluster_traits {
+        label="Core Traits";
+        color=lightgrey;
+        is_dispatcher_resolver [label="is_dispatcher_resolver<TResolver, TModule, TRecord>\nSFINAE detection"];
+        dispatcher_concept_trait [label="dispatcher_resolver_concept<TResolver, TModule, TRecord>\nConcept wrapper"];
+        require_dispatcher_resolver [label="require_dispatcher_resolver_t<TResolver, TModule, TRecord>\nSFINAE enable"];
+    }
+    
+    trait_system -> is_dispatcher_resolver;
+    trait_system -> dispatcher_concept_trait;
+    trait_system -> require_dispatcher_resolver;
+    
+    node [shape=box, style=filled, fillcolor=orange];
+    validation_results [label="Validation Results"];
+    
+    dispatcher_concept -> validation_results [label="produces"];
+    
+    subgraph cluster_results {
+        label="Boolean Constants";
+        color=lightgrey;
+        is_dispatcher_resolver_v [label="is_dispatcher_resolver_v<TResolver, TModule, TRecord>"];
+        dispatcher_concept_v [label="dispatcher_resolver_concept_v<TResolver, TModule, TRecord>"];
+    }
+    
+    validation_results -> is_dispatcher_resolver_v;
+    validation_results -> dispatcher_concept_v;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgreen;
+        resolver_binding [label="InfoResolverBinding\nTDispatcherResolver validation"];
+        pipeline_runner [label="PipelineRunner\nOperation delegation"];
+        dispatch_layer [label="F_Dispatch Layer\nCandidate resolution"];
+    }
+    
+    dispatcher_concept -> resolver_binding [label="enables"];
+    dispatcher_concept -> pipeline_runner [label="validates"];
+    dispatcher_concept -> dispatch_layer [label="supports"];
+}

@@ -1,0 +1,60 @@
+digraph repository_route_structure {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    route [label="InfoRepositoryRoute\nRepository Route Configuration"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    route_fields [label="Route Configuration Fields"];
+    
+    route -> route_fields [label="contains"];
+    
+    subgraph cluster_fields {
+        label="Route Fields";
+        color=lightgrey;
+        level_key [label="level_key: string = \"INFO\"\nLevel partition key"];
+        route_key [label="route_key: string = \"info_repository\"\nRepository route identifier"];
+    }
+    
+    route_fields -> level_key;
+    route_fields -> route_key;
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    constructors [label="Construction Methods"];
+    
+    route -> constructors [label="provides"];
+    
+    subgraph cluster_constructors {
+        label="Constructor Variants";
+        color=lightgrey;
+        default_ctor [label="InfoRepositoryRoute()\nDefault construction"];
+        param_ctor [label="InfoRepositoryRoute(level_key, route_key)\nParameterized construction"];
+        factory_method [label="make_default()\nStatic factory method"];
+    }
+    
+    constructors -> default_ctor;
+    constructors -> param_ctor;
+    constructors -> factory_method;
+    
+    subgraph cluster_defaults {
+        label="Default Values";
+        color=lightgreen;
+        default_level [label="level_key = \"INFO\""];
+        default_route [label="route_key = \"info_repository\""];
+    }
+    
+    default_ctor -> default_level;
+    factory_method -> default_route;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightblue;
+        pipeline_binding [label="InfoPipelineBinding"];
+        repository_layer [label="G_Routing Layer"];
+        system_integration [label="Repository System"];
+    }
+    
+    route -> pipeline_binding [label="used in"];
+    pipeline_binding -> repository_layer [label="belongs to"];
+    repository_layer -> system_integration [label="connects to"];
+}

@@ -1,5 +1,181 @@
 # Architectural Analysis: slot_lifecycle.hpp
 
+## Architectural Diagrams
+
+### Graphviz (.dot) - State Machine Architecture
+```dot
+digraph slot_lifecycle_state_machine {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    lifecycle [label="SlotLifecycle\nState Manager"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    state_enum [label="State Enumeration"];
+    
+    lifecycle -> state_enum [label="defines"];
+    
+    subgraph cluster_states {
+        label="Lifecycle States";
+        color=lightgrey;
+        new_state [label="New\nInitial state"];
+        pending_state [label="Pending\nReady for dispatch"];
+        dispatching_state [label="Dispatching\nActively processing"];
+        dispatched_state [label="Dispatched\nSuccessfully completed"];
+        failed_state [label="Failed\nProcessing failed"];
+        evicted_state [label="Evicted\nRemoved from system"];
+    }
+    
+    state_enum -> new_state;
+    state_enum -> pending_state;
+    state_enum -> dispatching_state;
+    state_enum -> dispatched_state;
+    state_enum -> failed_state;
+    state_enum -> evicted_state;
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    storage [label="State Storage"];
+    
+    lifecycle -> storage [label="manages"];
+    
+    subgraph cluster_storage {
+        label="Storage Design";
+        color=lightgrey;
+        state_map [label="unordered_map<RecordId, State>\nstates_"];
+    }
+    
+    storage -> state_map;
+    
+    node [shape=box, style=filled, fillcolor=lightorange];
+    operations [label="State Operations"];
+    
+    lifecycle -> operations [label="provides"];
+    
+    subgraph cluster_ops {
+        label="Operation Categories";
+        color=lightgrey;
+        management [label="State Management"];
+        inspection [label="State Inspection"];
+        utilities [label="Utility Functions"];
+    }
+    
+    operations -> management;
+    operations -> inspection;
+    operations -> utilities;
+    
+    subgraph cluster_management {
+        label="State Management";
+        color=lightgrey;
+        ensure_slot [label="ensure_slot(record_id)"];
+        set_pending [label="set_pending(record_id)"];
+        set_dispatching [label="set_dispatching(record_id)"];
+        set_dispatched [label="set_dispatched(record_id)"];
+        set_failed [label="set_failed(record_id)"];
+        set_evicted [label="set_evicted(record_id)"];
+    }
+    
+    subgraph cluster_inspection {
+        label="State Inspection";
+        color=lightgrey;
+        has_slot [label="has_slot(record_id)"];
+        get_state [label="get_state(record_id)"];
+        erase_slot [label="erase_slot(record_id)"];
+    }
+    
+    subgraph cluster_utilities {
+        label="Utilities";
+        color=lightgrey;
+        snapshot [label="snapshot()"];
+        to_string [label="to_string(state)"];
+    }
+    
+    management -> ensure_slot;
+    management -> set_pending;
+    management -> set_dispatching;
+    management -> set_dispatched;
+    management -> set_failed;
+    management -> set_evicted;
+    
+    inspection -> has_slot;
+    inspection -> get_state;
+    inspection -> erase_slot;
+    
+    utilities -> snapshot;
+    utilities -> to_string;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgreen;
+        container_module [label="LogContainerModule"];
+        dispatch [label="Dispatch Layer"];
+        monitoring [label="Monitoring Systems"];
+    }
+    
+    lifecycle -> container_module [label="subordinate to"];
+    container_module -> dispatch [label="provides state for"];
+    lifecycle -> monitoring [label="enables"];
+}
+
+### Mermaid - Lifecycle State Transitions
+```mermaid
+stateDiagram-v2
+    [*] --> New: ensure_slot()
+    
+    New --> Pending: set_pending()
+    Pending --> Dispatching: set_dispatching()
+    
+    Dispatching --> Dispatched: set_dispatched()
+    Dispatching --> Failed: set_failed()
+    
+    Failed --> Pending: requeue_pending_front()
+    Failed --> Evicted: set_evicted()
+    
+    Dispatched --> Evicted: retention policy
+    Pending --> Evicted: retention policy
+    New --> Evicted: cleanup
+    
+    Dispatched --> [*]: final state
+    Evicted --> [*]: final state
+    
+    note right of New
+        Record admitted to system
+        Initial state for all records
+    end note
+    
+    note right of Pending
+        Record ready for dispatch
+        In pending queue
+    end note
+    
+    note right of Dispatching
+        Record being actively processed
+        Prevents double-processing
+    end note
+    
+    note right of Dispatched
+        Record successfully delivered
+        Final success state
+    end note
+    
+    note right of Failed
+        Record processing failed
+        May be retried or evicted
+    end note
+    
+    note right of Evicted
+        Record permanently removed
+        Due to retention or failure
+    end note
+    
+    state "SlotLifecycle State Machine" as Lifecycle
+    Lifecycle --> New : Record admission
+    Lifecycle --> Pending : Queue management
+    Lifecycle --> Dispatching : Dispatch operations
+    Lifecycle --> Dispatched : Success confirmation
+    Lifecycle --> Failed : Error handling
+    Lifecycle --> Evicted : Cleanup operations
+```
+
 ## File Overview
 **Location:** `D:\CppBridgeVSC\LoggingSystem\include\logging_system\H_State\slot_lifecycle.hpp`  
 **Purpose:** Provides per-record lifecycle state vocabulary and storage for runtime state transitions.  

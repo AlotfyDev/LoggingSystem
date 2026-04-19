@@ -1,5 +1,123 @@
 # Architectural Analysis: log_record.hpp
 
+## Architectural Diagrams
+
+### Graphviz (.dot) - Record Structure
+```dot
+digraph log_record_structure {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    record [label="LogRecord<TPayload>\nTemplate Structure"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    template_param [label="Template Parameter"];
+    
+    record -> template_param [label="parameterized by"];
+    
+    subgraph cluster_param {
+        label="Type Parameter";
+        color=lightgrey;
+        payload_type [label="TPayload\nRecord payload data"];
+    }
+    
+    template_param -> payload_type;
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    identity_fields [label="Identity Fields"];
+    
+    record -> identity_fields [label="contains"];
+    
+    subgraph cluster_identity {
+        label="Record Identity";
+        color=lightgrey;
+        record_id [label="record_id: string"];
+        payload [label="payload: TPayload"];
+        created_at [label="created_at_utc: string"];
+    }
+    
+    identity_fields -> record_id;
+    identity_fields -> payload;
+    identity_fields -> created_at;
+    
+    node [shape=box, style=filled, fillcolor=lightorange];
+    lifecycle_fields [label="Lifecycle Fields"];
+    
+    record -> lifecycle_fields [label="contains"];
+    
+    subgraph cluster_lifecycle {
+        label="Dispatch Tracking";
+        color=lightgrey;
+        dispatched_at [label="dispatched_at_utc: optional<string>"];
+        adapter_key [label="adapter_key: optional<string>"];
+    }
+    
+    lifecycle_fields -> dispatched_at;
+    lifecycle_fields -> adapter_key;
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    type_access [label="Type Access"];
+    
+    record -> type_access [label="provides"];
+    
+    subgraph cluster_type_access {
+        label="Type Aliases";
+        color=lightgrey;
+        payload_alias [label="PayloadType = TPayload"];
+    }
+    
+    type_access -> payload_alias;
+    
+    subgraph cluster_constructors {
+        label="Construction Methods";
+        color=lightblue;
+        default_ctor [label="LogRecord()"];
+        param_ctor [label="LogRecord(id, payload, created_at, dispatched, adapter)"];
+    }
+    
+    record -> default_ctor;
+    record -> param_ctor;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgreen;
+        stabilizer [label="RecordStabilizer"];
+        dispatch [label="Dispatch Layer"];
+        storage [label="Repository Layer"];
+    }
+    
+    stabilizer -> record [label="creates"];
+    record -> dispatch [label="processed by"];
+    record -> storage [label="persisted in"];
+}
+
+### Mermaid - Lifecycle Flow
+```mermaid
+stateDiagram-v2
+    [*] --> New: Record Created
+    New --> Pending: enqueue_pending()
+    Pending --> Dispatching: drain_pending()
+    
+    Dispatching --> Dispatched: commit_dispatched()
+    Dispatching --> Failed: mark_failed()
+    
+    Failed --> Pending: requeue_pending_front()
+    Failed --> Evicted: Retention policy
+    
+    Dispatched --> [*]: Final state
+    Evicted --> [*]: Final state
+    
+    note right of Pending : record.dispatched_at_utc = null\nrecord.adapter_key = null
+    note right of Dispatching : Actively being processed
+    note right of Dispatched : record.dispatched_at_utc = timestamp\nrecord.adapter_key = "adapter_name"
+    note right of Failed : Error occurred during dispatch
+    note right of Evicted : Removed from system
+    
+    state "LogRecord Structure" as Record
+    Record --> New : Default construction
+    Record --> Pending : With optional fields filled
+```
+
 ## File Overview
 **Location:** `D:\CppBridgeVSC\LoggingSystem\include\logging_system\B_Models\log_record.hpp`  
 **Purpose:** Defines the LogRecord template structure for finalized log entries ready for dispatch or storage.  

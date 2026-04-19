@@ -1,5 +1,93 @@
 # Architectural Analysis: default_timestamp_stabilizer.hpp
 
+## Architectural Diagrams
+
+### Graphviz (.dot) - Time Handling Structure
+```dot
+digraph timestamp_stabilizer_structure {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    stabilizer [label="DefaultTimestampStabilizer\nPolicy Class"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    time_source [label="UTC Time Source"];
+    
+    stabilizer -> time_source [label="depends on"];
+    
+    subgraph cluster_methods {
+        label="Stabilization Methods";
+        color=lightgrey;
+        stabilize [label="stabilize()\n-> std::string"];
+        inject_into [label="inject_into(TEnvelope)\n-> TEnvelope"];
+    }
+    
+    stabilizer -> stabilize;
+    stabilizer -> inject_into;
+    
+    subgraph cluster_behavior {
+        label="Time Operations";
+        color=lightyellow;
+        utc_call [label="Call utc_now_iso()"];
+        timestamp_assign [label="Assign to created_at_utc"];
+    }
+    
+    stabilize -> utc_call;
+    inject_into -> utc_call;
+    inject_into -> timestamp_assign;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgreen;
+        b_models [label="B_Models::utc_now_iso"];
+        preparation [label="PreparationBinding"];
+        envelope [label="LogEnvelope"];
+    }
+    
+    time_source -> b_models;
+    stabilizer -> preparation [label="used as TTimestampStabilizer"];
+    inject_into -> envelope [label="modifies"];
+}
+
+### Mermaid - Stabilization Flow
+```mermaid
+flowchart TD
+    A[DefaultTimestampStabilizer] --> B{stabilize method}
+    A --> C{inject_into method}
+    
+    B --> D[Call utc_now_iso()]
+    C --> E[Call utc_now_iso()]
+    
+    D --> F[Return ISO 8601 timestamp string]
+    E --> G[Assign timestamp to envelope.created_at_utc]
+    
+    G --> H[Return envelope with timestamp]
+    
+    F --> I[Standalone timestamp]
+    H --> J[Timestamped envelope]
+    
+    I --> K[Used for record creation]
+    J --> K
+    
+    subgraph "Time Source Integration"
+        D
+        E
+    end
+    
+    subgraph "UTC ISO 8601 Format"
+        F
+        G
+    end
+    
+    L[B_Models::utc_now_iso] --> D
+    L --> E
+    
+    M[PreparationBinding] --> A
+    M --> N[Other Policies]
+    N --> O[Complete Preparation]
+    O --> K
+```
+
 ## File Overview
 **Location:** `D:\CppBridgeVSC\LoggingSystem\include\logging_system\D_Preparation\default_timestamp_stabilizer.hpp`  
 **Purpose:** Provides default timestamp stabilization policy for log preparation operations.  

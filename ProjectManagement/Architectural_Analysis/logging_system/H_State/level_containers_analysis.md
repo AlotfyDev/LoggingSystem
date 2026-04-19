@@ -1,5 +1,161 @@
 # Architectural Analysis: level_containers.hpp
 
+## Architectural Diagrams
+
+### Graphviz (.dot) - Partitioning Architecture
+```dot
+digraph level_containers_partitioning {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    containers [label="LevelContainers\nPartition Manager"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    data_structure [label="Data Structure"];
+    
+    containers -> data_structure [label="manages"];
+    
+    subgraph cluster_storage {
+        label="Storage Design";
+        color=lightgrey;
+        hash_map [label="unordered_map<LevelKey, RecordIdBucket>"];
+        deque [label="deque<RecordId> per level"];
+    }
+    
+    data_structure -> hash_map;
+    hash_map -> deque;
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    operations [label="Core Operations"];
+    
+    containers -> operations [label="provides"];
+    
+    subgraph cluster_ops {
+        label="Operation Categories";
+        color=lightgrey;
+        add_ops [label="Add Operations"];
+        remove_ops [label="Remove Operations"];
+        query_ops [label="Query Operations"];
+    }
+    
+    operations -> add_ops;
+    operations -> remove_ops;
+    operations -> query_ops;
+    
+    subgraph cluster_add {
+        label="Add Record";
+        color=lightgrey;
+        add_record [label="add_record(level_key, record_id)"];
+    }
+    
+    subgraph cluster_remove {
+        label="Remove Record";
+        color=lightgrey;
+        remove_record [label="remove_record(level_key, record_id)"];
+    }
+    
+    subgraph cluster_query {
+        label="Query Operations";
+        color=lightgrey;
+        contains [label="contains_record(level_key, record_id)"];
+        list_records [label="list_records(level_key)"];
+        list_levels [label="list_levels()"];
+        level_size [label="level_size(level_key)"];
+        total_size [label="total_size()"];
+        clear [label="clear()"];
+    }
+    
+    add_ops -> add_record;
+    remove_ops -> remove_record;
+    query_ops -> contains;
+    query_ops -> list_records;
+    query_ops -> list_levels;
+    query_ops -> level_size;
+    query_ops -> total_size;
+    query_ops -> clear;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgreen;
+        container_module [label="LogContainerModule"];
+        resolver [label="Resolver Layer"];
+        dispatch [label="Dispatch Layer"];
+    }
+    
+    containers -> container_module [label="subordinate to"];
+    container_module -> resolver [label="enables"];
+    container_module -> dispatch [label="enables"];
+}
+
+### Mermaid - Level Partitioning Flow
+```mermaid
+flowchart TD
+    A[LevelContainers] --> B[Partitioned Storage]
+    
+    B --> C[unordered_map<LevelKey, deque<RecordId>>]
+    
+    C --> D[Level Partition 1]
+    C --> E[Level Partition 2]
+    C --> F[Level Partition N]
+    
+    D --> G[Record ID 1]
+    D --> H[Record ID 2]
+    D --> I[Record ID N]
+    
+    E --> J[Record ID 1]
+    E --> K[Record ID 2]
+    
+    F --> L[Record ID 1]
+    
+    M[Add Record] --> N{Level exists?}
+    N -->|Yes| O[Push to existing deque]
+    N -->|No| P[Create new deque]
+    P --> O
+    
+    Q[Remove Record] --> R{Level exists?}
+    R -->|No| S[Return false]
+    R -->|Yes| T{Record in deque?}
+    T -->|No| S
+    T -->|Yes| U[Erase from deque]
+    U --> V{Deque empty?}
+    V -->|Yes| W[Remove level from map]
+    V -->|No| X[Keep level]
+    
+    Y[Query Operations] --> Z[contains_record]
+    Y --> AA[list_records]
+    Y --> BB[list_levels]
+    Y --> CC[level_size]
+    Y --> DD[total_size]
+    
+    Z --> EE{O(1) hash lookup}
+    AA --> FF{O(n) copy deque}
+    BB --> GG{O(k) iterate map}
+    CC --> HH{O(1) hash lookup}
+    DD --> II{O(k) sum sizes}
+    
+    subgraph "Storage Architecture"
+        C
+        D
+        E
+        F
+    end
+    
+    subgraph "Record Organization"
+        G
+        H
+        I
+        J
+        K
+        L
+    end
+    
+    subgraph "Operation Flow"
+        M
+        Q
+        Y
+    end
+```
+
 ## File Overview
 **Location:** `D:\CppBridgeVSC\LoggingSystem\include\logging_system\H_State\level_containers.hpp`  
 **Purpose:** Provides level-based partitioning index for record identifiers with insertion order preservation.  

@@ -1,0 +1,58 @@
+digraph adapter_emission_bridge {
+    rankdir=LR;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    emission [label="DefaultAdapterEmission\nEmission Bridge"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    emission_method [label="emit Method"];
+    
+    emission -> emission_method [label="provides"];
+    
+    subgraph cluster_signature {
+        label="Method Signature";
+        color=lightgrey;
+        template_params [label="Template<TAdapter, TDispatchContext>"];
+        return_type [label="Return: decltype(adapter.emit_signal(context.record))"];
+    }
+    
+    emission_method -> template_params;
+    emission_method -> return_type;
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    bridge_behavior [label="Bridge Behavior"];
+    
+    emission_method -> bridge_behavior [label="implements"];
+    
+    subgraph cluster_behavior {
+        label="Emission Logic";
+        color=lightgrey;
+        call_adapter [label="adapter.emit_signal(context.record)"];
+        return_result [label="Return adapter result"];
+    }
+    
+    bridge_behavior -> call_adapter;
+    bridge_behavior -> return_result;
+    
+    subgraph cluster_contract {
+        label="Adapter Contract";
+        color=lightgreen;
+        emit_signal_method [label="emit_signal(record) method"];
+        return_type_flexible [label="Any return type"];
+    }
+    
+    call_adapter -> emit_signal_method;
+    return_result -> return_type_flexible;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightblue;
+        executor [label="ThreadPoolDispatchExecutor"];
+        dispatch_context [label="DispatchContext"];
+        adapter [label="Adapter Implementation"];
+    }
+    
+    executor -> emission [label="uses as emission bridge"];
+    emission -> dispatch_context [label="accesses record from"];
+    emission -> adapter [label="calls emit_signal on"];
+}

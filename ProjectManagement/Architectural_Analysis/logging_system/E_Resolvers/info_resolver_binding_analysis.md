@@ -1,5 +1,88 @@
 # Architectural Analysis: info_resolver_binding.hpp
 
+## Architectural Diagrams
+
+### Graphviz (.dot) - Instantiation Relationships
+```dot
+digraph info_resolver_instantiation {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    info_binding [label="InfoResolverBinding\nConcrete Type Alias"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    template [label="ResolverBinding<T...>\nA_Core Template"];
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    resolvers [label="Default Resolver Implementations"];
+    
+    info_binding -> template [label="instantiates"];
+    template -> resolvers [label="parameterized with"];
+    
+    subgraph cluster_resolvers {
+        label="Resolver Components";
+        color=lightgrey;
+        writer [label="DefaultWriterResolver"];
+        dispatcher [label="DefaultDispatcherResolver"];
+        readonly [label="DefaultReadonlyResolver"];
+    }
+    
+    resolvers -> writer;
+    resolvers -> dispatcher;
+    resolvers -> readonly;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgrey;
+        pipeline [label="InfoPipelineBinding"];
+        system [label="Logging System"];
+    }
+    
+    info_binding -> pipeline [label="composed in"];
+    pipeline -> system [label="used by"];
+}
+
+### Mermaid - Concrete Resolver Flow
+```mermaid
+flowchart TD
+    A[InfoResolverBinding] --> B[ResolverBinding Template]
+    
+    B --> C[WriterResolver =\nDefaultWriterResolver]
+    B --> D[DispatcherResolver =\nDefaultDispatcherResolver]
+    B --> E[ReadonlyResolver =\nDefaultReadonlyResolver]
+    
+    C --> F[resolve_writer methods]
+    D --> G[resolve_dispatcher methods]
+    E --> H[resolve_readonly methods]
+    
+    F --> I[Writer Resolution]
+    G --> J[Dispatcher Resolution]
+    H --> K[Readonly Resolution]
+    
+    I --> L[Resolution Results]
+    J --> L
+    K --> L
+    
+    L --> M[Ready for Dispatch]
+    M --> N[InfoPipelineBinding]
+    
+    subgraph "Resolution Types"
+        I
+        J
+        K
+    end
+    
+    subgraph "Usage Context"
+        O[Resolver Layer] --> P[Target Selection]
+        Q[Dispatch Layer] --> R[Channel Selection]
+        S[Query Layer] --> T[Access Pattern]
+    end
+    
+    I --> P
+    J --> R
+    K --> T
+```
+
 ## File Overview
 **Location:** `D:\CppBridgeVSC\LoggingSystem\include\logging_system\E_Resolvers\info_resolver_binding.hpp`  
 **Purpose:** Provides a concrete instantiation of resolver binding using default resolver implementations.  

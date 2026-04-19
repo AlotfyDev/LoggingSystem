@@ -1,0 +1,72 @@
+digraph writer_resolver_architecture {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    resolver [label="DefaultWriterResolver\nWrite-Side Resolver"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    descriptors [label="Descriptor Types"];
+    
+    resolver -> descriptors [label="defines"];
+    
+    subgraph cluster_descriptors {
+        label="Output Descriptors";
+        color=lightgrey;
+        target_descriptor [label="WriteTargetDescriptor\nTarget metadata"];
+        handoff_event [label="WriteHandoffEvent\nReady signal"];
+    }
+    
+    descriptors -> target_descriptor;
+    descriptors -> handoff_event;
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    operations [label="Resolution Operations"];
+    
+    resolver -> operations [label="provides"];
+    
+    subgraph cluster_operations {
+        label="Core Operations";
+        color=lightgrey;
+        resolve_target [label="resolve_write_target(...)\nCompute target descriptor"];
+        build_handoff [label="build_handoff_event(...)\nCreate handoff signal"];
+    }
+    
+    operations -> resolve_target;
+    operations -> build_handoff;
+    
+    subgraph cluster_target_fields {
+        label="WriteTargetDescriptor Fields";
+        color=lightgrey;
+        record_id [label="record_id: string"];
+        level_key [label="level_key: string"];
+        slot_state [label="slot_state: SlotLifecycle::State"];
+        membership [label="level_membership_confirmed: bool"];
+    }
+    
+    target_descriptor -> record_id;
+    target_descriptor -> level_key;
+    target_descriptor -> slot_state;
+    target_descriptor -> membership;
+    
+    subgraph cluster_handoff_fields {
+        label="WriteHandoffEvent Fields";
+        color=lightgrey;
+        target_ref [label="target: WriteTargetDescriptor"];
+        ready_flag [label="ready: bool"];
+    }
+    
+    handoff_event -> target_ref;
+    handoff_event -> handoff_event;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgreen;
+        container_module [label="LogContainerModule"];
+        resolver_binding [label="InfoResolverBinding"];
+        dispatch [label="Dispatch Layer"];
+    }
+    
+    container_module -> resolver [label="provides state for"];
+    resolver -> resolver_binding [label="used in"];
+    resolver_binding -> dispatch [label="enables"];
+}

@@ -1,0 +1,44 @@
+digraph timestamp_stabilizer_structure {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    stabilizer [label="DefaultTimestampStabilizer\nPolicy Class"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    time_source [label="UTC Time Source"];
+    
+    stabilizer -> time_source [label="depends on"];
+    
+    subgraph cluster_methods {
+        label="Stabilization Methods";
+        color=lightgrey;
+        stabilize [label="stabilize()\n-> std::string"];
+        inject_into [label="inject_into(TEnvelope)\n-> TEnvelope"];
+    }
+    
+    stabilizer -> stabilize;
+    stabilizer -> inject_into;
+    
+    subgraph cluster_behavior {
+        label="Time Operations";
+        color=lightyellow;
+        utc_call [label="Call utc_now_iso()"];
+        timestamp_assign [label="Assign to created_at_utc"];
+    }
+    
+    stabilize -> utc_call;
+    inject_into -> utc_call;
+    inject_into -> timestamp_assign;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgreen;
+        b_models [label="B_Models::utc_now_iso"];
+        preparation [label="PreparationBinding"];
+        envelope [label="LogEnvelope"];
+    }
+    
+    time_source -> b_models;
+    stabilizer -> preparation [label="used as TTimestampStabilizer"];
+    inject_into -> envelope [label="modifies"];
+}

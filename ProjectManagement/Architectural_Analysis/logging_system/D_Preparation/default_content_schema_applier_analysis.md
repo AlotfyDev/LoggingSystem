@@ -1,5 +1,91 @@
 # Architectural Analysis: default_content_schema_applier.hpp
 
+## Architectural Diagrams
+
+### Graphviz (.dot) - Schema Structure
+```dot
+digraph schema_applier_structure {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    applier [label="DefaultContentSchemaApplier\nPolicy Class"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    methods [label="Application Methods"];
+    
+    applier -> methods [label="provides"];
+    
+    subgraph cluster_methods {
+        label="Method Variants";
+        color=lightgrey;
+        simple_apply [label="apply(TEnvelope, schema_id)\n-> TEnvelope"];
+        catalog_apply [label="apply(TEnvelope, schema_id, TSchemaCatalog)\n-> TEnvelope"];
+    }
+    
+    methods -> simple_apply;
+    methods -> catalog_apply;
+    
+    subgraph cluster_behavior {
+        label="Application Behavior";
+        color=lightyellow;
+        schema_assign [label="envelope.content_schema_id = schema_id"];
+        catalog_ignore [label="Ignore catalog parameter"];
+    }
+    
+    simple_apply -> schema_assign;
+    catalog_apply -> schema_assign;
+    catalog_apply -> catalog_ignore;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgreen;
+        preparation [label="PreparationBinding"];
+        envelope [label="LogEnvelope"];
+        future_catalog [label="Future Schema Catalog"];
+    }
+    
+    applier -> preparation [label="used as TSchemaApplier"];
+    schema_assign -> envelope [label="modifies"];
+    catalog_ignore -> future_catalog [label="prepared for"];
+}
+
+### Mermaid - Application Flow
+```mermaid
+flowchart TD
+    A[DefaultContentSchemaApplier] --> B{apply method variant}
+    
+    B --> C[Simple apply\nenvelope + schema_id]
+    B --> D[Catalog apply\nenvelope + schema_id + catalog]
+    
+    C --> E[Assign schema_id to envelope]
+    D --> E
+    
+    D --> F[Ignore catalog parameter]
+    
+    E --> G[Return envelope with schema]
+    
+    G --> H[Schema Applied]
+    
+    H --> I[Used in preparation pipeline]
+    
+    subgraph "Schema Assignment"
+        E
+        G
+    end
+    
+    subgraph "Catalog Extension Point"
+        D
+        F
+    end
+    
+    J[PreparationBinding] --> A
+    J --> K[Other Policies]
+    K --> L[Complete Preparation]
+    L --> I
+    
+    M[Future Schema Validation] --> F
+```
+
 ## File Overview
 **Location:** `D:\CppBridgeVSC\LoggingSystem\include\logging_system\D_Preparation\default_content_schema_applier.hpp`  
 **Purpose:** Provides default content schema application policy for log preparation operations.  

@@ -1,5 +1,92 @@
 # Architectural Analysis: info_dispatch_binding.hpp
 
+## Architectural Diagrams
+
+### Graphviz (.dot) - Instantiation Relationships
+```dot
+digraph info_dispatch_instantiation {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    info_binding [label="InfoDispatchBinding\nConcrete Type Alias"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    template [label="DispatchBinding<T...>\nA_Core Template"];
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    policies [label="Default Dispatch Policies"];
+    
+    info_binding -> template [label="instantiates"];
+    template -> policies [label="parameterized with"];
+    
+    subgraph cluster_policies {
+        label="Policy Components";
+        color=lightgrey;
+        executor [label="ThreadPoolDispatchExecutor"];
+        queue [label="QueuePolicy"];
+        failure [label="DispatchFailurePolicy"];
+        emission [label="DefaultAdapterEmission"];
+    }
+    
+    policies -> executor;
+    policies -> queue;
+    policies -> failure;
+    policies -> emission;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgrey;
+        pipeline [label="InfoPipelineBinding"];
+        system [label="Logging System"];
+    }
+    
+    info_binding -> pipeline [label="composed in"];
+    pipeline -> system [label="used by"];
+}
+
+### Mermaid - Concrete Dispatch Flow
+```mermaid
+flowchart TD
+    A[InfoDispatchBinding] --> B[DispatchBinding Template]
+    
+    B --> C[DispatchExecutor =\nThreadPoolDispatchExecutor]
+    B --> D[QueuePolicy =\nQueuePolicy]
+    B --> E[FailurePolicy =\nDispatchFailurePolicy]
+    B --> F[AdapterEmission =\nDefaultAdapterEmission]
+    
+    C --> G[execute methods]
+    D --> H[enqueue/dequeue methods]
+    E --> I[handle_failure methods]
+    F --> J[emit methods]
+    
+    G --> K[Thread Pool Execution]
+    H --> L[Queue Management]
+    I --> M[Failure Handling]
+    J --> N[Output Adaptation]
+    
+    K --> O[Dispatch Operations]
+    L --> O
+    M --> O
+    N --> O
+    
+    O --> P[Records Dispatched]
+    P --> Q[InfoPipelineBinding]
+    
+    subgraph "Dispatch Policies"
+        K
+        L
+        M
+        N
+    end
+    
+    subgraph "Performance Aspects"
+        R[Concurrency] --> K
+        S[Ordering] --> L
+        T[Reliability] --> M
+        U[Adaptation] --> N
+    end
+```
+
 ## File Overview
 **Location:** `D:\CppBridgeVSC\LoggingSystem\include\logging_system\F_Dispatch\info_dispatch_binding.hpp`  
 **Purpose:** Provides a concrete instantiation of dispatch binding using default dispatch policy implementations.  

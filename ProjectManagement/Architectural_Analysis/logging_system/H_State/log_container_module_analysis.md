@@ -1,5 +1,205 @@
 # Architectural Analysis: log_container_module.hpp
 
+## Architectural Diagrams
+
+### Graphviz (.dot) - State Coordination Architecture
+```dot
+digraph log_container_coordination {
+    rankdir=LR;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    container [label="LogContainerModule<T>\nState Coordinator"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    storage_components [label="Storage Components"];
+    
+    container -> storage_components [label="manages"];
+    
+    subgraph cluster_storage {
+        label="Core Storage";
+        color=lightgrey;
+        records_map [label="unordered_map<RecordId, RecordType>\nrecords_by_id_"];
+        levels_map [label="unordered_map<RecordId, LevelKey>\nlevels_by_record_id_"];
+        pending_queue [label="deque<RecordId>\npending_order_"];
+        listeners_map [label="unordered_map<ListenerId, Listener>\nlisteners_"];
+    }
+    
+    storage_components -> records_map;
+    storage_components -> levels_map;
+    storage_components -> pending_queue;
+    storage_components -> listeners_map;
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    subordinate_managers [label="Subordinate Managers"];
+    
+    container -> subordinate_managers [label="delegates to"];
+    
+    subgraph cluster_subordinates {
+        label="Manager Components";
+        color=lightgrey;
+        level_containers [label="LevelContainers\nlevel_containers_"];
+        slot_lifecycle [label="SlotLifecycle\nslot_lifecycle_"];
+    }
+    
+    subordinate_managers -> level_containers;
+    subordinate_managers -> slot_lifecycle;
+    
+    node [shape=box, style=filled, fillcolor=lightorange];
+    operations [label="Core Operations"];
+    
+    container -> operations [label="provides"];
+    
+    subgraph cluster_ops {
+        label="Operation Categories";
+        color=lightgrey;
+        admission [label="Record Admission"];
+        batch_ops [label="Batch Operations"];
+        queries [label="Query Operations"];
+        listeners [label="Listener Management"];
+    }
+    
+    operations -> admission;
+    operations -> batch_ops;
+    operations -> queries;
+    operations -> listeners;
+    
+    subgraph cluster_admission {
+        label="Admission";
+        color=lightgrey;
+        enqueue [label="enqueue_pending(level_key, record)"];
+    }
+    
+    subgraph cluster_batch {
+        label="Batch Management";
+        color=lightgrey;
+        drain [label="drain_pending(max_count)"];
+        requeue [label="requeue_pending_front(records)"];
+        commit [label="commit_dispatched(records)"];
+        mark_failed [label="mark_failed(records)"];
+    }
+    
+    subgraph cluster_queries {
+        label="Queries";
+        color=lightgrey;
+        find [label="find_record(record_id)"];
+        list_level [label="list_records_by_level(level_key)"];
+        list_all [label="list_all_records()"];
+        inspect [label="inspect()"];
+    }
+    
+    subgraph cluster_listeners {
+        label="Listeners";
+        color=lightgrey;
+        subscribe [label="subscribe_listener(id, listener)"];
+        unsubscribe [label="unsubscribe_listener(id)"];
+    }
+    
+    admission -> enqueue;
+    batch_ops -> drain;
+    batch_ops -> requeue;
+    batch_ops -> commit;
+    batch_ops -> mark_failed;
+    queries -> find;
+    queries -> list_level;
+    queries -> list_all;
+    queries -> inspect;
+    listeners -> subscribe;
+    listeners -> unsubscribe;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgreen;
+        preparation [label="Preparation Layer"];
+        resolver [label="Resolver Layer"];
+        dispatch [label="Dispatch Layer"];
+        repository [label="Repository Layer"];
+    }
+    
+    preparation -> container [label="admits records"];
+    container -> resolver [label="provides level queries"];
+    container -> dispatch [label="provides batch operations"];
+    container -> repository [label="provides persistence"];
+}
+
+### Mermaid - State Coordination Flow
+```mermaid
+flowchart TD
+    A[Record Created] --> B[enqueue_pending]
+    
+    B --> C[Store record by ID]
+    B --> D[Associate level with record]
+    B --> E[Add to pending queue FIFO]
+    B --> F[Update level containers]
+    B --> G[Initialize lifecycle slot]
+    B --> H[Set pending state]
+    B --> I[Notify listeners]
+    
+    I --> J[Record Ready for Processing]
+    
+    J --> K{Processing Decision}
+    
+    K --> L[drain_pending] 
+    L --> M[Extract batch from queue]
+    M --> N[Set dispatching state]
+    M --> O[Return records for dispatch]
+    
+    K --> P[requeue_pending_front]
+    P --> Q[Return failed batch to front]
+    P --> R[Set pending state]
+    
+    K --> S[commit_dispatched]
+    S --> T[Set dispatched state]
+    S --> U[Records successfully processed]
+    
+    K --> V[mark_failed]
+    V --> W[Set failed state]
+    V --> X[Records failed processing]
+    
+    O --> Y[Dispatch Layer]
+    Y --> Z{Result}
+    Z --> AA[Success] 
+    Z --> BB[Failure]
+    
+    AA --> S
+    BB --> P
+    
+    subgraph "Admission Process"
+        B
+        C
+        D
+        E
+        F
+        G
+        H
+        I
+    end
+    
+    subgraph "Batch Operations"
+        L
+        P
+        S
+        V
+    end
+    
+    subgraph "State Coordination"
+        M
+        N
+        Q
+        R
+        T
+        U
+        W
+        X
+    end
+    
+    subgraph "External Integration"
+        Y
+        Z
+        AA
+        BB
+    end
+```
+
 ## File Overview
 **Location:** `D:\CppBridgeVSC\LoggingSystem\include\logging_system\H_State\log_container_module.hpp`  
 **Purpose:** Provides shared runtime state coordination for record admission, pending management, and lifecycle synchronization.  

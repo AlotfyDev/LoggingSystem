@@ -1,0 +1,74 @@
+digraph readonly_resolver_architecture {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    resolver [label="DefaultReadonlyResolver\nReadonly-Side Resolver"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    descriptors [label="Descriptor Types"];
+    
+    resolver -> descriptors [label="defines"];
+    
+    subgraph cluster_descriptors {
+        label="Output Descriptors";
+        color=lightgrey;
+        level_descriptor [label="ReadonlyLevelDescriptor\nLevel partition view"];
+        inspection_descriptor [label="ReadonlyInspectionDescriptor\nModule inspection view"];
+    }
+    
+    descriptors -> level_descriptor;
+    descriptors -> inspection_descriptor;
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    operations [label="Resolution Operations"];
+    
+    resolver -> operations [label="provides"];
+    
+    subgraph cluster_operations {
+        label="Core Operations";
+        color=lightgrey;
+        resolve_level [label="resolve_level(...)\nCreate level descriptor"];
+        resolve_inspection [label="resolve_inspection(...)\nCreate inspection descriptor"];
+    }
+    
+    operations -> resolve_level;
+    operations -> resolve_inspection;
+    
+    subgraph cluster_level_fields {
+        label="ReadonlyLevelDescriptor Fields";
+        color=lightgrey;
+        level_key [label="level_key: string"];
+        record_ids [label="record_ids: vector<string>"];
+    }
+    
+    level_descriptor -> level_key;
+    level_descriptor -> record_ids;
+    
+    subgraph cluster_inspection_fields {
+        label="ReadonlyInspectionDescriptor Fields";
+        color=lightgrey;
+        stored_records [label="stored_records: size_t"];
+        pending_records [label="pending_records: size_t"];
+        level_count [label="level_partition_count: size_t"];
+        listener_count [label="listener_count: size_t"];
+    }
+    
+    inspection_descriptor -> stored_records;
+    inspection_descriptor -> pending_records;
+    inspection_descriptor -> level_count;
+    inspection_descriptor -> listener_count;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgreen;
+        container_module [label="LogContainerModule"];
+        resolver_binding [label="InfoResolverBinding"];
+        monitoring [label="Monitoring Systems"];
+        querying [label="Query/Reporting Layers"];
+    }
+    
+    container_module -> resolver [label="provides state for"];
+    resolver -> resolver_binding [label="used in"];
+    resolver -> monitoring [label="enables"];
+    resolver -> querying [label="supports"];
+}

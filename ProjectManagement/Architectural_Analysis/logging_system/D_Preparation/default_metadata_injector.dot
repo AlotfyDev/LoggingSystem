@@ -1,0 +1,41 @@
+digraph metadata_injector_policy {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    policy [label="DefaultMetadataInjector\nPolicy Class"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    methods [label="Injection Methods"];
+    
+    policy -> methods [label="provides"];
+    
+    subgraph cluster_methods {
+        label="Method Signatures";
+        color=lightgrey;
+        inject [label="inject(TMetadata)\n-> TMetadata"];
+        inject_into [label="inject_into(TEnvelope, TMetadata)\n-> TEnvelope"];
+    }
+    
+    methods -> inject;
+    methods -> inject_into;
+    
+    subgraph cluster_behavior {
+        label="Default Behavior";
+        color=lightyellow;
+        passthrough [label="Pass-through\n(no modification)"];
+        assignment [label="Field Assignment\nenvelope.metadata = metadata"];
+    }
+    
+    inject -> passthrough;
+    inject_into -> assignment;
+    
+    subgraph cluster_usage {
+        label="Usage Context";
+        color=lightgreen;
+        preparation [label="PreparationBinding"];
+        pipeline [label="Preparation Pipeline"];
+    }
+    
+    policy -> preparation [label="used as TMetadataInjector"];
+    preparation -> pipeline [label="part of"];
+}

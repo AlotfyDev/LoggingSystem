@@ -1,0 +1,73 @@
+digraph thread_pool_executor_architecture {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    executor [label="ThreadPoolDispatchExecutor\nExecution Strategy"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    execution_method [label="execute_batch Method"];
+    
+    executor -> execution_method [label="provides"];
+    
+    subgraph cluster_signature {
+        label="Method Signature";
+        color=lightgrey;
+        template_params [label="Template<TAdapter, TDispatchContext, TEmissionBridge>"];
+        parameters [label="Parameters: adapter, batch, emission_bridge, policies"];
+        return_type [label="Return: ExecutionResult"];
+    }
+    
+    execution_method -> template_params;
+    execution_method -> parameters;
+    execution_method -> return_type;
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    execution_logic [label="Execution Logic"];
+    
+    execution_method -> execution_logic [label="implements"];
+    
+    subgraph cluster_logic {
+        label="Batch Processing";
+        color=lightgrey;
+        batch_iteration [label="Iterate through batch contexts"];
+        emission_call [label="Call emission_bridge.emit()"];
+        result_tracking [label="Track attempted/succeeded/failed"];
+        batch_limiting [label="Respect queue_policy.max_batch_size"];
+    }
+    
+    execution_logic -> batch_iteration;
+    execution_logic -> emission_call;
+    execution_logic -> result_tracking;
+    execution_logic -> batch_limiting;
+    
+    node [shape=box, style=filled, fillcolor=orange];
+    result_structure [label="ExecutionResult Structure"];
+    
+    executor -> result_structure [label="returns"];
+    
+    subgraph cluster_result {
+        label="Result Fields";
+        color=lightgrey;
+        attempted [label="attempted: size_t"];
+        succeeded [label="succeeded: size_t"];
+        failed [label="failed: size_t"];
+    }
+    
+    result_structure -> attempted;
+    result_structure -> succeeded;
+    result_structure -> failed;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgreen;
+        dispatch_binding [label="InfoDispatchBinding"];
+        policies [label="QueuePolicy, DispatchFailurePolicy"];
+        emission_bridge [label="DefaultAdapterEmission"];
+        state_coordination [label="LogContainerModule"];
+    }
+    
+    dispatch_binding -> executor [label="uses as executor"];
+    policies -> executor [label="configures"];
+    emission_bridge -> executor [label="used for emission"];
+    executor -> state_coordination [label="coordinates with"];
+}

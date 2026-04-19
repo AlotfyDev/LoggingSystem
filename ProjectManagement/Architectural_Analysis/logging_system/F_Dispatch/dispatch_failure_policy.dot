@@ -1,0 +1,60 @@
+digraph failure_policy_structure {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    policy [label="DispatchFailurePolicy\nFailure Handling Configuration"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    failure_modes [label="Failure Response Modes"];
+    
+    policy -> failure_modes [label="defines"];
+    
+    subgraph cluster_modes {
+        label="FailureMode Enum";
+        color=lightgrey;
+        requeue [label="Requeue\nRetry failed items"];
+        mark_failed [label="MarkFailed\nMark as permanently failed"];
+        abort_batch [label="AbortBatch\nStop entire batch"];
+    }
+    
+    failure_modes -> requeue;
+    failure_modes -> mark_failed;
+    failure_modes -> abort_batch;
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    policy_fields [label="Policy Configuration"];
+    
+    policy -> policy_fields [label="contains"];
+    
+    subgraph cluster_fields {
+        label="DispatchFailurePolicy Fields";
+        color=lightgrey;
+        mode [label="mode: FailureMode = Requeue\nFailure response strategy"];
+        max_retry_attempts [label="max_retry_attempts: size_t = 0\nMaximum retry count"];
+    }
+    
+    policy_fields -> mode;
+    policy_fields -> max_retry_attempts;
+    
+    subgraph cluster_defaults {
+        label="Default Values";
+        color=lightgreen;
+        default_mode [label="Requeue (retry)"];
+        default_retries [label="0 attempts"];
+    }
+    
+    mode -> default_mode;
+    max_retry_attempts -> default_retries;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightblue;
+        dispatch_binding [label="InfoDispatchBinding"];
+        executor [label="ThreadPoolDispatchExecutor"];
+        state_management [label="H_State Layer"];
+    }
+    
+    policy -> dispatch_binding [label="used in"];
+    dispatch_binding -> executor [label="passed to"];
+    executor -> state_management [label="triggers"];
+}

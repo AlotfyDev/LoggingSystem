@@ -1,0 +1,67 @@
+digraph route_context_structure {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    route_context [label="RouteContext\nShared Route Context"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    context_fields [label="Context Fields"];
+    
+    route_context -> context_fields [label="contains"];
+    
+    subgraph cluster_fields {
+        label="Route Context Members";
+        color=lightgrey;
+        level_key [label="level_key: string\nLog level identifier"];
+        route_key_hint [label="route_key_hint: optional<string>\nSuggested route key"];
+        pipeline_key [label="pipeline_key: optional<string>\nPipeline identifier"];
+    }
+    
+    context_fields -> level_key;
+    context_fields -> route_key_hint;
+    context_fields -> pipeline_key;
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    constructors [label="Construction Methods"];
+    
+    route_context -> constructors [label="provides"];
+    
+    subgraph cluster_constructors {
+        label="Constructor Variants";
+        color=lightgrey;
+        default_ctor [label="RouteContext()\nDefault construction"];
+        param_ctor [label="RouteContext(level_key, route_hint, pipeline_key)\nParameterized construction"];
+    }
+    
+    constructors -> default_ctor;
+    constructors -> param_ctor;
+    
+    node [shape=box, style=filled, fillcolor=orange];
+    optional_nature [label="Optional Field Design"];
+    
+    route_context -> optional_nature [label="features"];
+    
+    subgraph cluster_optional {
+        label="Optional Semantics";
+        color=lightgrey;
+        level_required [label="level_key: Always required"];
+        route_optional [label="route_key_hint: May be empty"];
+        pipeline_optional [label="pipeline_key: May be empty"];
+    }
+    
+    optional_nature -> level_required;
+    optional_nature -> route_optional;
+    optional_nature -> pipeline_optional;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgreen;
+        resolver_layer [label="E_Resolvers Layer\nContext enrichment"];
+        routing_layer [label="G_Routing Layer\nContext consumption"];
+        pipeline_coordination [label="K_Pipelines Layer\nContext passing"];
+    }
+    
+    route_context -> resolver_layer [label="created by"];
+    route_context -> routing_layer [label="used by"];
+    route_context -> pipeline_coordination [label="flows through"];
+}

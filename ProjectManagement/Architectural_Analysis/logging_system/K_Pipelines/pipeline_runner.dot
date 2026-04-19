@@ -1,0 +1,99 @@
+digraph pipeline_runner_architecture {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    runner [label="PipelineRunner<TPipelineBinding>\nPipeline Runner Template"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    facade_dependency [label="Facade Dependency"];
+    
+    runner -> facade_dependency [label="uses"];
+    
+    subgraph cluster_facade {
+        label="IngestPipelineFacade";
+        color=lightgrey;
+        facade [label="Facade = IngestPipelineFacade<TPipelineBinding>"];
+    }
+    
+    facade_dependency -> facade;
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    component_aliases [label="Component Type Aliases"];
+    
+    runner -> component_aliases [label="provides"];
+    
+    subgraph cluster_aliases {
+        label="Pipeline Components";
+        color=lightgrey;
+        preparation [label="Preparation = Facade::Preparation"];
+        resolver [label="Resolver = Facade::Resolver"];
+        dispatch [label="Dispatch = Facade::Dispatch"];
+        repository_route [label="RepositoryRoute = Facade::RepositoryRoute"];
+    }
+    
+    component_aliases -> preparation;
+    component_aliases -> resolver;
+    component_aliases -> dispatch;
+    component_aliases -> repository_route;
+    
+    node [shape=box, style=filled, fillcolor=orange];
+    runner_operations [label="Runner Operations"];
+    
+    runner -> runner_operations [label="provides"];
+    
+    subgraph cluster_operations {
+        label="Core Operations";
+        color=lightgrey;
+        resolve_target [label="resolve_write_target(module, level_key, record)"];
+        build_handoff [label="build_write_handoff_event(target)"];
+        resolve_route [label="resolve_default_route()"];
+    }
+    
+    runner_operations -> resolve_target;
+    runner_operations -> build_handoff;
+    runner_operations -> resolve_route;
+    
+    subgraph cluster_target_resolution {
+        label="Target Resolution Flow";
+        color=lightgreen;
+        resolver_access [label="Resolver::WriterResolver::resolve_write_target"];
+        module_param [label="module: LogContainerModule"];
+        level_param [label="level_key: string"];
+        record_param [label="record: TRecord"];
+    }
+    
+    resolve_target -> resolver_access;
+    resolver_access -> module_param;
+    resolver_access -> level_param;
+    resolver_access -> record_param;
+    
+    subgraph cluster_handoff {
+        label="Handoff Event Building";
+        color=lightgreen;
+        handoff_access [label="Resolver::WriterResolver::build_handoff_event"];
+        target_param [label="target: WriteTargetDescriptor"];
+    }
+    
+    build_handoff -> handoff_access;
+    handoff_access -> target_param;
+    
+    subgraph cluster_route_resolution {
+        label="Route Resolution";
+        color=lightgreen;
+        route_access [label="Facade::make_default_route()"];
+    }
+    
+    resolve_route -> route_access;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightblue;
+        level_apis [label="Level APIs (LogInfo)"];
+        pipeline_execution [label="Pipeline Execution Code"];
+        state_management [label="H_State Layer"];
+    }
+    
+    runner -> level_apis [label="used by"];
+    runner -> pipeline_execution [label="used by"];
+    state_management -> runner [label="provides module for"];
+}

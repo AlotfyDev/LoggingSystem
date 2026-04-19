@@ -1,5 +1,84 @@
 # Architectural Analysis: info_preparation_binding.hpp
 
+## Architectural Diagrams
+
+### Graphviz (.dot) - Instantiation Relationships
+```dot
+digraph info_preparation_instantiation {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    info_binding [label="InfoPreparationBinding\nConcrete Type Alias"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    template [label="PreparationBinding<T...>\nA_Core Template"];
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    policies [label="Default Policy Implementations"];
+    
+    info_binding -> template [label="instantiates"];
+    template -> policies [label="parameterized with"];
+    
+    subgraph cluster_policies {
+        label="Policy Components";
+        color=lightgrey;
+        metadata [label="DefaultMetadataInjector"];
+        timestamp [label="DefaultTimestampStabilizer"];
+        schema [label="DefaultContentSchemaApplier"];
+        envelope [label="DefaultEnvelopeAssembler"];
+        record [label="DefaultRecordStabilizer"];
+    }
+    
+    policies -> metadata;
+    policies -> timestamp;
+    policies -> schema;
+    policies -> envelope;
+    policies -> record;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgrey;
+        pipeline [label="InfoPipelineBinding"];
+        system [label="Logging System"];
+    }
+    
+    info_binding -> pipeline [label="composed in"];
+    pipeline -> system [label="used by"];
+}
+
+### Mermaid - Concrete Policy Flow
+```mermaid
+flowchart TD
+    A[InfoPreparationBinding] --> B[PreparationBinding Template]
+    
+    B --> C[MetadataInjector =\nDefaultMetadataInjector]
+    B --> D[TimestampStabilizer =\nDefaultTimestampStabilizer]
+    B --> E[SchemaApplier =\nDefaultContentSchemaApplier]
+    B --> F[EnvelopeAssembler =\nDefaultEnvelopeAssembler]
+    B --> G[RecordStabilizer =\nDefaultRecordStabilizer]
+    
+    C --> H[inject/inject_into methods]
+    D --> I[stabilize/inject_into methods]
+    E --> J[apply methods]
+    F --> K[assemble method]
+    G --> L[stabilize/stabilize_from_envelope methods]
+    
+    H --> M[Metadata Injection]
+    I --> N[Timestamp Stabilization]
+    J --> O[Schema Application]
+    K --> P[Envelope Assembly]
+    G --> Q[Record Stabilization]
+    
+    M --> R[Prepared Log Data]
+    N --> R
+    O --> R
+    P --> R
+    Q --> R
+    
+    R --> S[Ready for Pipeline]
+    S --> T[InfoPipelineBinding]
+```
+
 ## File Overview
 **Location:** `D:\CppBridgeVSC\LoggingSystem\include\logging_system\D_Preparation\info_preparation_binding.hpp`  
 **Purpose:** Provides a concrete instantiation of preparation binding using default policy implementations.  

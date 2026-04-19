@@ -1,0 +1,82 @@
+digraph level_containers_partitioning {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    containers [label="LevelContainers\nPartition Manager"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    data_structure [label="Data Structure"];
+    
+    containers -> data_structure [label="manages"];
+    
+    subgraph cluster_storage {
+        label="Storage Design";
+        color=lightgrey;
+        hash_map [label="unordered_map<LevelKey, RecordIdBucket>"];
+        deque [label="deque<RecordId> per level"];
+    }
+    
+    data_structure -> hash_map;
+    hash_map -> deque;
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    operations [label="Core Operations"];
+    
+    containers -> operations [label="provides"];
+    
+    subgraph cluster_ops {
+        label="Operation Categories";
+        color=lightgrey;
+        add_ops [label="Add Operations"];
+        remove_ops [label="Remove Operations"];
+        query_ops [label="Query Operations"];
+    }
+    
+    operations -> add_ops;
+    operations -> remove_ops;
+    operations -> query_ops;
+    
+    subgraph cluster_add {
+        label="Add Record";
+        color=lightgrey;
+        add_record [label="add_record(level_key, record_id)"];
+    }
+    
+    subgraph cluster_remove {
+        label="Remove Record";
+        color=lightgrey;
+        remove_record [label="remove_record(level_key, record_id)"];
+    }
+    
+    subgraph cluster_query {
+        label="Query Operations";
+        color=lightgrey;
+        contains [label="contains_record(level_key, record_id)"];
+        list_records [label="list_records(level_key)"];
+        list_levels [label="list_levels()"];
+        level_size [label="level_size(level_key)"];
+        total_size [label="total_size()"];
+        clear [label="clear()"];
+    }
+    
+    add_ops -> add_record;
+    remove_ops -> remove_record;
+    query_ops -> contains;
+    query_ops -> list_records;
+    query_ops -> list_levels;
+    query_ops -> level_size;
+    query_ops -> total_size;
+    query_ops -> clear;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgreen;
+        container_module [label="LogContainerModule"];
+        resolver [label="Resolver Layer"];
+        dispatch [label="Dispatch Layer"];
+    }
+    
+    containers -> container_module [label="subordinate to"];
+    container_module -> resolver [label="enables"];
+    container_module -> dispatch [label="enables"];
+}

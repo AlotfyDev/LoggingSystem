@@ -1,0 +1,39 @@
+digraph info_dispatch_instantiation {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    info_binding [label="InfoDispatchBinding\nConcrete Type Alias"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    template [label="DispatchBinding<T...>\nA_Core Template"];
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    policies [label="Default Dispatch Policies"];
+    
+    info_binding -> template [label="instantiates"];
+    template -> policies [label="parameterized with"];
+    
+    subgraph cluster_policies {
+        label="Policy Components";
+        color=lightgrey;
+        executor [label="ThreadPoolDispatchExecutor"];
+        queue [label="QueuePolicy"];
+        failure [label="DispatchFailurePolicy"];
+        emission [label="DefaultAdapterEmission"];
+    }
+    
+    policies -> executor;
+    policies -> queue;
+    policies -> failure;
+    policies -> emission;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgrey;
+        pipeline [label="InfoPipelineBinding"];
+        system [label="Logging System"];
+    }
+    
+    info_binding -> pipeline [label="composed in"];
+    pipeline -> system [label="used by"];
+}

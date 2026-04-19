@@ -1,0 +1,65 @@
+digraph pipeline_facade_architecture {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    facade [label="IngestPipelineFacade<TPipelineBinding>\nPipeline Facade Template"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    template_param [label="Template Parameter"];
+    
+    facade -> template_param [label="parameterized by"];
+    
+    subgraph cluster_param {
+        label="Pipeline Binding Type";
+        color=lightgrey;
+        pipeline_binding [label="TPipelineBinding\nAny pipeline binding type"];
+    }
+    
+    template_param -> pipeline_binding;
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    component_access [label="Component Type Aliases"];
+    
+    facade -> component_access [label="provides"];
+    
+    subgraph cluster_components {
+        label="Pipeline Components";
+        color=lightgrey;
+        preparation [label="Preparation =\nPipelineBinding::Preparation"];
+        resolver [label="Resolver =\nPipelineBinding::Resolver"];
+        dispatch [label="Dispatch =\nPipelineBinding::Dispatch"];
+        repository_route [label="RepositoryRoute =\nPipelineBinding::RepositoryRoute"];
+    }
+    
+    component_access -> preparation;
+    component_access -> resolver;
+    component_access -> dispatch;
+    component_access -> repository_route;
+    
+    node [shape=box, style=filled, fillcolor=orange];
+    factory_method [label="Factory Method"];
+    
+    facade -> factory_method [label="includes"];
+    
+    subgraph cluster_factory {
+        label="Route Factory";
+        color=lightgrey;
+        make_default_route [label="make_default_route()\nReturns RepositoryRoute::make_default()"];
+    }
+    
+    factory_method -> make_default_route;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgreen;
+        pipeline_runner [label="PipelineRunner"];
+        level_apis [label="Level APIs (LogInfo, etc.)"];
+        generic_code [label="Generic Pipeline Code"];
+    }
+    
+    facade -> pipeline_runner [label="used by"];
+    facade -> level_apis [label="used by"];
+    facade -> generic_code [label="enables"];
+    
+    pipeline_binding -> facade [label="wrapped by"];
+}

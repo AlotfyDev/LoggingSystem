@@ -1,5 +1,121 @@
 # Architectural Analysis: default_envelope_assembler.hpp
 
+## Architectural Diagrams
+
+### Graphviz (.dot) - Assembly Structure
+```dot
+digraph envelope_assembler_structure {
+    rankdir=LR;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    assembler [label="DefaultEnvelopeAssembler\nPolicy Class"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    assemble_method [label="assemble Method"];
+    
+    assembler -> assemble_method [label="provides"];
+    
+    subgraph cluster_parameters {
+        label="Input Parameters";
+        color=lightgrey;
+        content [label="TContent content"];
+        context [label="TContext context"];
+        metadata [label="TMetadata metadata"];
+        timestamp [label="std::string created_at_utc"];
+        schema_id [label="std::string content_schema_id"];
+    }
+    
+    assemble_method -> content;
+    assemble_method -> context;
+    assemble_method -> metadata;
+    assemble_method -> timestamp;
+    assemble_method -> schema_id;
+    
+    subgraph cluster_construction {
+        label="Construction Process";
+        color=lightyellow;
+        envelope_template [label="LogEnvelope<T...> template"];
+        type_deduction [label="std::decay_t type cleaning"];
+        move_construction [label="Move construct envelope"];
+    }
+    
+    assemble_method -> envelope_template;
+    envelope_template -> type_deduction;
+    type_deduction -> move_construction;
+    
+    subgraph cluster_output {
+        label="Output Result";
+        color=lightgreen;
+        constructed_envelope [label="LogEnvelope with all components"];
+    }
+    
+    move_construction -> constructed_envelope;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightblue;
+        preparation [label="PreparationBinding"];
+        b_models [label="B_Models::LogEnvelope"];
+    }
+    
+    assembler -> preparation [label="used as TEnvelopeAssembler"];
+    envelope_template -> b_models [label="instantiates"];
+}
+
+### Mermaid - Construction Flow
+```mermaid
+flowchart TD
+    A[DefaultEnvelopeAssembler] --> B[assemble method]
+    
+    B --> C[Receive components]
+    C --> D[TContent content]
+    C --> E[TContext context]
+    C --> F[TMetadata metadata]
+    C --> G[std::string created_at_utc]
+    C --> H[std::string content_schema_id]
+    
+    B --> I[Determine envelope type]
+    I --> J[LogEnvelope<TContent, TContext, TMetadata>]
+    
+    J --> K[Apply type cleaning]
+    K --> L[std::decay_t<TContent>, std::decay_t<TContext>, std::decay_t<TMetadata>]
+    
+    L --> M[Construct envelope]
+    M --> N[new LogEnvelope{\n  std::move(content),\n  std::move(context),\n  std::move(metadata),\n  std::move(created_at_utc),\n  std::move(content_schema_id)\n}]
+    
+    N --> O[Return constructed envelope]
+    
+    O --> P[Envelope Ready]
+    P --> Q[Used in preparation pipeline]
+    
+    subgraph "Component Assembly"
+        D
+        E
+        F
+        G
+        H
+    end
+    
+    subgraph "Type Resolution"
+        I
+        J
+        K
+        L
+    end
+    
+    subgraph "Construction"
+        M
+        N
+        O
+        P
+    end
+    
+    R[PreparationBinding] --> A
+    R --> S[Other Policies]
+    S --> T[Complete Preparation]
+    T --> Q
+```
+
 ## File Overview
 **Location:** `D:\CppBridgeVSC\LoggingSystem\include\logging_system\D_Preparation\default_envelope_assembler.hpp`  
 **Purpose:** Provides default envelope assembly policy for constructing log envelopes from components.  

@@ -1,0 +1,67 @@
+digraph repository_route_concept_architecture {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    concept [label="repository_route_concept\nType Contract Validation"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    trait_system [label="Trait Detection System"];
+    
+    concept -> trait_system [label="implements"];
+    
+    subgraph cluster_traits {
+        label="Core Traits";
+        color=lightgrey;
+        is_repository_route [label="is_repository_route<T>\nMember detection"];
+        repository_route_concept [label="repository_route_concept<T>\nConcept wrapper"];
+        require_repository_route [label="require_repository_route_t<T>\nSFINAE enable"];
+    }
+    
+    trait_system -> is_repository_route;
+    trait_system -> repository_route_concept;
+    trait_system -> require_repository_route;
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    detection_logic [label="Detection Logic"];
+    
+    is_repository_route -> detection_logic [label="uses"];
+    
+    subgraph cluster_detection {
+        label="Member Detection";
+        color=lightgrey;
+        level_key_detection [label="Detects level_key member"];
+        route_key_detection [label="Detects route_key member"];
+        void_t_detection [label="std::void_t SFINAE detection"];
+    }
+    
+    detection_logic -> level_key_detection;
+    detection_logic -> route_key_detection;
+    detection_logic -> void_t_detection;
+    
+    node [shape=box, style=filled, fillcolor=orange];
+    validation_results [label="Validation Results"];
+    
+    concept -> validation_results [label="produces"];
+    
+    subgraph cluster_results {
+        label="Boolean Constants";
+        color=lightgrey;
+        is_repository_route_v [label="is_repository_route_v<T>\nTrait value"];
+        repository_route_concept_v [label="repository_route_concept_v<T>\nConcept value"];
+    }
+    
+    validation_results -> is_repository_route_v;
+    validation_results -> repository_route_concept_v;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgreen;
+        pipeline_binding [label="PipelineBinding<T...>\nValidation"];
+        route_implementations [label="Route Implementations\n(InfoRepositoryRoute, etc.)"];
+        static_assertions [label="Static Assertions\nin bindings"];
+    }
+    
+    concept -> pipeline_binding [label="enables"];
+    concept -> route_implementations [label="validates"];
+    concept -> static_assertions [label="powers"];
+}

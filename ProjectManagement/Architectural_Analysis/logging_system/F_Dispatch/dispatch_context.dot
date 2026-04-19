@@ -1,0 +1,81 @@
+digraph dispatch_context_structure {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    context [label="DispatchContext<T...>\nExecution Carrier"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    template_params [label="Template Parameters"];
+    
+    context -> template_params [label="parameterized by"];
+    
+    subgraph cluster_params {
+        label="Type Parameters";
+        color=lightgrey;
+        record_type [label="TRecord\nLog record payload"];
+        candidate_type [label="TDispatchCandidate\nResolver candidate"];
+        binding_type [label="TReceiverBinding\nReceiver binding"];
+    }
+    
+    template_params -> record_type;
+    template_params -> candidate_type;
+    template_params -> binding_type;
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    data_members [label="Data Members"];
+    
+    context -> data_members [label="contains"];
+    
+    subgraph cluster_members {
+        label="Context Members";
+        color=lightgrey;
+        record [label="record: TRecord"];
+        candidate [label="candidate: TDispatchCandidate"];
+        receiver_binding [label="receiver_binding: TReceiverBinding"];
+        round_id [label="round_id: optional<string>"];
+    }
+    
+    data_members -> record;
+    data_members -> candidate;
+    data_members -> receiver_binding;
+    data_members -> round_id;
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    type_aliases [label="Type Aliases"];
+    
+    context -> type_aliases [label="provides"];
+    
+    subgraph cluster_aliases {
+        label="Type Access";
+        color=lightgrey;
+        record_alias [label="RecordType = TRecord"];
+        candidate_alias [label="DispatchCandidateType = TDispatchCandidate"];
+        binding_alias [label="ReceiverBindingType = TReceiverBinding"];
+    }
+    
+    type_aliases -> record_alias;
+    type_aliases -> candidate_alias;
+    type_aliases -> binding_alias;
+    
+    subgraph cluster_constructors {
+        label="Construction Methods";
+        color=lightblue;
+        default_ctor [label="DispatchContext()"];
+        param_ctor [label="DispatchContext(record, candidate, binding, round_id)"];
+    }
+    
+    context -> default_ctor;
+    context -> param_ctor;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgreen;
+        resolver_layer [label="E_Resolvers Layer"];
+        executor [label="ThreadPoolDispatchExecutor"];
+        adapter_emission [label="DefaultAdapterEmission"];
+    }
+    
+    resolver_layer -> context [label="creates"];
+    context -> executor [label="consumed by"];
+    executor -> adapter_emission [label="passes to"];
+}

@@ -1,0 +1,65 @@
+digraph writer_resolver_concept_architecture {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    writer_concept [label="writer_resolver_concept\nWriter Resolver Validation"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    operation_validation [label="Operation Validation"];
+    
+    writer_concept -> operation_validation [label="validates"];
+    
+    subgraph cluster_operations {
+        label="Required Operations";
+        color=lightgrey;
+        resolve_target_op [label="resolve_write_target(module, level_key, record)"];
+        build_handoff_op [label="build_handoff_event(target)"];
+    }
+    
+    operation_validation -> resolve_target_op;
+    operation_validation -> build_handoff_op;
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    trait_system [label="Trait Detection System"];
+    
+    writer_concept -> trait_system [label="implements"];
+    
+    subgraph cluster_traits {
+        label="Core Traits";
+        color=lightgrey;
+        is_writer_resolver [label="is_writer_resolver<TResolver, TModule, TRecord>\nSFINAE detection"];
+        writer_concept_trait [label="writer_resolver_concept<TResolver, TModule, TRecord>\nConcept wrapper"];
+        require_writer_resolver [label="require_writer_resolver_t<TResolver, TModule, TRecord>\nSFINAE enable"];
+    }
+    
+    trait_system -> is_writer_resolver;
+    trait_system -> writer_concept_trait;
+    trait_system -> require_writer_resolver;
+    
+    node [shape=box, style=filled, fillcolor=orange];
+    validation_results [label="Validation Results"];
+    
+    writer_concept -> validation_results [label="produces"];
+    
+    subgraph cluster_results {
+        label="Boolean Constants";
+        color=lightgrey;
+        is_writer_resolver_v [label="is_writer_resolver_v<TResolver, TModule, TRecord>"];
+        writer_concept_v [label="writer_resolver_concept_v<TResolver, TModule, TRecord>"];
+    }
+    
+    validation_results -> is_writer_resolver_v;
+    validation_results -> writer_concept_v;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgreen;
+        resolver_binding [label="InfoResolverBinding\nTWriterResolver validation"];
+        pipeline_runner [label="PipelineRunner\nOperation delegation"];
+        facade_usage [label="IngestPipelineFacade\nResolver access"];
+    }
+    
+    writer_concept -> resolver_binding [label="enables"];
+    writer_concept -> pipeline_runner [label="validates"];
+    writer_concept -> facade_usage [label="supports"];
+}

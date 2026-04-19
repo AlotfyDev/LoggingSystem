@@ -1,0 +1,72 @@
+digraph dispatcher_resolver_architecture {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    resolver [label="DefaultDispatcherResolver\nDispatch-Side Resolver"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    descriptors [label="Descriptor Types"];
+    
+    resolver -> descriptors [label="defines"];
+    
+    subgraph cluster_descriptors {
+        label="Output Descriptors";
+        color=lightgrey;
+        candidate_descriptor [label="DispatchCandidateDescriptor\nCandidate metadata"];
+        receiver_descriptor [label="DispatchReceiverBindingDescriptor\nReceiver binding"];
+    }
+    
+    descriptors -> candidate_descriptor;
+    descriptors -> receiver_descriptor;
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    operations [label="Resolution Operations"];
+    
+    resolver -> operations [label="provides"];
+    
+    subgraph cluster_operations {
+        label="Core Operations";
+        color=lightgrey;
+        resolve_candidate [label="resolve_dispatch_candidate(...)\nCreate candidate descriptor"];
+        resolve_receiver [label="resolve_dispatch_receiver_binding(...)\nCreate receiver binding"];
+    }
+    
+    operations -> resolve_candidate;
+    operations -> resolve_receiver;
+    
+    subgraph cluster_candidate_fields {
+        label="DispatchCandidateDescriptor Fields";
+        color=lightgrey;
+        record_id [label="record_id: string"];
+        level_key [label="level_key: string"];
+        slot_state [label="slot_state: SlotLifecycle::State"];
+    }
+    
+    candidate_descriptor -> record_id;
+    candidate_descriptor -> level_key;
+    candidate_descriptor -> slot_state;
+    
+    subgraph cluster_receiver_fields {
+        label="DispatchReceiverBindingDescriptor Fields";
+        color=lightgrey;
+        level_key_recv [label="level_key: string"];
+        route_key [label="route_key: string"];
+        ready_flag [label="ready: bool"];
+    }
+    
+    receiver_descriptor -> level_key_recv;
+    receiver_descriptor -> route_key;
+    receiver_descriptor -> receiver_descriptor;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgreen;
+        container_module [label="LogContainerModule"];
+        resolver_binding [label="InfoResolverBinding"];
+        dispatch [label="Dispatch Layer"];
+    }
+    
+    container_module -> resolver [label="provides state for"];
+    resolver -> resolver_binding [label="used in"];
+    resolver_binding -> dispatch [label="enables"];
+}
