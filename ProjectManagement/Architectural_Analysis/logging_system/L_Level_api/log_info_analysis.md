@@ -149,27 +149,26 @@ flowchart TD
 
 ## File Overview
 **Location:** `D:\CppBridgeVSC\LoggingSystem\include\logging_system\L_Level_api\log_info.hpp`  
-**Purpose:** Provides a thin, dedicated entry point for INFO-level logging operations using the complete INFO pipeline.  
+**Purpose:** LogInfo is the finalized thin dedicated INFO-level entrypoint over the INFO pipeline slice.  
 **Language:** C++17  
 **Dependencies:** `<string>`, `K_Pipelines/info_pipeline_binding.hpp`, `K_Pipelines/pipeline_runner.hpp`  
 
 ## Architectural Role
 
-### Core Design Pattern: Dedicated Level Entry Point
-This file implements **Dedicated Interface Pattern** providing a specialized entry point for INFO-level logging operations. The `LogInfo` serves as:
+### Core Design Pattern: Finalized Level Entrypoint
+This file implements **Finalized Level Entrypoint Pattern** providing complete INFO pipeline access. The `LogInfo` serves as:
 
-- **Level-specific API** providing dedicated INFO logging operations
-- **Pipeline binding user** that leverages the complete INFO pipeline
-- **Thin abstraction layer** over generic pipeline runner functionality
-- **INFO specialization** with hardcoded level key and pipeline binding
+- **Finalized entrypoint** reflecting upgraded runner and admitted-runtime path
+- **Dual-path exposure** for both direct helper and state-admission execution
+- **Per-level specialization** with hardcoded INFO-specific configuration
+- **Thin delegation layer** over pipeline runner functionality
 
 ### Level API Layer Architecture (L_Level_api)
-The `LogInfo` provides the INFO-specific entry point that answers:
+The `LogInfo` answers questions about finalized INFO pipeline access:
 
-- **How does external code access INFO-level logging functionality?**
-- **What operations are available specifically for INFO logging?**
-- **How are INFO operations connected to the INFO pipeline?**
-- **What level-specific constants and defaults are provided?**
+- **How does external code submit work into the INFO pipeline without generic routing?**
+- **How does the INFO pipeline expose both direct and state-admission-aware paths?**
+- **What is the thin API for triggering INFO pipeline execution with proper state handling?**
 
 ## Structural Analysis
 
@@ -183,30 +182,45 @@ struct LogInfo final {
         return "INFO";
     }
 
-    template <typename TModule, typename TRecord>
-    static auto resolve_write_target(
-        const TModule& module,
-        const TRecord& record) {
-        return Runner::resolve_write_target(module, level_key(), record);
-    }
-
-    template <typename TWriteTargetDescriptor>
-    static auto build_write_handoff_event(
-        const TWriteTargetDescriptor& target) {
-        return Runner::build_write_handoff_event(target);
-    }
-
     static auto resolve_default_route() {
         return Runner::resolve_default_route();
+    }
+
+    template <typename TModule, typename TRecord, typename TAdapter>
+    static auto run_single(
+        const TModule& module,
+        const TRecord& record,
+        TAdapter& adapter,
+        const std::optional<std::string>& round_id = std::nullopt) {
+        return Runner::run_single(
+            module,
+            level_key(),
+            record,
+            adapter,
+            round_id);
+    }
+
+    template <typename TModule, typename TRecord, typename TAdapter>
+    static auto admit_and_run(
+        TModule& module,
+        const TRecord& record,
+        TAdapter& adapter,
+        const std::optional<std::string>& round_id = std::nullopt) {
+        return Runner::admit_and_run(
+            module,
+            level_key(),
+            record,
+            adapter,
+            round_id);
     }
 };
 ```
 
 **Component Integration:**
-- **`PipelineBinding`**: Uses InfoPipelineBinding (complete INFO pipeline)
-- **`Runner`**: Uses PipelineRunner specialized for INFO pipeline
-- **Level Constant**: Hardcoded "INFO" level key
-- **Operation Delegation**: All operations delegate to runner with INFO context
+- **`PipelineBinding`**: Uses InfoPipelineBinding for complete INFO pipeline access
+- **`Runner`**: Uses PipelineRunner specialized for INFO pipeline execution
+- **Level Constant**: Hardcoded "INFO" level key for specialization
+- **Dual Operations**: `run_single` (direct) and `admit_and_run` (state-admission-aware)
 
 ### API Operations
 
@@ -219,23 +233,6 @@ static constexpr const char* level_key() noexcept
 - `constexpr` enables compile-time usage
 - `noexcept` guarantees no exceptions
 
-#### Write Target Resolution
-```cpp
-static auto resolve_write_target(const TModule& module, const TRecord& record)
-```
-**Resolution Process:**
-1. Delegates to `Runner::resolve_write_target`
-2. Passes hardcoded "INFO" as level_key
-3. Returns WriteTargetDescriptor for INFO pipeline
-
-#### Handoff Event Building
-```cpp
-static auto build_write_handoff_event(const TWriteTargetDescriptor& target)
-```
-**Handoff Process:**
-1. Delegates to `Runner::build_write_handoff_event`
-2. Returns WriteHandoffEvent for next layer processing
-
 #### Default Route Resolution
 ```cpp
 static auto resolve_default_route()
@@ -244,16 +241,59 @@ static auto resolve_default_route()
 1. Delegates to `Runner::resolve_default_route`
 2. Returns InfoRepositoryRoute default configuration
 
+#### Single Record Execution
+```cpp
+template <typename TModule, typename TRecord, typename TAdapter>
+static auto run_single(
+    const TModule& module,
+    const TRecord& record,
+    TAdapter& adapter,
+    const std::optional<std::string>& round_id = std::nullopt)
+```
+**Execution Process:**
+1. Delegates to `Runner::run_single` with hardcoded "INFO" level
+2. Provides complete record-to-dispatch path for INFO pipeline
+3. Accepts any adapter-like object for emission
+
+#### State-Admission Execution
+```cpp
+template <typename TModule, typename TRecord, typename TAdapter>
+static auto admit_and_run(
+    TModule& module,
+    const TRecord& record,
+    TAdapter& adapter,
+    const std::optional<std::string>& round_id = std::nullopt)
+```
+**Admitted-Runtime Process:**
+1. Delegates to `Runner::admit_and_run` with hardcoded "INFO" level
+2. Provides state-admission-aware INFO path with batch processing and feedback
+3. Handles record admission, drain processing, and state feedback automatically
+
 ## Integration with Architecture
 
 ### Level API in Logging Entry Flow
-The LogInfo integrates into the logging entry flow as follows:
+The LogInfo integrates into the logging entry flow with dual paths:
 
+**Direct Record Path:**
 ```
-External Code → Level Selection → LogInfo API → Pipeline Runner → INFO Pipeline
-       ↓                ↓                ↓                ↓                ↓
-   INFO Logging → LogInfo Struct → resolve_write_target → Runner → InfoPipelineBinding
-   API Calls → Dedicated Methods → INFO Context → Delegation → Complete Pipeline
+External Code → Level API → Pipeline Runner → INFO Pipeline → Dispatch Emission
+       ↓              ↓              ↓              ↓              ↓
+   INFO Logging → LogInfo::run_single → Runner::run_single → Resolver → Adapter
+   API Calls → Direct Delegation → INFO Context → Resolution → Emission
+```
+
+**Admitted-Runtime Path:**
+```
+External Code → Level API → State Admission → Batch Processing → State Feedback
+       ↓              ↓              ↓              ↓              ↓
+   INFO Logging → LogInfo::admit_and_run → enqueue_pending → drain_pending → commit/
+   API Calls → State-Aware Path → shared state → batch execution → requeue/
+                                                           mark-failed
+```
+External Code → Level API → Pipeline Runner → INFO Pipeline → Dispatch Emission
+       ↓              ↓              ↓              ↓              ↓
+   INFO Logging → LogInfo → run_single → Resolver → DispatchContext → Adapter
+   API Calls → Dedicated Entrypoint → INFO Context → Resolution → Batch Execution
 ```
 
 **Integration Points:**
@@ -267,24 +307,33 @@ External Code → Level Selection → LogInfo API → Pipeline Runner → INFO P
 // INFO logging operations
 std::string level = LogInfo::level_key();  // "INFO"
 
-// Resolve write target for INFO record
-auto target = LogInfo::resolve_write_target(
-    log_container_module, info_record);
+// Direct record-to-dispatch execution (bypasses state admission)
+auto direct_result = LogInfo::run_single(
+    log_container_module,    // const TModule& - read-only state access
+    info_record,             // TRecord - finalized log record
+    file_adapter,            // TAdapter - emission target
+    std::optional<std::string>{"round_123"} // optional round_id
+);
 
-// Build handoff event
-auto handoff = LogInfo::build_write_handoff_event(target);
+// Admitted-runtime execution (with state admission and feedback)
+auto admitted_result = LogInfo::admit_and_run(
+    log_container_module,    // TModule& - read-write state access
+    info_record,             // TRecord - record to admit and process
+    file_adapter,            // TAdapter - emission target
+    std::optional<std::string>{"batch_001"} // optional round_id
+);
 
-// Get default INFO route
+// Get default INFO route for setup
 auto route = LogInfo::resolve_default_route();
 ```
 
 ## Quality Assurance
 
 ### Code Quality Metrics
-- **Cyclomatic Complexity:** 1 (minimal, all operations delegate)
-- **Lines of Code:** 32
-- **Dependencies:** 3 headers (1 std, 2 internal)
-- **Template Usage:** Two template methods with parameter forwarding
+- **Cyclomatic Complexity:** 1 (minimal, dual delegation paths)
+- **Lines of Code:** 36 (core struct) + 103 (documentation comments)
+- **Dependencies:** 3 headers (2 std, 1 internal)
+- **Template Complexity:** Two template methods with parameter forwarding
 
 ### Architectural Compliance
 ✅ **Multi-Tier Architecture:** Layer L (Level APIs) - level-specific entry points  
@@ -312,29 +361,25 @@ auto route = LogInfo::resolve_default_route();
 
 ## Design Rationale
 
-### Dedicated Level Entry Point
-**Why Level-Specific API:**
-- **Direct Access**: External code can access INFO logging without generic routing
-- **Type Safety**: INFO-specific operations with proper typing
-- **Performance**: No level dispatch overhead for dedicated INFO usage
-- **Simplicity**: Clear, focused API for INFO logging scenarios
+### Finalized Level Entrypoint
+**Why Finalized Entrypoint:**
+- **Runner Evolution**: Reflects upgraded runner from record-driven to admitted-runtime
+- **Dual Path Exposure**: Provides both direct helper and state-admission-aware paths
+- **Slice Completion**: Closes the finalized INFO entrypoint for current architecture
+- **Per-Level Specialization**: INFO-specific paths without runtime level switching
 
-**API Benefits:**
-- **Level Awareness**: Explicit INFO context in all operations
-- **Pipeline Integration**: Direct connection to complete INFO pipeline
-- **Operation Consistency**: Same operation patterns as generic runner
-- **Extensibility**: Pattern can be replicated for other levels (WARN, ERROR, etc.)
+**Design Intent:**
+- **Complete INFO Access**: Exposes all INFO pipeline execution capabilities
+- **State-Aware Options**: Supports both stateless and state-admission-aware usage
+- **Thin Delegation Layer**: Minimal coordination while preserving pipeline boundaries
+- **No Central Convergence**: Maintains per-level separation and specialization
 
-### Thin Abstraction Layer
-**Why "Thin" Design:**
-- **Minimal Indirection**: Direct delegation to pipeline runner
-- **No Business Logic**: Pure coordination layer with no processing
-- **Type Propagation**: Template parameters flow through to runner
-- **Performance**: Zero abstraction overhead
-
-**Thin Layer Benefits:**
-- **Transparency**: Operations clearly map to underlying runner functionality
-- **Maintainability**: Changes to runner automatically reflected in API
+### Minimal Scope Design
+**Why Current Minimal Scope:**
+- **Runnable Path Closure**: Provides working INFO entry without premature expansion
+- **Record-Driven Focus**: INFO logging through finalized records
+- **Adapter Boundary**: Works with any adapter-like emission object
+- **No Preparation Integration**: Focuses on dispatch side, not raw content submission
 - **Testability**: API can be tested by testing runner delegation
 - **Consistency**: Same behavior as direct runner usage
 
@@ -368,28 +413,30 @@ auto route = LogInfo::resolve_default_route();
 ## Evolution and Maintenance
 
 ### Level API Extension
-Future enhancements may include:
-- **Additional Operations**: More INFO-specific logging operations
-- **Batch Operations**: Support for multiple record processing
-- **Configuration Options**: INFO-specific configuration parameters
-- **Monitoring Integration**: INFO-specific metrics and monitoring
+Later expansions may include:
+- **Preparation-Stage Raw-Content Submission Helpers**: When preparation/admission entry is promoted
+- **INFO-Specific Convenience Overloads**: Specialized INFO logging helpers
+- **Consuming-Surface Integration Hooks**: Connections to broader consuming surfaces
+- **CLI Integration Helpers**: Command-line interface support for INFO logging
+- **Pipeline-Local Policy-Aware Entry Helpers**: INFO-specific policy integration
 
-### Multi-Level API Pattern
-Expansion strategy for other levels:
-- **Consistent Structure**: Each level gets dedicated API struct
-- **Shared Runner**: All use PipelineRunner with different bindings
-- **Level Constants**: Each has appropriate level key
-- **Pipeline Specificity**: Each connects to level-specific pipeline binding
+### What This File Should NOT Contain
+This file must NOT:
+- **Become Shared Level Multiplexer**: No runtime level switching logic
+- **Own Shared State**: No global state management for INFO logging
+- **Own Adapter Registry Logic**: No adapter discovery or management
+- **Own Governance/Configuration**: No INFO pipeline policy or configuration
+- **Collapse Back into Generic service.log(...) Routing**: No generic convergence
 
 ### Testing Strategy
 Level API testing should verify:
-- Level key returns correct "INFO" string
-- Template methods properly forward to runner operations
-- Type compatibility with LogContainerModule and record types
-- Delegation works correctly for all operation types
-- No additional state or overhead introduced by API layer
-- Integration with complete INFO pipeline functions correctly
-- API can be used as drop-in replacement for direct runner calls
+- level_key() returns correct "INFO" string
+- run_single correctly delegates to PipelineRunner with INFO level
+- Template instantiation works with various TModule, TRecord, TAdapter types
+- Optional round_id parameter handling works correctly
+- resolve_default_route delegates to runner correctly
+- No state management or overhead in thin entrypoint
+- Direct pipeline access without central service convergence
 
 ## Related Components
 
@@ -407,7 +454,7 @@ Level API testing should verify:
 
 ---
 
-**Analysis Version:** 1.0  
-**Analysis Date:** 2026-04-19  
-**Architectural Layer:** L_Level_api (Level-Specific APIs)  
-**Status:** ✅ Analyzed, No Issues
+**Analysis Version:** 1.2
+**Analysis Date:** 2026-04-19
+**Architectural Layer:** L_Level_api (Level Entry Points)
+**Status:** ✅ Analyzed, Updated for Finalized Entrypoint

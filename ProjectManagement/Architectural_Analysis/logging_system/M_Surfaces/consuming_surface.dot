@@ -1,0 +1,69 @@
+digraph consuming_surface_architecture {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+
+    consuming_surface [label="ConsumingSurface\nUser-Facing Surface"];
+
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    level_api_integration [label="Level API Integration"];
+
+    consuming_surface -> level_api_integration [label="uses"];
+
+    subgraph cluster_level_apis {
+        label="Level APIs";
+        color=lightgrey;
+        log_info_api [label="LogInfo\nINFO Level API"];
+        future_apis [label="Future APIs\n(WARN, ERROR, etc.)"];
+    }
+
+    level_api_integration -> log_info_api;
+
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    pipeline_execution [label="Pipeline Execution"];
+
+    consuming_surface -> pipeline_execution [label="triggers"];
+
+    subgraph cluster_pipelines {
+        label="Pipeline Runners";
+        color=lightgrey;
+        info_runner [label="PipelineRunner<InfoPipelineBinding>"];
+        future_runners [label="Future Runners\n(WARN, ERROR, etc.)"];
+    }
+
+    pipeline_execution -> info_runner;
+
+    node [shape=box, style=filled, fillcolor=orange];
+    adapter_emission [label="Adapter Emission"];
+
+    pipeline_execution -> adapter_emission [label="through"];
+
+    subgraph cluster_adapters {
+        label="Adapter Boundary";
+        color=lightgrey;
+        file_adapter [label="FileAdapter"];
+        noop_adapter [label="NoOpAdapter"];
+        future_adapters [label="Future Adapters"];
+    }
+
+    adapter_emission -> file_adapter;
+    adapter_emission -> noop_adapter;
+
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    surface_expansion [label="Surface Expansion"];
+
+    consuming_surface -> surface_expansion [label="plans"];
+
+    subgraph cluster_expansion {
+        label="Future Expansion Points";
+        color=lightgrey;
+        additional_levels [label="Additional Level Entries\n(log_warn, log_error, etc.)"];
+        raw_content [label="Raw-Content Submission\n(when preparation promoted)"];
+        inspection [label="Inspection/Query Helpers"];
+        notifications [label="Notification Subscriptions"];
+    }
+
+    surface_expansion -> additional_levels;
+    surface_expansion -> raw_content;
+    surface_expansion -> inspection;
+    surface_expansion -> notifications;
+}

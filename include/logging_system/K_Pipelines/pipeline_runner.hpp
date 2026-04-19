@@ -1,6 +1,14 @@
 #pragma once
 
+
+
+
+
+
+
 /*
+------------------------------------------------------------------------------
+K_Pipelines/pipeline_runner.hpp
 
 Very important design note:
 
@@ -19,8 +27,9 @@ This isn't yet the full raw-content-to-record pipeline, but it is a record-to-di
 
 
 
-------------------------------------------------------------------------------
-K_Pipelines/pipeline_runner.hpp
+Reference Version
+-----------------
+INFO_SLICE_SYNC_BASELINE_V1
 
 Role in the architecture
 ------------------------
@@ -28,8 +37,8 @@ PipelineRunner is the minimal runnable execution unit for one concrete pipeline
 binding.
 
 It answers narrow questions such as:
-    "How does one pipeline binding execute its own write-side and dispatch-side
-     path without collapsing back into a central service?"
+    "How does one pipeline binding execute its own admitted-runtime path without
+     collapsing back into a central service?"
     "How can a per-pipeline thin API trigger a runnable path using only the
      components bound into that pipeline?"
 
@@ -46,43 +55,62 @@ The INFO slice already has:
 - adapter boundary
 - a concrete NoOp adapter
 
-The next dependency-first step is therefore to provide a minimal runnable
-pipeline unit that:
-- uses pipeline-local resolver components
-- uses pipeline-local dispatch components
-- constructs a dispatch context
-- executes emission through a provided adapter-like object
+At this stage, the pipeline runner must evolve from:
+- record-to-dispatch helper
+
+into:
+- minimal admitted-runtime pipeline path
+
+That means this file must now:
+- accept a record into the shared state module
+- drain pending work from the module
+- resolve dispatch descriptors for drained records
+- execute a dispatch batch through the bound dispatch stack
+- feed the execution result back into the state module
+
+Intentional assumption at this stage
+------------------------------------
+To make the slice runnable now, this version of the runner works on:
+- TRecord already available
+- level_key supplied by the per-level thin API (for example LogInfo)
+- module being a LogContainerModule<TRecord>-like state module
+- adapter being any adapter-like object such as NoOpAdapter
+
+This means:
+- this is not yet the full raw-content-to-record pipeline
+- but it is a minimal admitted-runtime slice
+- and that is enough to properly close the first reference slice
 
 Current minimal scope
 ---------------------
 This file currently provides:
-- `PipelineRunner<TPipelineBinding>`
-- `run_single(module, level_key, record, adapter, round_id)`:
-    - resolves write target
-    - builds write handoff event
-    - resolves dispatch candidate
-    - resolves dispatch receiver binding
-    - builds a one-item dispatch batch
-    - executes the batch through the pipeline's bound dispatch stack
+- `run_single(...)`
+    direct record-driven dispatch helper
+- `admit_and_run(...)`
+    minimal admitted-runtime path
 - `resolve_default_route()`
 
-This is intentionally minimal and record-driven.
-It closes the first runnable slice without prematurely introducing:
-- full raw-content preparation
-- full state mutation orchestration
-- system-root composition
+The admitted-runtime path currently does the following:
+1. enqueues the record into the shared state module
+2. drains pending records
+3. resolves dispatch candidate + receiver binding per record
+4. builds dispatch contexts
+5. executes the batch through the bound dispatch stack
+6. applies minimal state feedback:
+   - commit on full success
+   - requeue or mark-failed on failure according to failure policy mode
 
 What this file should contain in its fuller form later
 ------------------------------------------------------
 Later expansions may include:
-- preparation-stage raw content submission
-- record stabilization hooks
-- state-admission integration
-- batch building from pending drains
-- commit/requeue feedback hooks
-- queue/failure policy overrides
-- pipeline-local instrumentation
+- raw-content preparation hooks
+- envelope/record stabilization integration
+- partial-batch result reconciliation
+- richer policy-aware feedback handling
+- retry/backoff integration
+- per-record execution result accounting
 - stronger compile-time contract assertions
+- instrumentation and timing hooks
 
 What should NOT live here
 -------------------------
@@ -92,12 +120,13 @@ This file must NOT:
 - own adapter registry logic
 - own governance/configuration
 - collapse per-pipeline behavior into generic central convergence
+- absorb preparation/component implementations that belong elsewhere
 
 Design rule
 -----------
 This file is a runnable per-pipeline execution unit.
 It executes one pipeline using the components already bound into that pipeline,
-but does not claim ownership of the whole system.
+while preserving per-pipeline specialization and shared-state boundaries.
 ------------------------------------------------------------------------------
 */
 
@@ -106,6 +135,7 @@ but does not claim ownership of the whole system.
 #include <vector>
 
 #include "logging_system/F_Dispatch/dispatch_context.hpp"
+#include "logging_system/F_Dispatch/dispatch_failure_policy.hpp"
 #include "logging_system/K_Pipelines/ingest_pipeline_facade.hpp"
 
 namespace logging_system::K_Pipelines {
@@ -171,6 +201,102 @@ struct PipelineRunner final {
             typename Dispatch::QueuePolicy{},
             typename Dispatch::FailurePolicy{});
     }
+
+    template <typename TModule, typename TRecord, typename TAdapter>
+    static auto admit_and_run(
+        TModule& module,
+        const std::string& level_key,
+        const TRecord& record,
+        TAdapter& adapter,
+        const std::optional<std::string>& round_id = std::nullopt) {
+        module.enqueue_pending(level_key, record);
+
+        const auto drained_records = module.drain_pending(
+            typename Dispatch::QueuePolicy{}.max_batch_size);
+
+        using DispatchContext = logging_system::F_Dispatch::DispatchContext<
+            TRecord,
+            decltype(typename Resolver::DispatcherResolver::resolve_dispatch_candidate(
+                module,
+                level_key,
+                record)),
+            decltype(typename Resolver::DispatcherResolver::resolve_dispatch_receiver_binding(
+                typename Resolver::DispatcherResolver::resolve_dispatch_candidate(
+                    module,
+                    level_key,
+                    record)))>;
+
+        std::vector<DispatchContext> batch{};
+        batch.reserve(drained_records.size());
+
+        for (const auto& drained_record : drained_records) {
+            const auto dispatch_candidate =
+                typename Resolver::DispatcherResolver::resolve_dispatch_candidate(
+                    module,
+                    level_key,
+                    drained_record);
+
+            const auto receiver_binding =
+                typename Resolver::DispatcherResolver::resolve_dispatch_receiver_binding(
+                    dispatch_candidate);
+
+            batch.emplace_back(
+                drained_record,
+                dispatch_candidate,
+                receiver_binding,
+                round_id);
+        }
+
+        const auto result =
+            typename Dispatch::DispatchExecutor::execute_batch(
+                adapter,
+                batch,
+                typename Dispatch::AdapterEmission{},
+                typename Dispatch::QueuePolicy{},
+                typename Dispatch::FailurePolicy{});
+
+        apply_state_feedback(
+            module,
+            drained_records,
+            result,
+            typename Dispatch::FailurePolicy{});
+
+        return result;
+    }
+
+private:
+    template <typename TModule, typename TRecord, typename TExecutionResult>
+    static void apply_state_feedback(
+        TModule& module,
+        const std::vector<TRecord>& drained_records,
+        const TExecutionResult& result,
+        const logging_system::F_Dispatch::DispatchFailurePolicy& failure_policy) {
+        if (drained_records.empty()) {
+            return;
+        }
+
+        if (result.failed == 0) {
+            module.commit_dispatched(drained_records);
+            return;
+        }
+
+        switch (failure_policy.mode) {
+            case logging_system::F_Dispatch::FailureMode::Requeue:
+                module.requeue_pending_front(drained_records);
+                break;
+
+            case logging_system::F_Dispatch::FailureMode::MarkFailed:
+                module.mark_failed(drained_records);
+                break;
+
+            case logging_system::F_Dispatch::FailureMode::AbortBatch:
+                module.mark_failed(drained_records);
+                break;
+        }
+    }
 };
 
 }  // namespace logging_system::K_Pipelines
+
+
+
