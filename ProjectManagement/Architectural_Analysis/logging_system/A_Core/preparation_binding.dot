@@ -1,0 +1,41 @@
+digraph preparation_binding_structure {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    preparation_binding [label="PreparationBinding<T...>\nTemplate Class"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    tag [label="binding_tag =\npreparation_binding_tag"];
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    stages [label="Preparation Stages"];
+    
+    preparation_binding -> tag [label="inherits"];
+    preparation_binding -> stages [label="orchestrates"];
+    
+    subgraph cluster_stages {
+        label="Preparation Pipeline";
+        color=lightgrey;
+        metadata [label="MetadataInjector\nContext Injection"];
+        timestamp [label="TimestampStabilizer\nTime Normalization"];
+        schema [label="SchemaApplier\nContent Validation"];
+        envelope [label="EnvelopeAssembler\nStructure Creation"];
+        record [label="RecordStabilizer\nFinal Preparation"];
+    }
+    
+    stages -> metadata [label="1."];
+    metadata -> timestamp [label="2."];
+    timestamp -> schema [label="3."];
+    schema -> envelope [label="4."];
+    envelope -> record [label="5."];
+    
+    subgraph cluster_integration {
+        label="Integration Context";
+        color=lightgrey;
+        info_prep [label="info_preparation_binding.hpp"];
+        pipeline [label="pipeline_binding.hpp"];
+    }
+    
+    preparation_binding -> info_prep [label="instantiated as"];
+    info_prep -> pipeline [label="composed in"];
+}

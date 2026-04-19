@@ -1,0 +1,51 @@
+digraph pipeline_binding_architecture {
+    rankdir=LR;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    pipeline_binding [label="PipelineBinding<T...>\nComposition Template"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    validation [label="Static Validation\nConcept Checks"];
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    components [label="Component Access"];
+    
+    pipeline_binding -> validation [label="enforces"];
+    pipeline_binding -> components [label="provides"];
+    
+    subgraph cluster_validation {
+        label="Validation Phase";
+        color=lightgrey;
+        prep_check [label="preparation_binding_concept_v"];
+        resolver_check [label="resolver_binding_concept_v"];
+        dispatch_check [label="dispatch_binding_concept_v"];
+    }
+    
+    validation -> prep_check;
+    validation -> resolver_check;
+    validation -> dispatch_check;
+    
+    subgraph cluster_components {
+        label="Component Types";
+        color=lightgrey;
+        preparation [label="Preparation\nTPreparationBinding"];
+        resolver [label="Resolver\nTResolverBinding"];
+        dispatch [label="Dispatch\nTDispatchBinding"];
+        routing [label="RepositoryRoute\nTRepositoryRoute"];
+    }
+    
+    components -> preparation;
+    components -> resolver;
+    components -> dispatch;
+    components -> routing;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgrey;
+        info_pipeline [label="info_pipeline_binding.hpp"];
+        system_init [label="System Initialization"];
+    }
+    
+    pipeline_binding -> info_pipeline [label="instantiated as"];
+    info_pipeline -> system_init [label="used in"];
+}

@@ -1,0 +1,33 @@
+digraph binding_concepts_system {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    concepts [label="Concept Traits\n(bool_constant wrappers)"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    enable_types [label="SFINAE Enable Types\n(require_*_binding_t)"];
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    usage_sites [label="Usage Sites\n(Template constraints\nFunction overloads)"];
+    
+    concepts -> enable_types [label="Powers SFINAE"];
+    enable_types -> usage_sites [label="Enables constraints"];
+    
+    subgraph cluster_concept_types {
+        label="Concept Types";
+        color=lightgrey;
+        prep_concept [label="preparation_binding_concept"];
+        resolver_concept [label="resolver_binding_concept"];
+        dispatch_concept [label="dispatch_binding_concept"];
+        pipeline_concept [label="pipeline_binding_concept"];
+    }
+    
+    subgraph cluster_enable_types {
+        label="Enable Types";
+        color=lightgrey;
+        prep_enable [label="require_preparation_binding_t"];
+        resolver_enable [label="require_resolver_binding_t"];
+        dispatch_enable [label="require_dispatch_binding_t"];
+        pipeline_enable [label="require_pipeline_binding_t"];
+    }
+}

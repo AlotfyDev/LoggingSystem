@@ -1,0 +1,9 @@
+# Folders to ignore
+.agents/
+.claude/
+.clinerules/
+.codeanalyzer_mcp/
+.codex/
+.kilo/
+.qwen/
+.vscode/

@@ -1,0 +1,47 @@
+digraph binding_traits_flow {
+    rankdir=LR;
+    node [shape=box, style=filled];
+    
+    subgraph cluster_input {
+        label="Input Types";
+        color=lightgrey;
+        any_type [label="Any Type T"];
+    }
+    
+    subgraph cluster_detection {
+        label="Detection Phase";
+        color=lightblue;
+        has_binding_tag [label="has_binding_tag<T>\nChecks for binding_tag member"];
+        is_binding_of_tag [label="is_binding_of_tag<T, Tag>\nVerifies specific tag type"];
+    }
+    
+    subgraph cluster_specialization {
+        label="Specialized Traits";
+        color=lightgreen;
+        prep_trait [label="is_preparation_binding<T>"];
+        resolver_trait [label="is_resolver_binding<T>"];
+        dispatch_trait [label="is_dispatch_binding<T>"];
+        pipeline_trait [label="is_pipeline_binding<T>"];
+    }
+    
+    subgraph cluster_constants {
+        label="Boolean Constants";
+        color=lightyellow;
+        prep_const [label="is_preparation_binding_v<T>"];
+        resolver_const [label="is_resolver_binding_v<T>"];
+        dispatch_const [label="is_dispatch_binding_v<T>"];
+        pipeline_const [label="is_pipeline_binding_v<T>"];
+    }
+    
+    any_type -> has_binding_tag;
+    has_binding_tag -> is_binding_of_tag;
+    is_binding_of_tag -> prep_trait;
+    is_binding_of_tag -> resolver_trait;
+    is_binding_of_tag -> dispatch_trait;
+    is_binding_of_tag -> pipeline_trait;
+    
+    prep_trait -> prep_const;
+    resolver_trait -> resolver_const;
+    dispatch_trait -> dispatch_const;
+    pipeline_trait -> pipeline_const;
+}

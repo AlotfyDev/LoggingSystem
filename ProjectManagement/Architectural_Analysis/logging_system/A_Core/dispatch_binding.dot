@@ -1,0 +1,39 @@
+digraph dispatch_binding_structure {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    dispatch_binding [label="DispatchBinding<T...>\nTemplate Class"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    tag [label="binding_tag =\ndispatch_binding_tag"];
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    policies [label="Policy Components"];
+    
+    dispatch_binding -> tag [label="inherits"];
+    dispatch_binding -> policies [label="composes"];
+    
+    subgraph cluster_policies {
+        label="Policy Types";
+        color=lightgrey;
+        executor [label="DispatchExecutor\nExecution Policy"];
+        queue [label="QueuePolicy\nQueuing Strategy"];
+        failure [label="FailurePolicy\nError Handling"];
+        emission [label="AdapterEmission\nOutput Adaptation"];
+    }
+    
+    policies -> executor;
+    policies -> queue;
+    policies -> failure;
+    policies -> emission;
+    
+    subgraph cluster_usage {
+        label="Usage Context";
+        color=lightgrey;
+        info_dispatch [label="info_dispatch_binding.hpp\nConcrete Instantiation"];
+        pipeline [label="pipeline_binding.hpp\nComposition"];
+    }
+    
+    dispatch_binding -> info_dispatch [label="instantiated as"];
+    info_dispatch -> pipeline [label="composed in"];
+}

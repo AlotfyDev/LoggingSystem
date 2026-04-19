@@ -1,0 +1,37 @@
+digraph resolver_binding_architecture {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    resolver_binding [label="ResolverBinding<T...>\nTemplate Class"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    tag [label="binding_tag =\nresolver_binding_tag"];
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    resolvers [label="Resolution Strategies"];
+    
+    resolver_binding -> tag [label="inherits"];
+    resolver_binding -> resolvers [label="provides"];
+    
+    subgraph cluster_resolvers {
+        label="Resolver Types";
+        color=lightgrey;
+        writer [label="WriterResolver\nOutput Destination"];
+        dispatcher [label="DispatcherResolver\nRouting Strategy"];
+        readonly [label="ReadonlyResolver\nQuery Access"];
+    }
+    
+    resolvers -> writer;
+    resolvers -> dispatcher;
+    resolvers -> readonly;
+    
+    subgraph cluster_integration {
+        label="Integration Context";
+        color=lightgrey;
+        info_resolver [label="info_resolver_binding.hpp"];
+        pipeline [label="pipeline_binding.hpp"];
+    }
+    
+    resolver_binding -> info_resolver [label="instantiated as"];
+    info_resolver -> pipeline [label="composed in"];
+}

@@ -1,0 +1,20 @@
+digraph binding_tags_relationships {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    binding_tags [label="binding_tags.hpp\nTag Definitions"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    binding_traits [label="binding_traits.hpp\nType Traits"];
+    binding_concepts [label="binding_concepts.hpp\nConcept Constraints"];
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    concrete_bindings [label="Concrete Bindings\n(dispatch_binding.hpp\npreparation_binding.hpp\nresolver_binding.hpp\npipeline_binding.hpp)"];
+    
+    binding_tags -> binding_traits [label="Provides tag types"];
+    binding_tags -> binding_concepts [label="Provides tag types"];
+    binding_tags -> concrete_bindings [label="Base for all bindings"];
+    
+    binding_traits -> concrete_bindings [label="Type checking"];
+    binding_concepts -> concrete_bindings [label="Constraint validation"];
+}
