@@ -1,8 +1,8 @@
 {
   "repo": "AlotfyDev/LoggingSystem",
   "branch": "master",
-  "last_updated": "2026-04-19T20:29:55Z",
-  "file_count": 286,
+  "last_updated": "2026-04-19T20:30:31Z",
+  "file_count": 287,
   "files": [
     {
       "path": ".github/scripts/generate_repo_index.py",
@@ -63,6 +63,16 @@
       "category": "documentation",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/docs/checkpoints/ERROR_SLICE_BASELINE_V1.md",
       "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/docs/checkpoints/ERROR_SLICE_BASELINE_V1.md"
+    },
+    {
+      "path": "docs/checkpoints/FATAL_SLICE_BASELINE_V1.md",
+      "filename": "FATAL_SLICE_BASELINE_V1.md",
+      "extension": "md",
+      "size_bytes": 854,
+      "top_level_dir": "docs",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/docs/checkpoints/FATAL_SLICE_BASELINE_V1.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/docs/checkpoints/FATAL_SLICE_BASELINE_V1.md"
     },
     {
       "path": "docs/checkpoints/INFO_SLICE_SYNC_BASELINE_V1.md",
