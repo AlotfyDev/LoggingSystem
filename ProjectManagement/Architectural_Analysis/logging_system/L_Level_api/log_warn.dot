@@ -1,0 +1,53 @@
+digraph log_warn_architecture {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    log_warn [label="LogWarn\nWARN Level API Entry Point"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    pipeline_binding_integration [label="Pipeline Binding Integration"];
+    
+    log_warn -> pipeline_binding_integration [label="uses"];
+    
+    subgraph cluster_binding {
+        label="WarnPipelineBinding";
+        color=lightgrey;
+        warn_pipeline [label="PipelineBinding =\nWarnPipelineBinding"];
+    }
+    
+    pipeline_binding_integration -> warn_pipeline;
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    runner_integration [label="Pipeline Runner"];
+    
+    log_warn -> runner_integration [label="uses"];
+    
+    subgraph cluster_runner {
+        label="PipelineRunner";
+        color=lightgrey;
+        runner [label="Runner =\nPipelineRunner<PipelineBinding>"];
+    }
+    
+    runner_integration -> runner;
+    
+    node [shape=box, style=filled, fillcolor=orange];
+    api_operations [label="API Operations"];
+    
+    log_warn -> api_operations [label="provides"];
+    
+    subgraph cluster_operations {
+        label="WARN Level Operations";
+        color=lightgrey;
+        level_key_op [label="level_key()\nReturns \"WARN\""];
+        resolve_target_op [label="resolve_write_target(module, record)"];
+        build_handoff_op [label="build_write_handoff_event(target)"];
+        resolve_route_op [label="resolve_default_route()"];
+        admit_and_run_op [label="admit_and_run(module, record, adapter, round_id)"];
+    }
+    
+    api_operations -> level_key_op;
+    api_operations -> resolve_target_op;
+    api_operations -> build_handoff_op;
+    api_operations -> resolve_route_op;
+    api_operations -> admit_and_run_op;
+}

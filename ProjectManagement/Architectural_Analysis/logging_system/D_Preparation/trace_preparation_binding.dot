@@ -1,0 +1,41 @@
+digraph trace_preparation_instantiation {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    trace_binding [label="TracePreparationBinding\nConcrete Type Alias"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    template [label="PreparationBinding<T...>\nA_Core Template"];
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    policies [label="Default Policy Implementations"];
+    
+    trace_binding -> template [label="instantiates"];
+    template -> policies [label="parameterized with"];
+    
+    subgraph cluster_policies {
+        label="Policy Components";
+        color=lightgrey;
+        metadata [label="DefaultMetadataInjector"];
+        timestamp [label="DefaultTimestampStabilizer"];
+        schema [label="DefaultContentSchemaApplier"];
+        envelope [label="DefaultEnvelopeAssembler"];
+        record [label="DefaultRecordStabilizer"];
+    }
+    
+    policies -> metadata;
+    policies -> timestamp;
+    policies -> schema;
+    policies -> envelope;
+    policies -> record;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgrey;
+        pipeline [label="TracePipelineBinding"];
+        system [label="Logging System"];
+    }
+    
+    trace_binding -> pipeline [label="composed in"];
+    pipeline -> system [label="used by"];
+}

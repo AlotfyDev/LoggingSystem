@@ -2,7 +2,7 @@ digraph consuming_surface_architecture {
     rankdir=TB;
     node [shape=box, style=filled, fillcolor=lightblue];
 
-    consuming_surface [label="ConsumingSurface\nUser-Facing Surface"];
+    consuming_surface [label="ConsumingSurface\nMulti-Level User-Facing Surface"];
 
     node [shape=box, style=filled, fillcolor=lightgreen];
     level_api_integration [label="Level API Integration"];
@@ -10,13 +10,22 @@ digraph consuming_surface_architecture {
     consuming_surface -> level_api_integration [label="uses"];
 
     subgraph cluster_level_apis {
-        label="Level APIs";
+        label="All Implemented Level APIs";
         color=lightgrey;
         log_info_api [label="LogInfo\nINFO Level API"];
-        future_apis [label="Future APIs\n(WARN, ERROR, etc.)"];
+        log_debug_api [label="LogDebug\nDEBUG Level API"];
+        log_warn_api [label="LogWarn\nWARN Level API"];
+        log_error_api [label="LogError\nERROR Level API"];
+        log_fatal_api [label="LogFatal\nFATAL Level API"];
+        log_trace_api [label="LogTrace\nTRACE Level API"];
     }
 
     level_api_integration -> log_info_api;
+    level_api_integration -> log_debug_api;
+    level_api_integration -> log_warn_api;
+    level_api_integration -> log_error_api;
+    level_api_integration -> log_fatal_api;
+    level_api_integration -> log_trace_api;
 
     node [shape=box, style=filled, fillcolor=lightyellow];
     pipeline_execution [label="Pipeline Execution"];
@@ -24,13 +33,22 @@ digraph consuming_surface_architecture {
     consuming_surface -> pipeline_execution [label="triggers"];
 
     subgraph cluster_pipelines {
-        label="Pipeline Runners";
+        label="All Implemented Pipeline Runners";
         color=lightgrey;
         info_runner [label="PipelineRunner<InfoPipelineBinding>"];
-        future_runners [label="Future Runners\n(WARN, ERROR, etc.)"];
+        debug_runner [label="PipelineRunner<DebugPipelineBinding>"];
+        warn_runner [label="PipelineRunner<WarnPipelineBinding>"];
+        error_runner [label="PipelineRunner<ErrorPipelineBinding>"];
+        fatal_runner [label="PipelineRunner<FatalPipelineBinding>"];
+        trace_runner [label="PipelineRunner<TracePipelineBinding>"];
     }
 
     pipeline_execution -> info_runner;
+    pipeline_execution -> debug_runner;
+    pipeline_execution -> warn_runner;
+    pipeline_execution -> error_runner;
+    pipeline_execution -> fatal_runner;
+    pipeline_execution -> trace_runner;
 
     node [shape=box, style=filled, fillcolor=orange];
     adapter_emission [label="Adapter Emission"];
@@ -56,14 +74,14 @@ digraph consuming_surface_architecture {
     subgraph cluster_expansion {
         label="Future Expansion Points";
         color=lightgrey;
-        additional_levels [label="Additional Level Entries\n(log_warn, log_error, etc.)"];
         raw_content [label="Raw-Content Submission\n(when preparation promoted)"];
         inspection [label="Inspection/Query Helpers"];
         notifications [label="Notification Subscriptions"];
+        consuming_convenience [label="Consuming-Side Convenience\n(CLI/application integration)"];
     }
 
-    surface_expansion -> additional_levels;
     surface_expansion -> raw_content;
     surface_expansion -> inspection;
     surface_expansion -> notifications;
+    surface_expansion -> consuming_convenience;
 }

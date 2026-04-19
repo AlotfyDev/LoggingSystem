@@ -1,0 +1,39 @@
+digraph trace_dispatch_instantiation {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    trace_binding [label="TraceDispatchBinding\nConcrete Type Alias"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    template [label="DispatchBinding<T...>\nA_Core Template"];
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    dispatch [label="Default Dispatch Implementations"];
+    
+    trace_binding -> template [label="instantiates"];
+    template -> dispatch [label="parameterized with"];
+    
+    subgraph cluster_dispatch {
+        label="Dispatch Components";
+        color=lightgrey;
+        executor [label="ThreadPoolDispatchExecutor"];
+        queue_policy [label="QueuePolicy"];
+        failure_policy [label="DispatchFailurePolicy"];
+        emission [label="DefaultAdapterEmission"];
+    }
+    
+    dispatch -> executor;
+    dispatch -> queue_policy;
+    dispatch -> failure_policy;
+    dispatch -> emission;
+    
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgrey;
+        pipeline [label="TracePipelineBinding"];
+        system [label="Logging System"];
+    }
+    
+    trace_binding -> pipeline [label="composed in"];
+    pipeline -> system [label="used by"];
+}

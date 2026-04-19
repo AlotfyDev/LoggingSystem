@@ -1,0 +1,47 @@
+digraph warn_preparation_binding {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    warn_prep_binding [label="WarnPreparationBinding\nWARN Pipeline Preparation"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    generic_binding [label="Generic PreparationBinding"];
+    
+    warn_prep_binding -> generic_binding [label="specializes"];
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    preparation_components [label="Preparation Components"];
+    
+    warn_prep_binding -> preparation_components [label="binds"];
+    
+    subgraph cluster_components {
+        label="WARN Preparation Stack";
+        color=lightgrey;
+        metadata [label="DefaultMetadataInjector"];
+        timestamp [label="DefaultTimestampStabilizer"];
+        schema [label="DefaultContentSchemaApplier"];
+        envelope [label="DefaultEnvelopeAssembler"];
+        stabilizer [label="DefaultRecordStabilizer"];
+    }
+    
+    preparation_components -> metadata;
+    preparation_components -> timestamp;
+    preparation_components -> schema;
+    preparation_components -> envelope;
+    preparation_components -> stabilizer;
+    
+    node [shape=box, style=filled, fillcolor=orange];
+    pipeline_integration [label="Pipeline Integration"];
+    
+    preparation_components -> pipeline_integration [label="used by"];
+    
+    subgraph cluster_pipeline {
+        label="WARN Pipeline";
+        color=lightgrey;
+        warn_pipeline [label="WarnPipelineBinding"];
+        preparation_stage [label="Preparation Stage"];
+    }
+    
+    pipeline_integration -> warn_pipeline;
+    warn_pipeline -> preparation_stage;
+}

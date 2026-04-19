@@ -1,0 +1,43 @@
+digraph error_resolver_binding {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    error_resolver_binding [label="ErrorResolverBinding\nERROR Pipeline Resolution"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    generic_binding [label="Generic ResolverBinding"];
+    
+    error_resolver_binding -> generic_binding [label="specializes"];
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    resolver_components [label="Resolver Components"];
+    
+    error_resolver_binding -> resolver_components [label="binds"];
+    
+    subgraph cluster_components {
+        label="ERROR Resolver Stack";
+        color=lightgrey;
+        writer [label="DefaultWriterResolver"];
+        dispatcher [label="DefaultDispatcherResolver"];
+        readonly [label="DefaultReadonlyResolver"];
+    }
+    
+    resolver_components -> writer;
+    resolver_components -> dispatcher;
+    resolver_components -> readonly;
+    
+    node [shape=box, style=filled, fillcolor=orange];
+    pipeline_integration [label="Pipeline Integration"];
+    
+    resolver_components -> pipeline_integration [label="used by"];
+    
+    subgraph cluster_pipeline {
+        label="ERROR Pipeline";
+        color=lightgrey;
+        error_pipeline [label="ErrorPipelineBinding"];
+        resolver_stage [label="Resolver Stage"];
+    }
+    
+    pipeline_integration -> error_pipeline;
+    error_pipeline -> resolver_stage;
+}

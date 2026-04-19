@@ -1,0 +1,39 @@
+digraph fatal_pipeline_composition {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+
+    fatal_pipeline [label="FatalPipelineBinding\nFinal Pipeline Assembly"];
+
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    template [label="PipelineBinding<T...>\nA_Core Template"];
+
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    components [label="Pipeline Components"];
+
+    fatal_pipeline -> template [label="instantiates"];
+    template -> components [label="parameterized with"];
+
+    subgraph cluster_components {
+        label="Component Bindings";
+        color=lightgrey;
+        preparation [label="FatalPreparationBinding"];
+        resolver [label="FatalResolverBinding"];
+        dispatch [label="FatalDispatchBinding"];
+        route [label="FatalRepositoryRoute"];
+    }
+
+    components -> preparation;
+    components -> resolver;
+    components -> dispatch;
+    components -> route;
+
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgrey;
+        level_api [label="LogFatal"];
+        system [label="Logging System"];
+    }
+
+    fatal_pipeline -> level_api [label="used by"];
+    level_api -> system [label="provides"];
+}

@@ -1,0 +1,47 @@
+digraph error_preparation_binding {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    error_prep_binding [label="ErrorPreparationBinding\nERROR Pipeline Preparation"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    generic_binding [label="Generic PreparationBinding"];
+    
+    error_prep_binding -> generic_binding [label="specializes"];
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    preparation_components [label="Preparation Components"];
+    
+    error_prep_binding -> preparation_components [label="binds"];
+    
+    subgraph cluster_components {
+        label="ERROR Preparation Stack";
+        color=lightgrey;
+        metadata [label="DefaultMetadataInjector"];
+        timestamp [label="DefaultTimestampStabilizer"];
+        schema [label="DefaultContentSchemaApplier"];
+        envelope [label="DefaultEnvelopeAssembler"];
+        stabilizer [label="DefaultRecordStabilizer"];
+    }
+    
+    preparation_components -> metadata;
+    preparation_components -> timestamp;
+    preparation_components -> schema;
+    preparation_components -> envelope;
+    preparation_components -> stabilizer;
+    
+    node [shape=box, style=filled, fillcolor=orange];
+    pipeline_integration [label="Pipeline Integration"];
+    
+    preparation_components -> pipeline_integration [label="used by"];
+    
+    subgraph cluster_pipeline {
+        label="ERROR Pipeline";
+        color=lightgrey;
+        error_pipeline [label="ErrorPipelineBinding"];
+        preparation_stage [label="Preparation Stage"];
+    }
+    
+    pipeline_integration -> error_pipeline;
+    error_pipeline -> preparation_stage;
+}

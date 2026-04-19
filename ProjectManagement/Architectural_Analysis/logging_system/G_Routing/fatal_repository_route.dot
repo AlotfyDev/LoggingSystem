@@ -1,0 +1,43 @@
+digraph fatal_repository_route {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+
+    route_struct [label="FatalRepositoryRoute\nConcrete Route Struct"];
+
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    members [label="Route Members"];
+
+    route_struct -> members [label="defines"];
+
+    subgraph cluster_members {
+        label="Struct Members";
+        color=lightgrey;
+        level_key [label="level_key: string\n\"FATAL\""];
+        route_key [label="route_key: string\n\"fatal_repository\""];
+    }
+
+    members -> level_key;
+    members -> route_key;
+
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    factory [label="Static Factory Method"];
+    route_struct -> factory [label="provides"];
+
+    subgraph cluster_factory {
+        label="Factory Method";
+        color=lightgrey;
+        make_default [label="make_default()\nStatic Method"];
+    }
+
+    factory -> make_default;
+
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgrey;
+        pipeline [label="FatalPipelineBinding"];
+        system [label="Logging System"];
+    }
+
+    route_struct -> pipeline [label="used in"];
+    pipeline -> system [label="routes to"];
+}

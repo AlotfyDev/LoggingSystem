@@ -1,0 +1,64 @@
+digraph warn_dispatch_binding {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    warn_dispatch_binding [label="WarnDispatchBinding\nWARN Pipeline Dispatch"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    generic_binding [label="Generic DispatchBinding"];
+    
+    warn_dispatch_binding -> generic_binding [label="specializes"];
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    dispatch_components [label="Dispatch Components"];
+    
+    warn_dispatch_binding -> dispatch_components [label="binds"];
+    
+    subgraph cluster_components {
+        label="WARN Dispatch Stack";
+        color=lightgrey;
+        executor [label="ThreadPoolDispatchExecutor"];
+        queue_policy [label="QueuePolicy"];
+        failure_policy [label="DispatchFailurePolicy"];
+        adapter_emission [label="DefaultAdapterEmission"];
+    }
+    
+    dispatch_components -> executor;
+    dispatch_components -> queue_policy;
+    dispatch_components -> failure_policy;
+    dispatch_components -> adapter_emission;
+    
+    node [shape=box, style=filled, fillcolor=orange];
+    pipeline_integration [label="Pipeline Integration"];
+    
+    dispatch_components -> pipeline_integration [label="used by"];
+    
+    subgraph cluster_pipeline {
+        label="WARN Pipeline";
+        color=lightgrey;
+        warn_pipeline [label="WarnPipelineBinding"];
+        dispatch_stage [label="Dispatch Stage"];
+    }
+    
+    pipeline_integration -> warn_pipeline;
+    warn_pipeline -> dispatch_stage;
+    
+    node [shape=box, style=filled, fillcolor=red];
+    dispatch_operations [label="Dispatch Operations"];
+    
+    dispatch_stage -> dispatch_operations [label="performs"];
+    
+    subgraph cluster_operations {
+        label="WARN Dispatch";
+        color=lightgrey;
+        batch_execution [label="execute_batch"];
+        queue_handling [label="queue policy"];
+        failure_handling [label="failure policy"];
+        emission [label="adapter emission"];
+    }
+    
+    dispatch_operations -> batch_execution;
+    dispatch_operations -> queue_handling;
+    dispatch_operations -> failure_handling;
+    dispatch_operations -> emission;
+}

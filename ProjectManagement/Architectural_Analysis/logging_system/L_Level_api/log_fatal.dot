@@ -1,0 +1,48 @@
+digraph fatal_level_api {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+
+    log_fatal [label="LogFatal\nLevel API Struct"];
+
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    pipeline_ref [label="Pipeline Reference"];
+    log_fatal -> pipeline_ref [label="uses"];
+
+    subgraph cluster_pipeline {
+        label="Pipeline Binding";
+        color=lightgrey;
+        fatal_pipeline [label="FatalPipelineBinding"];
+        runner [label="PipelineRunner"];
+    }
+
+    pipeline_ref -> fatal_pipeline;
+    fatal_pipeline -> runner;
+
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    methods [label="API Methods"];
+    log_fatal -> methods [label="provides"];
+
+    subgraph cluster_methods {
+        label="Method Set";
+        color=lightgrey;
+        level_key_method [label="level_key()"];
+        resolve_route [label="resolve_default_route()"];
+        run_single [label="run_single(...)"];
+        admit_and_run [label="admit_and_run(...)"];
+    }
+
+    methods -> level_key_method;
+    methods -> resolve_route;
+    methods -> run_single;
+    methods -> admit_and_run;
+
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgrey;
+        consumer [label="External Code"];
+        system [label="Logging System"];
+    }
+
+    consumer -> log_fatal [label="uses"];
+    log_fatal -> system [label="provides access to"];
+}

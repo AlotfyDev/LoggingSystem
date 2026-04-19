@@ -1,0 +1,36 @@
+digraph error_repository_route {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    error_repo_route [label="ErrorRepositoryRoute\nERROR Route Identity"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    route_identity [label="Route Identity"];
+    
+    error_repo_route -> route_identity [label="defines"];
+    
+    subgraph cluster_identity {
+        label="ERROR Route Properties";
+        color=lightgrey;
+        level_key [label="level_key: \"ERROR\""];
+        route_key [label="route_key: \"error_repository\""];
+    }
+    
+    route_identity -> level_key;
+    route_identity -> route_key;
+    
+    node [shape=box, style=filled, fillcolor=orange];
+    pipeline_binding [label="Pipeline Binding"];
+    
+    error_repo_route -> pipeline_binding [label="used by"];
+    
+    subgraph cluster_binding {
+        label="ERROR Pipeline";
+        color=lightgrey;
+        error_pipeline [label="ErrorPipelineBinding"];
+        route_component [label="RepositoryRoute = ErrorRepositoryRoute"];
+    }
+    
+    pipeline_binding -> error_pipeline;
+    pipeline_binding -> route_component;
+}

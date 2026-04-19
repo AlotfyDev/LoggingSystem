@@ -1,0 +1,36 @@
+digraph warn_repository_route {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    warn_repo_route [label="WarnRepositoryRoute\nWARN Route Identity"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    route_identity [label="Route Identity"];
+    
+    warn_repo_route -> route_identity [label="defines"];
+    
+    subgraph cluster_identity {
+        label="WARN Route Properties";
+        color=lightgrey;
+        level_key [label="level_key: \"WARN\""];
+        route_key [label="route_key: \"warn_repository\""];
+    }
+    
+    route_identity -> level_key;
+    route_identity -> route_key;
+    
+    node [shape=box, style=filled, fillcolor=orange];
+    pipeline_binding [label="Pipeline Binding"];
+    
+    warn_repo_route -> pipeline_binding [label="used by"];
+    
+    subgraph cluster_binding {
+        label="WARN Pipeline";
+        color=lightgrey;
+        warn_pipeline [label="WarnPipelineBinding"];
+        route_component [label="RepositoryRoute = WarnRepositoryRoute"];
+    }
+    
+    pipeline_binding -> warn_pipeline;
+    pipeline_binding -> route_component;
+}
