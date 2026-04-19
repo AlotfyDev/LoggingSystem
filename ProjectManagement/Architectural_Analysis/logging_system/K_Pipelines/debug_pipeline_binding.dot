@@ -1,0 +1,64 @@
+digraph debug_pipeline_binding {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    debug_pipeline_binding [label="DebugPipelineBinding\nDEBUG Pipeline Assembly"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    generic_binding [label="Generic PipelineBinding"];
+    
+    debug_pipeline_binding -> generic_binding [label="specializes"];
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    pipeline_components [label="Pipeline Components"];
+    
+    debug_pipeline_binding -> pipeline_components [label="assembles"];
+    
+    subgraph cluster_components {
+        label="DEBUG Pipeline Pillars";
+        color=lightgrey;
+        preparation [label="Preparation:\nDebugPreparationBinding"];
+        resolver [label="Resolver:\nDebugResolverBinding"];
+        dispatch [label="Dispatch:\nDebugDispatchBinding"];
+        route [label="RepositoryRoute:\nDebugRepositoryRoute"];
+    }
+    
+    pipeline_components -> preparation;
+    pipeline_components -> resolver;
+    pipeline_components -> dispatch;
+    pipeline_components -> route;
+    
+    node [shape=box, style=filled, fillcolor=orange];
+    pipeline_identity [label="Pipeline Identity"];
+    
+    debug_pipeline_binding -> pipeline_identity [label="provides"];
+    
+    subgraph cluster_identity {
+        label="DEBUG Pipeline";
+        color=lightgrey;
+        level_api [label="LogDebug\nLevel API"];
+        runner [label="PipelineRunner<DebugPipelineBinding>\nPipeline Runner"];
+        surface [label="ConsumingSurface\nConsuming Surface"];
+    }
+    
+    pipeline_identity -> level_api;
+    pipeline_identity -> runner;
+    pipeline_identity -> surface;
+    
+    node [shape=box, style=filled, fillcolor=red];
+    pipeline_execution [label="Pipeline Execution"];
+    
+    pipeline_identity -> pipeline_execution [label="enables"];
+    
+    subgraph cluster_execution {
+        label="DEBUG Execution Path";
+        color=lightgrey;
+        record_flow [label="Record → Preparation → Resolver → Dispatch → Repository"];
+        state_flow [label="State Admission → Batch Drain → Feedback"];
+        adapter_flow [label="Adapter Emission → Storage/Transmission"];
+    }
+    
+    pipeline_execution -> record_flow;
+    pipeline_execution -> state_flow;
+    pipeline_execution -> adapter_flow;
+}

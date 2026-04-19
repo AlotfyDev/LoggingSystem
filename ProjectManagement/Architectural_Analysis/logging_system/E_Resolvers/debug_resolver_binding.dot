@@ -1,0 +1,62 @@
+digraph debug_resolver_binding {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    
+    debug_resolver_binding [label="DebugResolverBinding\nDEBUG Pipeline Resolution"];
+    
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    generic_binding [label="Generic ResolverBinding"];
+    
+    debug_resolver_binding -> generic_binding [label="specializes"];
+    
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    resolver_components [label="Resolver Components"];
+    
+    debug_resolver_binding -> resolver_components [label="binds"];
+    
+    subgraph cluster_components {
+        label="DEBUG Resolver Stack";
+        color=lightgrey;
+        writer [label="DefaultWriterResolver"];
+        dispatcher [label="DefaultDispatcherResolver"];
+        readonly [label="DefaultReadonlyResolver"];
+    }
+    
+    resolver_components -> writer;
+    resolver_components -> dispatcher;
+    resolver_components -> readonly;
+    
+    node [shape=box, style=filled, fillcolor=orange];
+    pipeline_integration [label="Pipeline Integration"];
+    
+    resolver_components -> pipeline_integration [label="used by"];
+    
+    subgraph cluster_pipeline {
+        label="DEBUG Pipeline";
+        color=lightgrey;
+        debug_pipeline [label="DebugPipelineBinding"];
+        resolver_stage [label="Resolver Stage"];
+    }
+    
+    pipeline_integration -> debug_pipeline;
+    debug_pipeline -> resolver_stage;
+    
+    node [shape=box, style=filled, fillcolor=lightcyan];
+    resolution_operations [label="Resolution Operations"];
+    
+    resolver_stage -> resolution_operations [label="performs"];
+    
+    subgraph cluster_operations {
+        label="DEBUG Resolution";
+        color=lightgrey;
+        write_target [label="resolve_write_target"];
+        dispatch_cand [label="resolve_dispatch_candidate"];
+        dispatch_bind [label="resolve_dispatch_receiver_binding"];
+        readonly_ops [label="readonly operations"];
+    }
+    
+    resolution_operations -> write_target;
+    resolution_operations -> dispatch_cand;
+    resolution_operations -> dispatch_bind;
+    resolution_operations -> readonly_ops;
+}
