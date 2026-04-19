@@ -1,8 +1,8 @@
 {
   "repo": "AlotfyDev/LoggingSystem",
   "branch": "master",
-  "last_updated": "2026-04-19T18:21:53Z",
-  "file_count": 231,
+  "last_updated": "2026-04-19T20:22:06Z",
+  "file_count": 283,
   "files": [
     {
       "path": ".github/scripts/generate_repo_index.py",
@@ -418,7 +418,7 @@
       "path": "include/logging_system/D_Preparation/error_preparation_binding.hpp",
       "filename": "error_preparation_binding.hpp",
       "extension": "hpp",
-      "size_bytes": 0,
+      "size_bytes": 2790,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/D_Preparation/error_preparation_binding.hpp",
@@ -428,7 +428,7 @@
       "path": "include/logging_system/D_Preparation/fatal_preparation_binding.hpp",
       "filename": "fatal_preparation_binding.hpp",
       "extension": "hpp",
-      "size_bytes": 0,
+      "size_bytes": 2790,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/D_Preparation/fatal_preparation_binding.hpp",
@@ -478,7 +478,7 @@
       "path": "include/logging_system/D_Preparation/trace_preparation_binding.hpp",
       "filename": "trace_preparation_binding.hpp",
       "extension": "hpp",
-      "size_bytes": 0,
+      "size_bytes": 2790,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/D_Preparation/trace_preparation_binding.hpp",
@@ -488,7 +488,7 @@
       "path": "include/logging_system/D_Preparation/warn_preparation_binding.hpp",
       "filename": "warn_preparation_binding.hpp",
       "extension": "hpp",
-      "size_bytes": 0,
+      "size_bytes": 2781,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/D_Preparation/warn_preparation_binding.hpp",
@@ -548,7 +548,7 @@
       "path": "include/logging_system/E_Resolvers/error_resolver_binding.hpp",
       "filename": "error_resolver_binding.hpp",
       "extension": "hpp",
-      "size_bytes": 0,
+      "size_bytes": 2337,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/E_Resolvers/error_resolver_binding.hpp",
@@ -558,7 +558,7 @@
       "path": "include/logging_system/E_Resolvers/fatal_resolver_binding.hpp",
       "filename": "fatal_resolver_binding.hpp",
       "extension": "hpp",
-      "size_bytes": 0,
+      "size_bytes": 2337,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/E_Resolvers/fatal_resolver_binding.hpp",
@@ -588,7 +588,7 @@
       "path": "include/logging_system/E_Resolvers/trace_resolver_binding.hpp",
       "filename": "trace_resolver_binding.hpp",
       "extension": "hpp",
-      "size_bytes": 0,
+      "size_bytes": 2337,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/E_Resolvers/trace_resolver_binding.hpp",
@@ -598,7 +598,7 @@
       "path": "include/logging_system/E_Resolvers/warn_resolver_binding.hpp",
       "filename": "warn_resolver_binding.hpp",
       "extension": "hpp",
-      "size_bytes": 0,
+      "size_bytes": 2329,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/E_Resolvers/warn_resolver_binding.hpp",
@@ -678,7 +678,7 @@
       "path": "include/logging_system/F_Dispatch/error_dispatch_binding.hpp",
       "filename": "error_dispatch_binding.hpp",
       "extension": "hpp",
-      "size_bytes": 0,
+      "size_bytes": 2491,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/F_Dispatch/error_dispatch_binding.hpp",
@@ -688,7 +688,7 @@
       "path": "include/logging_system/F_Dispatch/fatal_dispatch_binding.hpp",
       "filename": "fatal_dispatch_binding.hpp",
       "extension": "hpp",
-      "size_bytes": 0,
+      "size_bytes": 2491,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/F_Dispatch/fatal_dispatch_binding.hpp",
@@ -738,7 +738,7 @@
       "path": "include/logging_system/F_Dispatch/trace_dispatch_binding.hpp",
       "filename": "trace_dispatch_binding.hpp",
       "extension": "hpp",
-      "size_bytes": 0,
+      "size_bytes": 2491,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/F_Dispatch/trace_dispatch_binding.hpp",
@@ -748,7 +748,7 @@
       "path": "include/logging_system/F_Dispatch/warn_dispatch_binding.hpp",
       "filename": "warn_dispatch_binding.hpp",
       "extension": "hpp",
-      "size_bytes": 0,
+      "size_bytes": 2482,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/F_Dispatch/warn_dispatch_binding.hpp",
@@ -768,7 +768,7 @@
       "path": "include/logging_system/G_Routing/error_repository_route.hpp",
       "filename": "error_repository_route.hpp",
       "extension": "hpp",
-      "size_bytes": 0,
+      "size_bytes": 2456,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/G_Routing/error_repository_route.hpp",
@@ -778,7 +778,7 @@
       "path": "include/logging_system/G_Routing/fatal_repository_route.hpp",
       "filename": "fatal_repository_route.hpp",
       "extension": "hpp",
-      "size_bytes": 0,
+      "size_bytes": 2456,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/G_Routing/fatal_repository_route.hpp",
@@ -818,7 +818,7 @@
       "path": "include/logging_system/G_Routing/trace_repository_route.hpp",
       "filename": "trace_repository_route.hpp",
       "extension": "hpp",
-      "size_bytes": 0,
+      "size_bytes": 2456,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/G_Routing/trace_repository_route.hpp",
@@ -828,7 +828,7 @@
       "path": "include/logging_system/G_Routing/warn_repository_route.hpp",
       "filename": "warn_repository_route.hpp",
       "extension": "hpp",
-      "size_bytes": 0,
+      "size_bytes": 2440,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/G_Routing/warn_repository_route.hpp",
@@ -1058,7 +1058,7 @@
       "path": "include/logging_system/K_Pipelines/error_pipeline_binding.hpp",
       "filename": "error_pipeline_binding.hpp",
       "extension": "hpp",
-      "size_bytes": 0,
+      "size_bytes": 2642,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/K_Pipelines/error_pipeline_binding.hpp",
@@ -1068,7 +1068,7 @@
       "path": "include/logging_system/K_Pipelines/fatal_pipeline_binding.hpp",
       "filename": "fatal_pipeline_binding.hpp",
       "extension": "hpp",
-      "size_bytes": 0,
+      "size_bytes": 2642,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/K_Pipelines/fatal_pipeline_binding.hpp",
@@ -1118,7 +1118,7 @@
       "path": "include/logging_system/K_Pipelines/trace_pipeline_binding.hpp",
       "filename": "trace_pipeline_binding.hpp",
       "extension": "hpp",
-      "size_bytes": 0,
+      "size_bytes": 2642,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/K_Pipelines/trace_pipeline_binding.hpp",
@@ -1128,7 +1128,7 @@
       "path": "include/logging_system/K_Pipelines/warn_pipeline_binding.hpp",
       "filename": "warn_pipeline_binding.hpp",
       "extension": "hpp",
-      "size_bytes": 0,
+      "size_bytes": 2622,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/K_Pipelines/warn_pipeline_binding.hpp",
@@ -1148,7 +1148,7 @@
       "path": "include/logging_system/L_Level_api/log_error.hpp",
       "filename": "log_error.hpp",
       "extension": "hpp",
-      "size_bytes": 0,
+      "size_bytes": 4214,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/L_Level_api/log_error.hpp",
@@ -1158,7 +1158,7 @@
       "path": "include/logging_system/L_Level_api/log_fatal.hpp",
       "filename": "log_fatal.hpp",
       "extension": "hpp",
-      "size_bytes": 0,
+      "size_bytes": 4214,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/L_Level_api/log_fatal.hpp",
@@ -1178,7 +1178,7 @@
       "path": "include/logging_system/L_Level_api/log_trace.hpp",
       "filename": "log_trace.hpp",
       "extension": "hpp",
-      "size_bytes": 0,
+      "size_bytes": 4214,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/L_Level_api/log_trace.hpp",
@@ -1188,7 +1188,7 @@
       "path": "include/logging_system/L_Level_api/log_warn.hpp",
       "filename": "log_warn.hpp",
       "extension": "hpp",
-      "size_bytes": 0,
+      "size_bytes": 4189,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/L_Level_api/log_warn.hpp",
@@ -1208,7 +1208,7 @@
       "path": "include/logging_system/M_Surfaces/consuming_surface.hpp",
       "filename": "consuming_surface.hpp",
       "extension": "hpp",
-      "size_bytes": 3626,
+      "size_bytes": 8473,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/M_Surfaces/consuming_surface.hpp",
@@ -1735,6 +1735,46 @@
       "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/D_Preparation/default_timestamp_stabilizer_analysis.md"
     },
     {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/D_Preparation/error_preparation_binding.dot",
+      "filename": "error_preparation_binding.dot",
+      "extension": "dot",
+      "size_bytes": 1665,
+      "top_level_dir": "ProjectManagement",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/D_Preparation/error_preparation_binding.dot",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/D_Preparation/error_preparation_binding.dot"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/D_Preparation/error_preparation_binding_analysis.md",
+      "filename": "error_preparation_binding_analysis.md",
+      "extension": "md",
+      "size_bytes": 3872,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/D_Preparation/error_preparation_binding_analysis.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/D_Preparation/error_preparation_binding_analysis.md"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/D_Preparation/fatal_preparation_binding.dot",
+      "filename": "fatal_preparation_binding.dot",
+      "extension": "dot",
+      "size_bytes": 1322,
+      "top_level_dir": "ProjectManagement",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/D_Preparation/fatal_preparation_binding.dot",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/D_Preparation/fatal_preparation_binding.dot"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/D_Preparation/fatal_preparation_binding_analysis.md",
+      "filename": "fatal_preparation_binding_analysis.md",
+      "extension": "md",
+      "size_bytes": 9991,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/D_Preparation/fatal_preparation_binding_analysis.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/D_Preparation/fatal_preparation_binding_analysis.md"
+    },
+    {
       "path": "ProjectManagement/Architectural_Analysis/logging_system/D_Preparation/info_preparation_binding.dot",
       "filename": "info_preparation_binding.dot",
       "extension": "dot",
@@ -1753,6 +1793,46 @@
       "category": "documentation",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/D_Preparation/info_preparation_binding_analysis.md",
       "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/D_Preparation/info_preparation_binding_analysis.md"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/D_Preparation/trace_preparation_binding.dot",
+      "filename": "trace_preparation_binding.dot",
+      "extension": "dot",
+      "size_bytes": 1354,
+      "top_level_dir": "ProjectManagement",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/D_Preparation/trace_preparation_binding.dot",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/D_Preparation/trace_preparation_binding.dot"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/D_Preparation/trace_preparation_binding_analysis.md",
+      "filename": "trace_preparation_binding_analysis.md",
+      "extension": "md",
+      "size_bytes": 10043,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/D_Preparation/trace_preparation_binding_analysis.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/D_Preparation/trace_preparation_binding_analysis.md"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/D_Preparation/warn_preparation_binding.dot",
+      "filename": "warn_preparation_binding.dot",
+      "extension": "dot",
+      "size_bytes": 1653,
+      "top_level_dir": "ProjectManagement",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/D_Preparation/warn_preparation_binding.dot",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/D_Preparation/warn_preparation_binding.dot"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/D_Preparation/warn_preparation_binding_analysis.md",
+      "filename": "warn_preparation_binding_analysis.md",
+      "extension": "md",
+      "size_bytes": 11859,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/D_Preparation/warn_preparation_binding_analysis.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/D_Preparation/warn_preparation_binding_analysis.md"
     },
     {
       "path": "ProjectManagement/Architectural_Analysis/logging_system/debug_slice_summary.md",
@@ -1845,6 +1925,46 @@
       "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/E_Resolvers/default_writer_resolver_analysis.md"
     },
     {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/E_Resolvers/error_resolver_binding.dot",
+      "filename": "error_resolver_binding.dot",
+      "extension": "dot",
+      "size_bytes": 1440,
+      "top_level_dir": "ProjectManagement",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/E_Resolvers/error_resolver_binding.dot",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/E_Resolvers/error_resolver_binding.dot"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/E_Resolvers/error_resolver_binding_analysis.md",
+      "filename": "error_resolver_binding_analysis.md",
+      "extension": "md",
+      "size_bytes": 2612,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/E_Resolvers/error_resolver_binding_analysis.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/E_Resolvers/error_resolver_binding_analysis.md"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/E_Resolvers/fatal_resolver_binding.dot",
+      "filename": "fatal_resolver_binding.dot",
+      "extension": "dot",
+      "size_bytes": 1165,
+      "top_level_dir": "ProjectManagement",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/E_Resolvers/fatal_resolver_binding.dot",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/E_Resolvers/fatal_resolver_binding.dot"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/E_Resolvers/fatal_resolver_binding_analysis.md",
+      "filename": "fatal_resolver_binding_analysis.md",
+      "extension": "md",
+      "size_bytes": 9337,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/E_Resolvers/fatal_resolver_binding_analysis.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/E_Resolvers/fatal_resolver_binding_analysis.md"
+    },
+    {
       "path": "ProjectManagement/Architectural_Analysis/logging_system/E_Resolvers/info_resolver_binding.dot",
       "filename": "info_resolver_binding.dot",
       "extension": "dot",
@@ -1863,6 +1983,56 @@
       "category": "documentation",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/E_Resolvers/info_resolver_binding_analysis.md",
       "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/E_Resolvers/info_resolver_binding_analysis.md"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/E_Resolvers/trace_resolver_binding.dot",
+      "filename": "trace_resolver_binding.dot",
+      "extension": "dot",
+      "size_bytes": 1197,
+      "top_level_dir": "ProjectManagement",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/E_Resolvers/trace_resolver_binding.dot",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/E_Resolvers/trace_resolver_binding.dot"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/E_Resolvers/trace_resolver_binding_analysis.md",
+      "filename": "trace_resolver_binding_analysis.md",
+      "extension": "md",
+      "size_bytes": 9389,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/E_Resolvers/trace_resolver_binding_analysis.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/E_Resolvers/trace_resolver_binding_analysis.md"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/E_Resolvers/warn_resolver_binding.dot",
+      "filename": "warn_resolver_binding.dot",
+      "extension": "dot",
+      "size_bytes": 2132,
+      "top_level_dir": "ProjectManagement",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/E_Resolvers/warn_resolver_binding.dot",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/E_Resolvers/warn_resolver_binding.dot"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/E_Resolvers/warn_resolver_binding_analysis.md",
+      "filename": "warn_resolver_binding_analysis.md",
+      "extension": "md",
+      "size_bytes": 11907,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/E_Resolvers/warn_resolver_binding_analysis.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/E_Resolvers/warn_resolver_binding_analysis.md"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/error_slice_summary.md",
+      "filename": "error_slice_summary.md",
+      "extension": "md",
+      "size_bytes": 5924,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/error_slice_summary.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/error_slice_summary.md"
     },
     {
       "path": "ProjectManagement/Architectural_Analysis/logging_system/F_Dispatch/debug_dispatch_binding.dot",
@@ -1945,6 +2115,46 @@
       "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/F_Dispatch/dispatch_failure_policy_analysis.md"
     },
     {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/F_Dispatch/error_dispatch_binding.dot",
+      "filename": "error_dispatch_binding.dot",
+      "extension": "dot",
+      "size_bytes": 1551,
+      "top_level_dir": "ProjectManagement",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/F_Dispatch/error_dispatch_binding.dot",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/F_Dispatch/error_dispatch_binding.dot"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/F_Dispatch/error_dispatch_binding_analysis.md",
+      "filename": "error_dispatch_binding_analysis.md",
+      "extension": "md",
+      "size_bytes": 2196,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/F_Dispatch/error_dispatch_binding_analysis.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/F_Dispatch/error_dispatch_binding_analysis.md"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/F_Dispatch/fatal_dispatch_binding.dot",
+      "filename": "fatal_dispatch_binding.dot",
+      "extension": "dot",
+      "size_bytes": 1245,
+      "top_level_dir": "ProjectManagement",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/F_Dispatch/fatal_dispatch_binding.dot",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/F_Dispatch/fatal_dispatch_binding.dot"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/F_Dispatch/fatal_dispatch_binding_analysis.md",
+      "filename": "fatal_dispatch_binding_analysis.md",
+      "extension": "md",
+      "size_bytes": 9696,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/F_Dispatch/fatal_dispatch_binding_analysis.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/F_Dispatch/fatal_dispatch_binding_analysis.md"
+    },
+    {
       "path": "ProjectManagement/Architectural_Analysis/logging_system/F_Dispatch/info_dispatch_binding.dot",
       "filename": "info_dispatch_binding.dot",
       "extension": "dot",
@@ -2005,6 +2215,56 @@
       "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/F_Dispatch/thread_pool_dispatch_executor_analysis.md"
     },
     {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/F_Dispatch/trace_dispatch_binding.dot",
+      "filename": "trace_dispatch_binding.dot",
+      "extension": "dot",
+      "size_bytes": 1277,
+      "top_level_dir": "ProjectManagement",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/F_Dispatch/trace_dispatch_binding.dot",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/F_Dispatch/trace_dispatch_binding.dot"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/F_Dispatch/trace_dispatch_binding_analysis.md",
+      "filename": "trace_dispatch_binding_analysis.md",
+      "extension": "md",
+      "size_bytes": 9748,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/F_Dispatch/trace_dispatch_binding_analysis.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/F_Dispatch/trace_dispatch_binding_analysis.md"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/F_Dispatch/warn_dispatch_binding.dot",
+      "filename": "warn_dispatch_binding.dot",
+      "extension": "dot",
+      "size_bytes": 2184,
+      "top_level_dir": "ProjectManagement",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/F_Dispatch/warn_dispatch_binding.dot",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/F_Dispatch/warn_dispatch_binding.dot"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/F_Dispatch/warn_dispatch_binding_analysis.md",
+      "filename": "warn_dispatch_binding_analysis.md",
+      "extension": "md",
+      "size_bytes": 5328,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/F_Dispatch/warn_dispatch_binding_analysis.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/F_Dispatch/warn_dispatch_binding_analysis.md"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/fatal_slice_summary.md",
+      "filename": "fatal_slice_summary.md",
+      "extension": "md",
+      "size_bytes": 5760,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/fatal_slice_summary.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/fatal_slice_summary.md"
+    },
+    {
       "path": "ProjectManagement/Architectural_Analysis/logging_system/G_Routing/debug_repository_route.dot",
       "filename": "debug_repository_route.dot",
       "extension": "dot",
@@ -2023,6 +2283,46 @@
       "category": "documentation",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/G_Routing/debug_repository_route_analysis.md",
       "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/G_Routing/debug_repository_route_analysis.md"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/G_Routing/error_repository_route.dot",
+      "filename": "error_repository_route.dot",
+      "extension": "dot",
+      "size_bytes": 1135,
+      "top_level_dir": "ProjectManagement",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/G_Routing/error_repository_route.dot",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/G_Routing/error_repository_route.dot"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/G_Routing/error_repository_route_analysis.md",
+      "filename": "error_repository_route_analysis.md",
+      "extension": "md",
+      "size_bytes": 1776,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/G_Routing/error_repository_route_analysis.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/G_Routing/error_repository_route_analysis.md"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/G_Routing/fatal_repository_route.dot",
+      "filename": "fatal_repository_route.dot",
+      "extension": "dot",
+      "size_bytes": 1225,
+      "top_level_dir": "ProjectManagement",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/G_Routing/fatal_repository_route.dot",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/G_Routing/fatal_repository_route.dot"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/G_Routing/fatal_repository_route_analysis.md",
+      "filename": "fatal_repository_route_analysis.md",
+      "extension": "md",
+      "size_bytes": 9142,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/G_Routing/fatal_repository_route_analysis.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/G_Routing/fatal_repository_route_analysis.md"
     },
     {
       "path": "ProjectManagement/Architectural_Analysis/logging_system/G_Routing/info_repository_route.dot",
@@ -2083,6 +2383,46 @@
       "category": "documentation",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/G_Routing/route_context_analysis.md",
       "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/G_Routing/route_context_analysis.md"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/G_Routing/trace_repository_route.dot",
+      "filename": "trace_repository_route.dot",
+      "extension": "dot",
+      "size_bytes": 1265,
+      "top_level_dir": "ProjectManagement",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/G_Routing/trace_repository_route.dot",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/G_Routing/trace_repository_route.dot"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/G_Routing/trace_repository_route_analysis.md",
+      "filename": "trace_repository_route_analysis.md",
+      "extension": "md",
+      "size_bytes": 9218,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/G_Routing/trace_repository_route_analysis.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/G_Routing/trace_repository_route_analysis.md"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/G_Routing/warn_repository_route.dot",
+      "filename": "warn_repository_route.dot",
+      "extension": "dot",
+      "size_bytes": 1121,
+      "top_level_dir": "ProjectManagement",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/G_Routing/warn_repository_route.dot",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/G_Routing/warn_repository_route.dot"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/G_Routing/warn_repository_route_analysis.md",
+      "filename": "warn_repository_route_analysis.md",
+      "extension": "md",
+      "size_bytes": 3368,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/G_Routing/warn_repository_route_analysis.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/G_Routing/warn_repository_route_analysis.md"
     },
     {
       "path": "ProjectManagement/Architectural_Analysis/logging_system/H_State/level_containers.dot",
@@ -2175,6 +2515,46 @@
       "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/K_Pipelines/debug_pipeline_binding_analysis.md"
     },
     {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/K_Pipelines/error_pipeline_binding.dot",
+      "filename": "error_pipeline_binding.dot",
+      "extension": "dot",
+      "size_bytes": 2332,
+      "top_level_dir": "ProjectManagement",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/K_Pipelines/error_pipeline_binding.dot",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/K_Pipelines/error_pipeline_binding.dot"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/K_Pipelines/error_pipeline_binding_analysis.md",
+      "filename": "error_pipeline_binding_analysis.md",
+      "extension": "md",
+      "size_bytes": 2991,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/K_Pipelines/error_pipeline_binding_analysis.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/K_Pipelines/error_pipeline_binding_analysis.md"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/K_Pipelines/fatal_pipeline_binding.dot",
+      "filename": "fatal_pipeline_binding.dot",
+      "extension": "dot",
+      "size_bytes": 1221,
+      "top_level_dir": "ProjectManagement",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/K_Pipelines/fatal_pipeline_binding.dot",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/K_Pipelines/fatal_pipeline_binding.dot"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/K_Pipelines/fatal_pipeline_binding_analysis.md",
+      "filename": "fatal_pipeline_binding_analysis.md",
+      "extension": "md",
+      "size_bytes": 10009,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/K_Pipelines/fatal_pipeline_binding_analysis.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/K_Pipelines/fatal_pipeline_binding_analysis.md"
+    },
+    {
       "path": "ProjectManagement/Architectural_Analysis/logging_system/K_Pipelines/info_pipeline_binding.dot",
       "filename": "info_pipeline_binding.dot",
       "extension": "dot",
@@ -2235,6 +2615,46 @@
       "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/K_Pipelines/pipeline_runner_analysis.md"
     },
     {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/K_Pipelines/trace_pipeline_binding.dot",
+      "filename": "trace_pipeline_binding.dot",
+      "extension": "dot",
+      "size_bytes": 1253,
+      "top_level_dir": "ProjectManagement",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/K_Pipelines/trace_pipeline_binding.dot",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/K_Pipelines/trace_pipeline_binding.dot"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/K_Pipelines/trace_pipeline_binding_analysis.md",
+      "filename": "trace_pipeline_binding_analysis.md",
+      "extension": "md",
+      "size_bytes": 10055,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/K_Pipelines/trace_pipeline_binding_analysis.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/K_Pipelines/trace_pipeline_binding_analysis.md"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/K_Pipelines/warn_pipeline_binding.dot",
+      "filename": "warn_pipeline_binding.dot",
+      "extension": "dot",
+      "size_bytes": 2316,
+      "top_level_dir": "ProjectManagement",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/K_Pipelines/warn_pipeline_binding.dot",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/K_Pipelines/warn_pipeline_binding.dot"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/K_Pipelines/warn_pipeline_binding_analysis.md",
+      "filename": "warn_pipeline_binding_analysis.md",
+      "extension": "md",
+      "size_bytes": 12944,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/K_Pipelines/warn_pipeline_binding_analysis.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/K_Pipelines/warn_pipeline_binding_analysis.md"
+    },
+    {
       "path": "ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_debug.dot",
       "filename": "log_debug.dot",
       "extension": "dot",
@@ -2253,6 +2673,46 @@
       "category": "documentation",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_debug_analysis.md",
       "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_debug_analysis.md"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_error.dot",
+      "filename": "log_error.dot",
+      "extension": "dot",
+      "size_bytes": 1815,
+      "top_level_dir": "ProjectManagement",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_error.dot",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_error.dot"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_error_analysis.md",
+      "filename": "log_error_analysis.md",
+      "extension": "md",
+      "size_bytes": 13430,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_error_analysis.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_error_analysis.md"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_fatal.dot",
+      "filename": "log_fatal.dot",
+      "extension": "dot",
+      "size_bytes": 1404,
+      "top_level_dir": "ProjectManagement",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_fatal.dot",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_fatal.dot"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_fatal_analysis.md",
+      "filename": "log_fatal_analysis.md",
+      "extension": "md",
+      "size_bytes": 9979,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_fatal_analysis.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_fatal_analysis.md"
     },
     {
       "path": "ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_info.dot",
@@ -2275,10 +2735,50 @@
       "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_info_analysis.md"
     },
     {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_trace.dot",
+      "filename": "log_trace.dot",
+      "extension": "dot",
+      "size_bytes": 1440,
+      "top_level_dir": "ProjectManagement",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_trace.dot",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_trace.dot"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_trace_analysis.md",
+      "filename": "log_trace_analysis.md",
+      "extension": "md",
+      "size_bytes": 10035,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_trace_analysis.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_trace_analysis.md"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_warn.dot",
+      "filename": "log_warn.dot",
+      "extension": "dot",
+      "size_bytes": 1802,
+      "top_level_dir": "ProjectManagement",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_warn.dot",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_warn.dot"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_warn_analysis.md",
+      "filename": "log_warn_analysis.md",
+      "extension": "md",
+      "size_bytes": 13343,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_warn_analysis.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/L_Level_api/log_warn_analysis.md"
+    },
+    {
       "path": "ProjectManagement/Architectural_Analysis/logging_system/M_Surfaces/consuming_surface.dot",
       "filename": "consuming_surface.dot",
       "extension": "dot",
-      "size_bytes": 2288,
+      "size_bytes": 3263,
       "top_level_dir": "ProjectManagement",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/M_Surfaces/consuming_surface.dot",
@@ -2288,11 +2788,31 @@
       "path": "ProjectManagement/Architectural_Analysis/logging_system/M_Surfaces/consuming_surface_analysis.md",
       "filename": "consuming_surface_analysis.md",
       "extension": "md",
-      "size_bytes": 13558,
+      "size_bytes": 17128,
       "top_level_dir": "ProjectManagement",
       "category": "documentation",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/M_Surfaces/consuming_surface_analysis.md",
       "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/M_Surfaces/consuming_surface_analysis.md"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/trace_slice_summary.md",
+      "filename": "trace_slice_summary.md",
+      "extension": "md",
+      "size_bytes": 5690,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/trace_slice_summary.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/trace_slice_summary.md"
+    },
+    {
+      "path": "ProjectManagement/Architectural_Analysis/logging_system/warn_slice_summary.md",
+      "filename": "warn_slice_summary.md",
+      "extension": "md",
+      "size_bytes": 5920,
+      "top_level_dir": "ProjectManagement",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/ProjectManagement/Architectural_Analysis/logging_system/warn_slice_summary.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/ProjectManagement/Architectural_Analysis/logging_system/warn_slice_summary.md"
     },
     {
       "path": "ProjectManagement/Docs/A_Cpp_Architectural_Skelton.md",
