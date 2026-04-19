@@ -1,8 +1,8 @@
 {
   "repo": "AlotfyDev/LoggingSystem",
   "branch": "master",
-  "last_updated": "2026-04-19T20:28:44Z",
-  "file_count": 284,
+  "last_updated": "2026-04-19T20:29:19Z",
+  "file_count": 285,
   "files": [
     {
       "path": ".github/scripts/generate_repo_index.py",
@@ -63,6 +63,16 @@
       "category": "documentation",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/docs/checkpoints/INFO_SLICE_SYNC_BASELINE_V1.md",
       "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/docs/checkpoints/INFO_SLICE_SYNC_BASELINE_V1.md"
+    },
+    {
+      "path": "docs/checkpoints/WARN_SLICE_BASELINE_V1.md",
+      "filename": "WARN_SLICE_BASELINE_V1.md",
+      "extension": "md",
+      "size_bytes": 841,
+      "top_level_dir": "docs",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/docs/checkpoints/WARN_SLICE_BASELINE_V1.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/docs/checkpoints/WARN_SLICE_BASELINE_V1.md"
     },
     {
       "path": "gitignore_directories.md",
