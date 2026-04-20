@@ -1,9 +1,19 @@
 {
   "repo": "AlotfyDev/LoggingSystem",
   "branch": "master",
-  "last_updated": "2026-04-20T15:52:12Z",
-  "file_count": 308,
+  "last_updated": "2026-04-20T17:00:32Z",
+  "file_count": 327,
   "files": [
+    {
+      "path": ".clangd",
+      "filename": ".clangd",
+      "extension": "",
+      "size_bytes": 377,
+      "top_level_dir": ".clangd",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/.clangd",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/.clangd"
+    },
     {
       "path": ".github/scripts/generate_repo_index.py",
       "filename": "generate_repo_index.py",
@@ -43,6 +53,176 @@
       "category": "documentation",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/apps/placeholder.txt",
       "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/apps/placeholder.txt"
+    },
+    {
+      "path": "build/build.ninja",
+      "filename": "build.ninja",
+      "extension": "ninja",
+      "size_bytes": 18630,
+      "top_level_dir": "build",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/build/build.ninja",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/build/build.ninja"
+    },
+    {
+      "path": "build/cmake_install.cmake",
+      "filename": "cmake_install.cmake",
+      "extension": "cmake",
+      "size_bytes": 2220,
+      "top_level_dir": "build",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/build/cmake_install.cmake",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/build/cmake_install.cmake"
+    },
+    {
+      "path": "build/CMakeCache.txt",
+      "filename": "CMakeCache.txt",
+      "extension": "txt",
+      "size_bytes": 14661,
+      "top_level_dir": "build",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/build/CMakeCache.txt",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/build/CMakeCache.txt"
+    },
+    {
+      "path": "build/CMakeFiles/4.1.2/CMakeCXXCompiler.cmake",
+      "filename": "CMakeCXXCompiler.cmake",
+      "extension": "cmake",
+      "size_bytes": 6972,
+      "top_level_dir": "build",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/build/CMakeFiles/4.1.2/CMakeCXXCompiler.cmake",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/build/CMakeFiles/4.1.2/CMakeCXXCompiler.cmake"
+    },
+    {
+      "path": "build/CMakeFiles/4.1.2/CMakeDetermineCompilerABI_CXX.bin",
+      "filename": "CMakeDetermineCompilerABI_CXX.bin",
+      "extension": "bin",
+      "size_bytes": 123264,
+      "top_level_dir": "build",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/build/CMakeFiles/4.1.2/CMakeDetermineCompilerABI_CXX.bin",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/build/CMakeFiles/4.1.2/CMakeDetermineCompilerABI_CXX.bin"
+    },
+    {
+      "path": "build/CMakeFiles/4.1.2/CMakeRCCompiler.cmake",
+      "filename": "CMakeRCCompiler.cmake",
+      "extension": "cmake",
+      "size_bytes": 237,
+      "top_level_dir": "build",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/build/CMakeFiles/4.1.2/CMakeRCCompiler.cmake",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/build/CMakeFiles/4.1.2/CMakeRCCompiler.cmake"
+    },
+    {
+      "path": "build/CMakeFiles/4.1.2/CMakeSystem.cmake",
+      "filename": "CMakeSystem.cmake",
+      "extension": "cmake",
+      "size_bytes": 380,
+      "top_level_dir": "build",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/build/CMakeFiles/4.1.2/CMakeSystem.cmake",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/build/CMakeFiles/4.1.2/CMakeSystem.cmake"
+    },
+    {
+      "path": "build/CMakeFiles/4.1.2/CompilerIdCXX/a.exe",
+      "filename": "a.exe",
+      "extension": "exe",
+      "size_bytes": 123316,
+      "top_level_dir": "build",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/build/CMakeFiles/4.1.2/CompilerIdCXX/a.exe",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/build/CMakeFiles/4.1.2/CompilerIdCXX/a.exe"
+    },
+    {
+      "path": "build/CMakeFiles/4.1.2/CompilerIdCXX/CMakeCXXCompilerId.cpp",
+      "filename": "CMakeCXXCompilerId.cpp",
+      "extension": "cpp",
+      "size_bytes": 29480,
+      "top_level_dir": "build",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/build/CMakeFiles/4.1.2/CompilerIdCXX/CMakeCXXCompilerId.cpp",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/build/CMakeFiles/4.1.2/CompilerIdCXX/CMakeCXXCompilerId.cpp"
+    },
+    {
+      "path": "build/CMakeFiles/cmake.check_cache",
+      "filename": "cmake.check_cache",
+      "extension": "check_cache",
+      "size_bytes": 85,
+      "top_level_dir": "build",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/build/CMakeFiles/cmake.check_cache",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/build/CMakeFiles/cmake.check_cache"
+    },
+    {
+      "path": "build/CMakeFiles/CMakeConfigureLog.yaml",
+      "filename": "CMakeConfigureLog.yaml",
+      "extension": "yaml",
+      "size_bytes": 222245,
+      "top_level_dir": "build",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/build/CMakeFiles/CMakeConfigureLog.yaml",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/build/CMakeFiles/CMakeConfigureLog.yaml"
+    },
+    {
+      "path": "build/CMakeFiles/InstallScripts.json",
+      "filename": "InstallScripts.json",
+      "extension": "json",
+      "size_bytes": 112,
+      "top_level_dir": "build",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/build/CMakeFiles/InstallScripts.json",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/build/CMakeFiles/InstallScripts.json"
+    },
+    {
+      "path": "build/CMakeFiles/rules.ninja",
+      "filename": "rules.ninja",
+      "extension": "ninja",
+      "size_bytes": 1374,
+      "top_level_dir": "build",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/build/CMakeFiles/rules.ninja",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/build/CMakeFiles/rules.ninja"
+    },
+    {
+      "path": "build/CMakeFiles/TargetDirectories.txt",
+      "filename": "TargetDirectories.txt",
+      "extension": "txt",
+      "size_bytes": 391,
+      "top_level_dir": "build",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/build/CMakeFiles/TargetDirectories.txt",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/build/CMakeFiles/TargetDirectories.txt"
+    },
+    {
+      "path": "CMakeLists.txt",
+      "filename": "CMakeLists.txt",
+      "extension": "txt",
+      "size_bytes": 730,
+      "top_level_dir": "CMakeLists.txt",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/CMakeLists.txt",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/CMakeLists.txt"
+    },
+    {
+      "path": "compile_commands.json",
+      "filename": "compile_commands.json",
+      "extension": "json",
+      "size_bytes": 424,
+      "top_level_dir": "compile_commands.json",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/compile_commands.json",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/compile_commands.json"
+    },
+    {
+      "path": "CONTEXT-logging-system-dev.md",
+      "filename": "CONTEXT-logging-system-dev.md",
+      "extension": "md",
+      "size_bytes": 4010,
+      "top_level_dir": "CONTEXT-logging-system-dev.md",
+      "category": "documentation",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/CONTEXT-logging-system-dev.md",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/CONTEXT-logging-system-dev.md"
     },
     {
       "path": "docs/checkpoints/DEBUG_SLICE_BASELINE_V1.md",
@@ -138,7 +318,7 @@
       "path": "include/logging_system/A_Core/binding_traits.hpp",
       "filename": "binding_traits.hpp",
       "extension": "hpp",
-      "size_bytes": 2306,
+      "size_bytes": 2357,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/A_Core/binding_traits.hpp",
@@ -1198,7 +1378,7 @@
       "path": "include/logging_system/L_Level_api/log_debug.hpp",
       "filename": "log_debug.hpp",
       "extension": "hpp",
-      "size_bytes": 4214,
+      "size_bytes": 4994,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/L_Level_api/log_debug.hpp",
@@ -1208,7 +1388,7 @@
       "path": "include/logging_system/L_Level_api/log_error.hpp",
       "filename": "log_error.hpp",
       "extension": "hpp",
-      "size_bytes": 4214,
+      "size_bytes": 4994,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/L_Level_api/log_error.hpp",
@@ -1218,7 +1398,7 @@
       "path": "include/logging_system/L_Level_api/log_fatal.hpp",
       "filename": "log_fatal.hpp",
       "extension": "hpp",
-      "size_bytes": 4214,
+      "size_bytes": 4994,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/L_Level_api/log_fatal.hpp",
@@ -1238,7 +1418,7 @@
       "path": "include/logging_system/L_Level_api/log_trace.hpp",
       "filename": "log_trace.hpp",
       "extension": "hpp",
-      "size_bytes": 4214,
+      "size_bytes": 4994,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/L_Level_api/log_trace.hpp",
@@ -1248,7 +1428,7 @@
       "path": "include/logging_system/L_Level_api/log_warn.hpp",
       "filename": "log_warn.hpp",
       "extension": "hpp",
-      "size_bytes": 4189,
+      "size_bytes": 4980,
       "top_level_dir": "include",
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/L_Level_api/log_warn.hpp",
@@ -1353,6 +1533,16 @@
       "category": "code_or_asset",
       "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/include/logging_system/N_System/system_runtime_context.hpp",
       "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/include/logging_system/N_System/system_runtime_context.hpp"
+    },
+    {
+      "path": "kilo.json",
+      "filename": "kilo.json",
+      "extension": "json",
+      "size_bytes": 571,
+      "top_level_dir": "kilo.json",
+      "category": "code_or_asset",
+      "raw_url": "https://raw.githubusercontent.com/AlotfyDev/LoggingSystem/master/kilo.json",
+      "github_url": "https://github.com/AlotfyDev/LoggingSystem/blob/master/kilo.json"
     },
     {
       "path": "Project_Initial_Tree.md",
