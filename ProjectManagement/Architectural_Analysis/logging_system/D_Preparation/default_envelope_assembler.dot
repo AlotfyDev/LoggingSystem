@@ -1,57 +1,170 @@
-digraph envelope_assembler_structure {
+digraph envelope_assembler_architecture {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+
+    envelope_assembler [label="EnvelopeAssembler\nPreparation Component"];
+
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    binding_info [label="ApiFacadeBindingInfo\nFacade Binding Context"];
+
+    envelope_assembler -> binding_info [label="uses"];
+
+    subgraph cluster_binding {
+        label="Binding Information";
+        color=lightgrey;
+        facade_name [label="facade_name: string\nAPI facade identifier"];
+        content_family [label="content_family_key: string\nContent type identifier"];
+        binding_key [label="binding_key: string\nBinding configuration key"];
+    }
+
+    binding_info -> facade_name;
+    binding_info -> content_family;
+    binding_info -> binding_key;
+
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    base_assembler [label="EnvelopeAssemblerBase<TDerived, TEnvelope, TMetadata, TTimestampStabilizer, TMetadataInjector>\nCRTP Base Class"];
+
+    envelope_assembler -> base_assembler [label="provides"];
+
+    subgraph cluster_base {
+        label="Base Components";
+        color=lightgrey;
+        metadata_storage [label="metadata_: TMetadata\nAdministrative metadata"];
+        binding_storage [label="binding_info_: ApiFacadeBindingInfo\nFacade binding context"];
+        schema_storage [label="content_schema_id_: string\nInternal schema identifier"];
+        timestamp_stabilizer [label="timestamp_stabilizer_: TTimestampStabilizer\nComposed timestamp stabilizer"];
+        metadata_injector [label="metadata_injector_: TMetadataInjector\nComposed metadata injector"];
+        type_aliases [label="Type aliases\nEnvelopeType, MetadataType, WrappedContentType"];
+    }
+
+    base_assembler -> metadata_storage;
+    base_assembler -> binding_storage;
+    base_assembler -> schema_storage;
+    base_assembler -> timestamp_stabilizer;
+    base_assembler -> metadata_injector;
+    base_assembler -> type_aliases;
+
+    node [shape=box, style=filled, fillcolor=orange];
+    assembler_variants [label="Assembler Variants"];
+
+    envelope_assembler -> assembler_variants [label="provides"];
+
+    subgraph cluster_variants {
+        label="Specialized Assemblers";
+        color=lightgrey;
+        plain_assembler [label="PlainEnvelopeAssembler\nBasic envelope assembly"];
+        plain_factory [label="CreatePlain(...)\nStatic factory method"];
+        validating_assembler [label="ValidatingEnvelopeAssembler\nValidation-aware assembly (reserved)"];
+        validating_factory [label="CreateValidating(...)\nStatic factory method"];
+    }
+
+    assembler_variants -> plain_assembler;
+    plain_assembler -> plain_factory;
+    assembler_variants -> validating_assembler;
+    validating_assembler -> validating_factory;
+
+    node [shape=box, style=filled, fillcolor=lightcyan];
+    assembly_methods [label="Assembly Methods"];
+
+    base_assembler -> assembly_methods [label="defines"];
+
+    subgraph cluster_methods {
+        label="Content Acceptance";
+        color=lightgrey;
+        create_envelope [label="accept_content(content)\nCreate new envelope"];
+        update_envelope [label="accept_content(envelope&, content)\nUpdate existing envelope"];
+    }
+
+    assembly_methods -> create_envelope;
+    assembly_methods -> update_envelope;
+
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    integration [label="Integration Points"];
+
+    envelope_assembler -> integration [label="connects"];
+
+    subgraph cluster_integration {
+        label="Architectural Connections";
+        color=lightgrey;
+        level_apis [label="Level APIs\nThin facades"];
+        metadata_models [label="LogMetadata\nAdministrative metadata"];
+        envelope_models [label="LogEnvelope\nPrepared envelopes"];
+        content_models [label="Content Contracts\nTyped content families"];
+    }
+
+    integration -> level_apis;
+    integration -> metadata_models;
+    integration -> envelope_models;
+    integration -> content_models;
+}
+
+// Data Flow Diagram
+digraph data_flow_diagram {
     rankdir=LR;
     node [shape=box, style=filled, fillcolor=lightblue];
-    
-    assembler [label="DefaultEnvelopeAssembler\nPolicy Class"];
-    
-    node [shape=box, style=filled, fillcolor=lightgreen];
-    assemble_method [label="assemble Method"];
-    
-    assembler -> assemble_method [label="provides"];
-    
-    subgraph cluster_parameters {
-        label="Input Parameters";
-        color=lightgrey;
-        content [label="TContent content"];
-        context [label="TContext context"];
-        metadata [label="TMetadata metadata"];
-        timestamp [label="std::string created_at_utc"];
-        schema_id [label="std::string content_schema_id"];
-    }
-    
-    assemble_method -> content;
-    assemble_method -> context;
-    assemble_method -> metadata;
-    assemble_method -> timestamp;
-    assemble_method -> schema_id;
-    
-    subgraph cluster_construction {
-        label="Construction Process";
-        color=lightyellow;
-        envelope_template [label="LogEnvelope<T...> template"];
-        type_deduction [label="std::decay_t type cleaning"];
-        move_construction [label="Move construct envelope"];
-    }
-    
-    assemble_method -> envelope_template;
-    envelope_template -> type_deduction;
-    type_deduction -> move_construction;
-    
-    subgraph cluster_output {
-        label="Output Result";
-        color=lightgreen;
-        constructed_envelope [label="LogEnvelope with all components"];
-    }
-    
-    move_construction -> constructed_envelope;
-    
-    subgraph cluster_integration {
-        label="Integration Points";
-        color=lightblue;
-        preparation [label="PreparationBinding"];
-        b_models [label="B_Models::LogEnvelope"];
-    }
-    
-    assembler -> preparation [label="used as TEnvelopeAssembler"];
-    envelope_template -> b_models [label="instantiates"];
+
+    level_api [label="Level API"];
+    base_assembler [label="EnvelopeAssemblerBase"];
+    crtp_dispatch [label="CRTP Dispatch"];
+    derived_assembler [label="TDerived\n(Plain/Validating)"];
+    envelope_construction [label="Envelope\nConstruction/Update"];
+
+    level_api -> base_assembler [label="accept_content()"];
+    base_assembler -> crtp_dispatch [label="accept_content_impl()"];
+    crtp_dispatch -> derived_assembler [label="Specialized logic"];
+    derived_assembler -> envelope_construction [label="Create/Update envelope"];
+
+    metadata [label="TMetadata", shape=box, fillcolor=orange];
+    schema [label="content_schema_id", shape=box, fillcolor=orange];
+    binding [label="ApiFacadeBindingInfo", shape=box, fillcolor=orange];
+    timestamp_comp [label="TTimestampStabilizer", shape=box, fillcolor=purple];
+    metadata_comp [label="TMetadataInjector", shape=box, fillcolor=purple];
+
+    metadata -> metadata_comp [label="Provided to injector"];
+    schema -> envelope_construction;
+    binding -> envelope_construction;
+    timestamp_comp -> envelope_construction [label="stabilize_into()"];
+    metadata_comp -> envelope_construction [label="inject_into()"];
+
+    {rank=same; metadata; schema; binding;}
+}
+
+// Logic Flow Diagram
+digraph logic_flow_diagram {
+    rankdir=TB;
+    node [shape=diamond, style=filled, fillcolor=yellow];
+
+    content_received [label="Content Received", shape=ellipse];
+    new_or_update [label="New or Update\nEnvelope?"];
+
+    new_envelope [label="Create New\nEnvelope", shape=box, fillcolor=green];
+    update_envelope [label="Update Existing\nEnvelope", shape=box, fillcolor=green];
+
+    crtp_new [label="CRTP: accept_content_impl(content)", shape=box, fillcolor=lightblue];
+    crtp_update [label="CRTP: accept_content_impl(envelope&, content)", shape=box, fillcolor=lightblue];
+
+    make_envelope [label="make_envelope_from_content()", shape=box, fillcolor=lightgreen];
+    assign_content [label="assign_content_to_envelope()", shape=box, fillcolor=lightgreen];
+
+    metadata_inject [label="Metadata Injector\ninject_into()", shape=box, fillcolor=pink];
+    timestamp_inject [label="Timestamp Stabilizer\nstabilize_into()", shape=box, fillcolor=pink];
+
+    return_envelope [label="Return Prepared\nEnvelope", shape=ellipse, fillcolor=green];
+
+    content_received -> new_or_update;
+
+    new_or_update -> new_envelope [label="New"];
+    new_or_update -> update_envelope [label="Update"];
+
+    new_envelope -> crtp_new;
+    update_envelope -> crtp_update;
+
+    crtp_new -> make_envelope;
+    crtp_update -> assign_content;
+
+    make_envelope -> metadata_inject;
+    assign_content -> metadata_inject;
+
+    metadata_inject -> timestamp_inject;
+    timestamp_inject -> return_envelope;
 }

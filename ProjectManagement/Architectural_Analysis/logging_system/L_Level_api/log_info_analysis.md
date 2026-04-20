@@ -2,459 +2,558 @@
 
 ## Architectural Diagrams
 
-### Graphviz (.dot) - Level API Architecture
+### GraphViz (.dot) - Level API Architecture
 ```dot
 digraph level_api_architecture {
     rankdir=TB;
     node [shape=box, style=filled, fillcolor=lightblue];
     
-    log_info [label="LogInfo\nINFO Level API Entry Point"];
+    log_info [label="LogInfo<TContent, TAssembler, TApiId>\nINFO Level API Façade"];
     
     node [shape=box, style=filled, fillcolor=lightgreen];
-    pipeline_binding [label="Pipeline Binding"];
+    template_params [label="Template Parameters"];
     
-    log_info -> pipeline_binding [label="uses"];
+    log_info -> template_params [label="parameterized by"];
     
-    subgraph cluster_binding {
-        label="InfoPipelineBinding";
+    subgraph cluster_template_params {
+        label="Template Parameters";
         color=lightgrey;
-        info_pipeline [label="PipelineBinding =\nInfoPipelineBinding"];
+        tcontent [label="TContent\nUser Content Type"];
+        tassembler [label="TAssembler\nSpecialized Assembler Type"];
+        tapiid [label="TApiId\nAPI Identity Type"];
     }
     
-    pipeline_binding -> info_pipeline;
-    
-    node [shape=box, style=filled, fillcolor=lightyellow];
-    runner_integration [label="Pipeline Runner"];
-    
-    log_info -> runner_integration [label="uses"];
-    
-    subgraph cluster_runner {
-        label="PipelineRunner";
-        color=lightgrey;
-        runner [label="Runner =\nPipelineRunner<PipelineBinding>"];
-    }
-    
-    runner_integration -> runner;
+    template_params -> tcontent;
+    template_params -> tassembler;
+    template_params -> tapiid;
     
     node [shape=box, style=filled, fillcolor=orange];
-    api_operations [label="API Operations"];
+    api_methods [label="Public API Methods"];
     
-    log_info -> api_operations [label="provides"];
+    log_info -> api_methods [label="provides"];
     
-    subgraph cluster_operations {
-        label="INFO Level Operations";
+    subgraph cluster_api_methods {
+        label="Public Methods";
         color=lightgrey;
-        level_key_op [label="level_key()\nReturns \"INFO\""];
-        resolve_target_op [label="resolve_write_target(module, record)"];
-        build_handoff_op [label="build_write_handoff_event(target)"];
-        resolve_route_op [label="resolve_default_route()"];
+        create_method [label="Create(api_id, assembler)\nStatic Factory"];
+        level_key_method [label="level_key()\nReturns \"INFO\""];
+        api_id_getter [label="api_id()\nIdentity Getter"];
+        assembler_getter [label="assembler()\nAssembler Access"];
+        accept_log_method [label="AcceptLog(content)\nContent Acceptance"];
     }
     
-    api_operations -> level_key_op;
-    api_operations -> resolve_target_op;
-    api_operations -> build_handoff_op;
-    api_operations -> resolve_route_op;
+    api_methods -> create_method;
+    api_methods -> level_key_method;
+    api_methods -> api_id_getter;
+    api_methods -> assembler_getter;
+    api_methods -> accept_log_method;
     
-    subgraph cluster_delegation {
-        label="Operation Delegation";
-        color=lightgreen;
-        runner_delegation [label="Delegates to Runner methods"];
-        level_parameter [label="Passes \"INFO\" as level_key"];
+    node [shape=box, style=filled, fillcolor=red];
+    admin_controls [label="Administrative Controls"];
+    
+    log_info -> admin_controls [label="friend access"];
+    
+    subgraph cluster_admin_controls {
+        label="SystemAdmin Controls";
+        color=lightgrey;
+        friend_systemadmin [label="friend class SystemAdmin"];
+        set_api_id [label="set_api_id_(api_id)\nPrivate Setter"];
+        bind_restriction [label="bind_content_type_restriction_<TRestrictedContent>()"];
+        clear_restriction [label="clear_content_type_restriction_()"];
+        is_restricted [label="is_content_type_restricted_()\nStatus Check"];
     }
     
-    resolve_target_op -> runner_delegation;
-    build_handoff_op -> runner_delegation;
-    resolve_route_op -> runner_delegation;
-    resolve_target_op -> level_parameter;
+    admin_controls -> friend_systemadmin;
+    admin_controls -> set_api_id;
+    admin_controls -> bind_restriction;
+    admin_controls -> clear_restriction;
+    admin_controls -> is_restricted;
     
-    subgraph cluster_integration {
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    assembler_integration [label="Assembler Integration"];
+    
+    log_info -> assembler_integration [label="owns and delegates to"];
+    
+    subgraph cluster_assembler_integration {
+        label="Composition-Owned Assembler";
+        color=lightgrey;
+        assembler_storage [label="TAssembler assembler_\nComposition Storage"];
+        accept_content_delegation [label="assembler_.accept_content(content)\nDelegation Call"];
+    }
+    
+    assembler_integration -> assembler_storage;
+    assembler_integration -> accept_content_delegation;
+    
+    subgraph cluster_integration_points {
         label="Integration Points";
         color=lightblue;
-        external_code [label="External INFO Logging Code"];
-        pipeline_system [label="INFO Pipeline System"];
-        state_management [label="H_State LogContainerModule"];
+        external_consumers [label="External INFO Logging Code"];
+        system_admin [label="SystemAdmin\nAdministrative Control"];
+        consuming_surfaces [label="Consuming Surface Components"];
+        content_models [label="Content Family Types"];
+        envelope_preparation [label="Envelope Preparation System"];
     }
-    
-    external_code -> log_info [label="uses"];
-    log_info -> pipeline_system [label="provides access to"];
-    state_management -> log_info [label="provides state for"];
+
+    external_consumers -> log_info [label="uses AcceptLog()"];
+    system_admin -> admin_controls [label="controls via friend"];
+    log_info -> consuming_surfaces [label="provides API surface"];
+    content_models -> accept_log_method [label="accepted as TContent"];
+    accept_content_delegation -> envelope_preparation [label="triggers assembly"];
 }
+```
+
+### Data Flow: Content Through Level API
+
+```mermaid
+flowchart TD
+    A[External Consumer\nContent Submission] --> B[LogInfo API\nAcceptLog(content)]
+
+    B --> C{Content Type\nRestriction Check}
+    C -->|Restricted| D[Validate Content Type]
+    C -->|Not Restricted| E[Skip Validation]
+
+    D --> F{Valid Content Type?}
+    F -->|No| G[Error/Undefined Behavior]
+    F -->|Yes| H[Proceed to Assembly]
+
+    E --> H
+    G --> I[Assembly Failed]
+
+    H --> J[Delegate to Owned Assembler\nassembler_.accept_content(content)]
+    J --> K[Assembler Processes Content]
+    K --> L[Envelope Creation/Update]
+    L --> M[Return Prepared Envelope]
+
+    I --> N[Error Response]
+    M --> O[Success Response]
+
+    subgraph "Administrative Context"
+        P[SystemAdmin] --> Q[Content Type Restrictions]
+        Q --> C
+    end
+
+    subgraph "Composition Ownership"
+        R[TAssembler assembler_] --> J
+    end
+```
+
+### Logic Flow: Level API Decision Points
+
+```mermaid
+stateDiagram-v2
+    [*] --> ConsumerCall: External code calls AcceptLog(content)
+
+    ConsumerCall --> ContentValidation: Check content type restrictions
+
+    ContentValidation --> ContentValid: Content type allowed
+    ContentValidation --> ContentInvalid: Content type restricted
+
+    ContentInvalid --> [*]: Error/Undefined behavior
+
+    ContentValid --> AssemblerDelegation: Delegate to owned assembler
+    AssemblerDelegation --> EnvelopeProcessing: Assembler creates/updates envelope
+    EnvelopeProcessing --> ReturnEnvelope: Return prepared envelope to consumer
+
+    ReturnEnvelope --> [*]: Success
+
+    note right of ContentValidation
+        Administrative control via
+        SystemAdmin friend access
+    end note
+
+    note right of AssemblerDelegation
+        Thin delegation layer -
+        no business logic in API
+    end note
+```
 
 ### Mermaid - Level API Usage Flow
 ```mermaid
 flowchart TD
-    A[External Code] --> B[Needs INFO Logging]
+    A[External Consumer] --> B[Needs INFO Content Submission]
     
-    B --> C[Use LogInfo API]
-    C --> D[Call LogInfo methods]
+    B --> C[Obtain LogInfo API Instance]
+    C --> D[SystemAdmin or Factory Creates API]
+    D --> E[LogInfo<TContent, TAssembler, TApiId>::Create(api_id, assembler)]
     
-    D --> E{Which operation?}
+    E --> F[API Ready for Use]
     
-    E --> F[level_key()]
-    E --> G[resolve_write_target]
-    E --> H[build_write_handoff_event]
-    E --> I[resolve_default_route]
+    F --> G{Consumer Operation}
     
-    F --> J[Return "INFO"]
+    G --> H[level_key()]
+    G --> I[api_id()]
+    G --> J[assembler()]
+    G --> K[AcceptLog(content)]
     
-    G --> K[Delegate to Runner::resolve_write_target]
-    K --> L[Pass module, "INFO", record]
-    L --> M[Get WriteTargetDescriptor]
+    H --> L[Return "INFO" constexpr]
     
-    H --> N[Delegate to Runner::build_write_handoff_event]
-    N --> O[Pass target descriptor]
-    O --> P[Get WriteHandoffEvent]
+    I --> M[Return API Identity]
     
-    I --> Q[Delegate to Runner::resolve_default_route]
-    Q --> R[Get InfoRepositoryRoute]
+    J --> N[Return Owned Assembler Reference]
     
-    J --> S[API Results]
+    K --> O[Validate Content Type if Restricted]
+    O --> P[Delegate to assembler_.accept_content(content)]
+    P --> Q[Assembler Processes Content]
+    Q --> R[Return Prepared Envelope]
+    
+    L --> S[API Results]
     M --> S
-    P --> S
+    N --> S
     R --> S
     
-    S --> T[INFO Logging Complete]
+    S --> T[INFO Content Accepted]
     
-    U[LogContainerModule] --> V[State Access]
-    V --> L
+    U[SystemAdmin] --> V[Administrative Control]
+    V --> W[set_api_id_(new_id)]
+    W --> Z[API Identity Updated]
+    V --> X[bind_content_type_restriction_<TRestrictedContent>()]
+    X --> AA[Content Type Restriction Applied]
+    V --> Y[clear_content_type_restriction_()]
+    Y --> BB[Content Type Restriction Cleared]
     
-    W[Record] --> X[Data Input]
-    X --> L
-    
-    subgraph "API Method Calls"
+    subgraph "Factory Construction"
         D
         E
-        F
-        G
+    end
+    
+    subgraph "Public API Methods"
         H
         I
-    end
-    
-    subgraph "Delegation to Runner"
-        K
-        L
-        N
-        O
-        Q
-    end
-    
-    subgraph "Results"
         J
-        M
+        K
+    end
+    
+    subgraph "Administrative Controls"
+        V
+        W
+        X
+        Y
+    end
+    
+    subgraph "Assembler Delegation"
+        O
         P
+        Q
         R
-        S
     end
 ```
 
 ## File Overview
 **Location:** `D:\CppBridgeVSC\LoggingSystem\include\logging_system\L_Level_api\log_info.hpp`  
-**Purpose:** LogInfo is the finalized thin dedicated INFO-level entrypoint over the INFO pipeline slice.  
+**Purpose:** LogInfo is the thin dedicated INFO-level API façade for the consuming pipeline, providing content-only acceptance with owned specialized assembler composition. It serves as the independent user-visible surface for INFO-family content submission without generic shared service convergence.  
 **Language:** C++17  
-**Dependencies:** `<string>`, `K_Pipelines/info_pipeline_binding.hpp`, `K_Pipelines/pipeline_runner.hpp`  
+**Dependencies:** `<utility>` (for std::move)
 
 ## Architectural Role
 
-### Core Design Pattern: Finalized Level Entrypoint
-This file implements **Finalized Level Entrypoint Pattern** providing complete INFO pipeline access. The `LogInfo` serves as:
+### Core Design Pattern: Template-Based Level API with Composition-Owned Assembler
+This file implements the **Composition-Owned Assembler Pattern** within a **Template-Based Level API Pattern**, serving as the architectural bridge between external consumers and internal envelope preparation systems.
 
-- **Finalized entrypoint** reflecting upgraded runner and admitted-runtime path
-- **Dual-path exposure** for both direct helper and state-admission execution
-- **Per-level specialization** with hardcoded INFO-specific configuration
-- **Thin delegation layer** over pipeline runner functionality
+The `LogInfo<TContent, TAssembler, TApiId>` provides:
+- **Thin Level-Specific Façade**: Independent user-visible surface for INFO content
+- **Composition-Owned Assembler**: Permanent assembler ownership without external lookup
+- **Template Flexibility**: Generic over content/assembler combinations with type safety
+- **Administrative Control Points**: Friend access for identity and restriction management
+- **Content-Only Acceptance**: Clean separation from record-driven patterns
 
-### Level API Layer Architecture (L_Level_api)
-The `LogInfo` answers questions about finalized INFO pipeline access:
+### Layer L (Level_api) Architecture Context
+The LogInfo answers specific architectural questions about dedicated level-specific access:
 
-- **How does external code submit work into the INFO pipeline without generic routing?**
-- **How does the INFO pipeline expose both direct and state-admission-aware paths?**
-- **What is the thin API for triggering INFO pipeline execution with proper state handling?**
+- **How does external code submit INFO-family content without passing through a generic shared service.log(level=...) convergence point?**
+- **How can the INFO API remain an independent user-visible surface while owning its specialized assembler by composition?**
+- **How can the API stay generic by default over content type, while still allowing higher layers to instantiate it with a concrete content type and a concrete specialized assembler?**
+- **How can administrative layers control API identity and content type restrictions without exposing these concerns to consumers?**
 
 ## Structural Analysis
 
-### Level API Structure
+### Template Class Structure
 ```cpp
-struct LogInfo final {
-    using PipelineBinding = logging_system::K_Pipelines::InfoPipelineBinding;
-    using Runner = logging_system::K_Pipelines::PipelineRunner<PipelineBinding>;
+template <typename TContent, typename TAssembler, typename TApiId>
+class LogInfo final {
+public:
+    using ContentType = TContent;
+    using AssemblerType = TAssembler;
+    using ApiIdType = TApiId;
 
-    static constexpr const char* level_key() noexcept {
-        return "INFO";
-    }
+    // Static factory for controlled construction
+    [[nodiscard]] static LogInfo Create(TApiId api_id, TAssembler assembler);
 
-    static auto resolve_default_route() {
-        return Runner::resolve_default_route();
-    }
+    // Level identification
+    static constexpr const char* level_key() noexcept;
 
-    template <typename TModule, typename TRecord, typename TAdapter>
-    static auto run_single(
-        const TModule& module,
-        const TRecord& record,
-        TAdapter& adapter,
-        const std::optional<std::string>& round_id = std::nullopt) {
-        return Runner::run_single(
-            module,
-            level_key(),
-            record,
-            adapter,
-            round_id);
-    }
+    // Identity access
+    [[nodiscard]] const TApiId& api_id() const noexcept;
 
-    template <typename TModule, typename TRecord, typename TAdapter>
-    static auto admit_and_run(
-        TModule& module,
-        const TRecord& record,
-        TAdapter& adapter,
-        const std::optional<std::string>& round_id = std::nullopt) {
-        return Runner::admit_and_run(
-            module,
-            level_key(),
-            record,
-            adapter,
-            round_id);
-    }
+    // Content acceptance (user-visible API)
+    [[nodiscard]] auto AcceptLog(TContent content) const;
+
+private:
+    friend class SystemAdmin;
+
+    // Administrative setters
+    void set_api_id_(TApiId api_id_in);
+    template <typename TRestrictedContent> void bind_content_type_restriction_();
+    void clear_content_type_restriction_();
+    [[nodiscard]] bool is_content_type_restricted_() const noexcept;
+
+    // Private state
+    TApiId api_id_{};
+    TAssembler assembler_{};
+    bool content_type_restricted_{false};
 };
 ```
 
-**Component Integration:**
-- **`PipelineBinding`**: Uses InfoPipelineBinding for complete INFO pipeline access
-- **`Runner`**: Uses PipelineRunner specialized for INFO pipeline execution
-- **Level Constant**: Hardcoded "INFO" level key for specialization
-- **Dual Operations**: `run_single` (direct) and `admit_and_run` (state-admission-aware)
+### Method Analysis
 
-### API Operations
+#### Static Factory Method
+```cpp
+[[nodiscard]] static LogInfo Create(TApiId api_id, TAssembler assembler)
+```
+**Construction Process:**
+1. Creates API instance with default constructor
+2. Moves assembler into composition ownership
+3. Sets API identity through private setter
+4. Returns fully configured API instance
 
-#### Level Identification
+**Purpose:** Controlled instantiation preventing invalid API states
+
+#### Level Identity Method
 ```cpp
 static constexpr const char* level_key() noexcept
 ```
-**Level Constant:**
-- Returns "INFO" as the level identifier
+**Level Specification:**
+- Returns "INFO" as the hardcoded level identifier
 - `constexpr` enables compile-time usage
-- `noexcept` guarantees no exceptions
+- `noexcept` guarantees exception safety
+- Static method allows usage without instance
 
-#### Default Route Resolution
+#### API Identity Accessor
 ```cpp
-static auto resolve_default_route()
+[[nodiscard]] const TApiId& api_id() const noexcept
 ```
-**Route Process:**
-1. Delegates to `Runner::resolve_default_route`
-2. Returns InfoRepositoryRoute default configuration
+**Identity Exposure:**
+- Returns reference to stored API identity
+- Const-correctness prevents modification
+- Noexcept for exception safety
 
-#### Single Record Execution
+#### Content Acceptance Method
 ```cpp
-template <typename TModule, typename TRecord, typename TAdapter>
-static auto run_single(
-    const TModule& module,
-    const TRecord& record,
-    TAdapter& adapter,
-    const std::optional<std::string>& round_id = std::nullopt)
+[[nodiscard]] auto AcceptLog(TContent content) const
 ```
-**Execution Process:**
-1. Delegates to `Runner::run_single` with hardcoded "INFO" level
-2. Provides complete record-to-dispatch path for INFO pipeline
-3. Accepts any adapter-like object for emission
+**Content Processing:**
+1. Accepts user content of template type TContent
+2. Moves content to avoid copying (if movable)
+3. Delegates to owned assembler's accept_content method
+4. Returns whatever the assembler returns (typically prepared envelope)
 
-#### State-Admission Execution
+**Purpose:** Thin delegation layer maintaining clean consumer API
+
+### Administrative Controls
+
+#### Friend Access Pattern
 ```cpp
-template <typename TModule, typename TRecord, typename TAdapter>
-static auto admit_and_run(
-    TModule& module,
-    const TRecord& record,
-    TAdapter& adapter,
-    const std::optional<std::string>& round_id = std::nullopt)
+friend class SystemAdmin;
 ```
-**Admitted-Runtime Process:**
-1. Delegates to `Runner::admit_and_run` with hardcoded "INFO" level
-2. Provides state-admission-aware INFO path with batch processing and feedback
-3. Handles record admission, drain processing, and state feedback automatically
+**Administrative Access:**
+- Allows SystemAdmin to access private administrative methods
+- Maintains encapsulation while enabling governance
+- Prevents direct consumer access to control mechanisms
+
+#### API Identity Management
+```cpp
+void set_api_id_(TApiId api_id_in)
+```
+**Identity Control:**
+- Private setter called during factory construction
+- Allows administrative reassignment if needed
+- Maintains API instance identity tracking
+
+#### Content Type Restrictions
+```cpp
+template <typename TRestrictedContent> void bind_content_type_restriction_()
+void clear_content_type_restriction_()
+[[nodiscard]] bool is_content_type_restricted_() const noexcept
+```
+**Restriction Management:**
+- Template method for type-specific content restrictions
+- Boolean flag tracks restriction state
+- Administrative control over allowed content types
+- Future extension point for schema/content validation
 
 ## Integration with Architecture
 
-### Level API in Logging Entry Flow
-The LogInfo integrates into the logging entry flow with dual paths:
-
-**Direct Record Path:**
+### API in Consuming Flow
 ```
-External Code → Level API → Pipeline Runner → INFO Pipeline → Dispatch Emission
-       ↓              ↓              ↓              ↓              ↓
-   INFO Logging → LogInfo::run_single → Runner::run_single → Resolver → Adapter
-   API Calls → Direct Delegation → INFO Context → Resolution → Emission
+External Code → LogInfo API → Assembler → Envelope Preparation → Pipeline
+      ↓              ↓              ↓              ↓              ↓
+   Content Only → AcceptLog → accept_content → Envelope Assembly → Processing
+   Template API → Owned Assembler → Administrative Metadata → Prepared Package → Registry
 ```
 
-**Admitted-Runtime Path:**
-```
-External Code → Level API → State Admission → Batch Processing → State Feedback
-       ↓              ↓              ↓              ↓              ↓
-   INFO Logging → LogInfo::admit_and_run → enqueue_pending → drain_pending → commit/
-   API Calls → State-Aware Path → shared state → batch execution → requeue/
-                                                           mark-failed
-```
-External Code → Level API → Pipeline Runner → INFO Pipeline → Dispatch Emission
-       ↓              ↓              ↓              ↓              ↓
-   INFO Logging → LogInfo → run_single → Resolver → DispatchContext → Adapter
-   API Calls → Dedicated Entrypoint → INFO Context → Resolution → Batch Execution
-```
-
-**Integration Points:**
-- **External Code**: Applications use LogInfo for INFO-level logging
-- **INFO Pipeline System**: LogInfo provides access to complete INFO pipeline
-- **H_State Layer**: LogContainerModule provides state for resolution operations
-- **Pipeline Components**: All INFO pipeline components (preparation, resolver, dispatch, routing)
+### Integration Points
+- **Consuming Surfaces**: Called by higher-level consuming façades for INFO content submission
+- **Assembler Components**: Owns and delegates to specialized envelope assemblers
+- **Administrative Systems**: Controlled by SystemAdmin for identity management and content restrictions
+- **Content Models**: Accepts typed content families without record conversion
+- **Envelope Preparation**: Triggers envelope assembly with metadata injection from assembler
+- **Pipeline Processing**: Prepared envelopes flow into INFO pipeline processing
 
 ### Usage Pattern
 ```cpp
-// INFO logging operations
-std::string level = LogInfo::level_key();  // "INFO"
+// Administrative setup (typically by SystemAdmin or factory)
+auto assembler = SpecializedEnvelopeAssembler<MyContent, LogMetadata>{metadata, binding};
+auto api = LogInfo<MyContent, decltype(assembler), std::string>::Create("api_001", assembler);
 
-// Direct record-to-dispatch execution (bypasses state admission)
-auto direct_result = LogInfo::run_single(
-    log_container_module,    // const TModule& - read-only state access
-    info_record,             // TRecord - finalized log record
-    file_adapter,            // TAdapter - emission target
-    std::optional<std::string>{"round_123"} // optional round_id
-);
+// Consumer usage - clean content-only API
+MyContent content{data};
+auto envelope = api.AcceptLog(std::move(content));  // Returns prepared envelope
 
-// Admitted-runtime execution (with state admission and feedback)
-auto admitted_result = LogInfo::admit_and_run(
-    log_container_module,    // TModule& - read-write state access
-    info_record,             // TRecord - record to admit and process
-    file_adapter,            // TAdapter - emission target
-    std::optional<std::string>{"batch_001"} // optional round_id
-);
-
-// Get default INFO route for setup
-auto route = LogInfo::resolve_default_route();
+// Optional: Access to API metadata
+std::string level = LogInfo<MyContent, decltype(assembler), std::string>::level_key();  // "INFO"
+std::string id = api.api_id();  // "api_001"
 ```
 
 ## Quality Assurance
 
 ### Code Quality Metrics
-- **Cyclomatic Complexity:** 1 (minimal, dual delegation paths)
-- **Lines of Code:** 36 (core struct) + 103 (documentation comments)
-- **Dependencies:** 3 headers (2 std, 1 internal)
-- **Template Complexity:** Two template methods with parameter forwarding
+- **Cyclomatic Complexity:** 1 (simple delegation methods)
+- **Lines of Code:** 160 total (including comprehensive documentation)
+- **Dependencies:** 1 standard header (`<utility>`)
+- **Template Complexity:** Three template parameters with straightforward usage
 
 ### Architectural Compliance
-✅ **Multi-Tier Architecture:** Layer L (Level APIs) - level-specific entry points  
+✅ **Multi-Tier Architecture:** Layer L (Level_api) - level-specific API surfaces  
 ✅ **No Hardcoded Values:** Level key appropriately hardcoded for INFO specialization  
-✅ **Helper Methods:** INFO-specific operations with proper delegation  
-✅ **Cross-Language Interface:** N/A (internal logging API)  
+✅ **Helper Methods:** Content acceptance and administrative access methods  
+✅ **Cross-Language Interface:** N/A (C++ template API)  
 
 ### Error Analysis
-**Status:** No syntax or logical errors detected.  
+**Status:** No syntax or logical errors detected.
 
 **Architectural Correctness Verification:**
-- **Pipeline Binding**: Correctly uses InfoPipelineBinding for complete INFO pipeline
-- **Runner Integration**: Properly uses PipelineRunner with INFO pipeline binding
-- **Level Constant**: Appropriate constexpr "INFO" level identification
-- **Delegation Pattern**: All operations correctly delegate to runner with proper parameters
+- **Template Design**: Proper template parameters for flexibility and type safety
+- **Factory Pattern**: Static factory ensures controlled construction
+- **Composition Ownership**: Assembler owned by composition, not external lookup
+- **Administrative Controls**: Friend access pattern correctly implemented
+- **Delegation Pattern**: Clean forwarding to assembler without business logic
 
 **Potential Issues Considered:**
-- **Type Dependencies**: Requires InfoPipelineBinding and PipelineRunner to be available
-- **Template Requirements**: Module and record types must be compatible with runner operations
-- **Level Specificity**: Hardcoded "INFO" appropriate for dedicated INFO API
-- **API Surface**: Minimal set of operations covers essential INFO logging needs
+- **Type Dependencies**: Requires TAssembler to have accept_content method
+- **Move Semantics**: Content passed by value, moved to assembler (appropriate for ownership transfer)
+- **Const-Correctness**: Methods appropriately const where state not modified
+- **Exception Safety**: Noexcept where appropriate, move operations exception-safe
 
 **Root Cause Analysis:** N/A (code is correct)  
 **Resolution Suggestions:** N/A  
 
 ## Design Rationale
 
-### Finalized Level Entrypoint
-**Why Finalized Entrypoint:**
-- **Runner Evolution**: Reflects upgraded runner from record-driven to admitted-runtime
-- **Dual Path Exposure**: Provides both direct helper and state-admission-aware paths
-- **Slice Completion**: Closes the finalized INFO entrypoint for current architecture
-- **Per-Level Specialization**: INFO-specific paths without runtime level switching
+### Template-Based API Design
+**Why Template Parameters:**
+- **Type Safety**: Compile-time enforcement of API compatibility
+- **Performance**: Template instantiation enables optimization
+- **Flexibility**: Generic over different content/assembler combinations
+- **Encapsulation**: Template parameters hide implementation details
 
-**Design Intent:**
-- **Complete INFO Access**: Exposes all INFO pipeline execution capabilities
-- **State-Aware Options**: Supports both stateless and state-admission-aware usage
-- **Thin Delegation Layer**: Minimal coordination while preserving pipeline boundaries
-- **No Central Convergence**: Maintains per-level separation and specialization
+**Why Three Template Parameters:**
+- **TContent**: User content type (flexibility for different content families)
+- **TAssembler**: Specialized assembler type (different assembly strategies)
+- **TApiId**: API identity type (flexibility for different identity schemes)
 
-### Minimal Scope Design
-**Why Current Minimal Scope:**
-- **Runnable Path Closure**: Provides working INFO entry without premature expansion
-- **Record-Driven Focus**: INFO logging through finalized records
-- **Adapter Boundary**: Works with any adapter-like emission object
-- **No Preparation Integration**: Focuses on dispatch side, not raw content submission
-- **Testability**: API can be tested by testing runner delegation
-- **Consistency**: Same behavior as direct runner usage
+### Composition-Owned Assembler
+**Why Composition:**
+- **Ownership Clarity**: API owns assembler, lifetime management clear
+- **No External Lookup**: Permanent one-to-one relationship, no runtime lookup needed
+- **Encapsulation**: Assembler hidden from consumers, accessed through API
+- **Dependency Injection**: Assembler provided at construction time
 
-### INFO Specialization
-**Why INFO First:**
-- **Common Level**: INFO is typically the most used logging level
-- **Complete Pipeline**: INFO has the most complete pipeline implementation
-- **Pattern Establishment**: Provides template for other level APIs
-- **Dependency Completion**: Requires all pipeline components to be available
+**Why Not Aggregation:**
+- **Permanent Relationship**: API-assembler bond never changes during API lifetime
+- **Performance**: No indirection through pointers/references
+- **Simplicity**: Direct member access, no null checks needed
 
-**Specialization Strategy:**
-- **Level Constant**: Hardcoded "INFO" for unambiguous level identification
-- **Pipeline Binding**: Uses complete InfoPipelineBinding with all components
-- **Runner Integration**: Leverages PipelineRunner for operation implementation
-- **Future Extension**: Pattern ready for DEBUG, WARN, ERROR level APIs
+### Administrative Controls
+**Why Friend Access Pattern:**
+- **Controlled Access**: Only SystemAdmin can modify administrative state
+- **Encapsulation**: Private methods prevent accidental consumer modification
+- **Governance**: Administrative layers can control API behavior
+- **Future Extensibility**: Pattern ready for additional administrative controls
+
+**Why Content Type Restrictions:**
+- **Schema Control**: Administrative ability to restrict accepted content types
+- **Validation Preparation**: Foundation for future content validation
+- **Policy Enforcement**: Higher-level governance over API usage
+- **Security**: Prevent unauthorized content type submissions
+
+### Static Factory Pattern
+**Why Static Factory:**
+- **Controlled Construction**: Prevents invalid API states (assembler required)
+- **Dependency Injection**: Clear assembler ownership transfer
+- **Naming**: Create() clearly indicates object construction
+- **Immutability**: API configuration set once, then immutable
+
+**Why Not Constructor:**
+- **Template Complexity**: Constructor would require explicit template arguments
+- **Clarity**: Factory method clearly separates construction from usage
+- **Validation**: Factory can perform validation before construction
 
 ## Performance Characteristics
 
 ### Compile-Time Performance
-- **Template Instantiation**: Lightweight delegation to existing runner
-- **Type Resolution**: Direct forwarding of template parameters
-- **Inlining Opportunity**: Static methods easily optimized
-- **No Additional Dependencies**: Uses existing pipeline infrastructure
+- **Template Instantiation**: Lightweight class with simple member access
+- **Type Resolution**: Direct template parameter usage
+- **Inlining Opportunity**: Small methods easily inlined by compiler
+- **No Complex Dependencies**: Only standard library usage
 
 ### Runtime Performance
-- **Delegation Overhead**: Minimal function call overhead to runner
-- **No State Management**: Pure coordination with no internal state
-- **Parameter Forwarding**: Efficient pass-through of arguments
-- **Pipeline Performance**: Actual performance depends on pipeline components
+- **Thin Delegation Layer**: Single method call to assembler
+- **Move Semantics**: Efficient content transfer without copying
+- **No Dynamic Allocation**: All state on stack or composition-owned
+- **Const Operations**: Read-only access where appropriate
 
 ## Evolution and Maintenance
 
-### Level API Extension
+### API Extensions
 Later expansions may include:
-- **Preparation-Stage Raw-Content Submission Helpers**: When preparation/admission entry is promoted
-- **INFO-Specific Convenience Overloads**: Specialized INFO logging helpers
-- **Consuming-Surface Integration Hooks**: Connections to broader consuming surfaces
-- **CLI Integration Helpers**: Command-line interface support for INFO logging
-- **Pipeline-Local Policy-Aware Entry Helpers**: INFO-specific policy integration
+- **INFO-Specific Convenience Methods**: Specialized overloads for common INFO content types
+- **Validation Integration**: Content validation before assembler delegation
+- **Metrics Collection**: Performance and usage monitoring
+- **Consuming Surface Integration**: Hooks for broader consuming façade integration
+- **Administrative Callbacks**: Notification mechanisms for administrative events
 
-### What This File Should NOT Contain
-This file must NOT:
-- **Become Shared Level Multiplexer**: No runtime level switching logic
-- **Own Shared State**: No global state management for INFO logging
-- **Own Adapter Registry Logic**: No adapter discovery or management
-- **Own Governance/Configuration**: No INFO pipeline policy or configuration
-- **Collapse Back into Generic service.log(...) Routing**: No generic convergence
+### Administrative Enhancements
+- **Content Type Validation**: Runtime enforcement of content type restrictions
+- **API Lifecycle Management**: Creation, modification, deactivation controls
+- **Performance Monitoring**: Administrative access to API usage metrics
+- **Policy Integration**: INFO-specific policy application and enforcement
 
 ### Testing Strategy
-Level API testing should verify:
-- level_key() returns correct "INFO" string
-- run_single correctly delegates to PipelineRunner with INFO level
-- Template instantiation works with various TModule, TRecord, TAdapter types
-- Optional round_id parameter handling works correctly
-- resolve_default_route delegates to runner correctly
-- No state management or overhead in thin entrypoint
-- Direct pipeline access without central service convergence
+API testing should verify:
+- Template instantiation works with various TContent, TAssembler, TApiId types
+- Factory method correctly constructs and configures API instances
+- AcceptLog properly forwards content to assembler
+- Administrative controls work through friend access
+- Const-correctness of all public methods
+- Move semantics efficiency for content transfer
+- Exception safety guarantees
 
 ## Related Components
 
 ### Depends On
-- `<string>` - For level key and string operations
-- `K_Pipelines/info_pipeline_binding.hpp` - For complete INFO pipeline binding
-- `K_Pipelines/pipeline_runner.hpp` - For pipeline operation implementations
+- `<utility>` - For std::move operations
+- Template parameter types (TContent, TAssembler, TApiId) - Must be properly defined
+- SystemAdmin class - For administrative control access
 
 ### Used By
-- External applications requiring INFO-level logging functionality
-- INFO-specific logging libraries and frameworks
-- Testing code that needs INFO logging operations
-- Monitoring and observability systems tracking INFO logs
-- Higher-level logging abstractions that need level-specific access
+- Consuming surface components requiring INFO content submission
+- SystemAdmin for API identity and restriction management
+- External consumer applications with INFO logging needs
+- Testing frameworks validating API behavior
+- Higher-level abstractions needing level-specific access
 
 ---
 
-**Analysis Version:** 1.2
-**Analysis Date:** 2026-04-19
-**Architectural Layer:** L_Level_api (Level Entry Points)
-**Status:** ✅ Analyzed, Updated for Finalized Entrypoint
+**Analysis Version:** 3.1
+**Analysis Date:** 2026-04-20
+**Architectural Layer:** L (Level_api) - Level-Specific API Surfaces
+**Status:** ✅ Analyzed, Updated for Thin API Implementation with Data/Logic Flow Diagrams

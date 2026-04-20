@@ -1,0 +1,46 @@
+digraph pipeline_catalog_architecture {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+
+    pipeline_catalog [label="PipelineCatalog\nCompile-time Pipeline Registry"];
+
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    level_apis [label="Level API Types"];
+
+    pipeline_catalog -> level_apis [label="exposes"];
+
+    subgraph cluster_level_apis {
+        label="Per-Level Pipeline Bindings";
+        color=lightgrey;
+        info_api [label="Info\nInfoPipelineBinding"];
+        debug_api [label="Debug\nDebugPipelineBinding"];
+        warn_api [label="Warn\nWarnPipelineBinding"];
+        error_api [label="Error\nErrorPipelineBinding"];
+        fatal_api [label="Fatal\nFatalPipelineBinding"];
+        trace_api [label="Trace\nTracePipelineBinding"];
+    }
+
+    level_apis -> info_api;
+    level_apis -> debug_api;
+    level_apis -> warn_api;
+    level_apis -> error_api;
+    level_apis -> fatal_api;
+    level_apis -> trace_api;
+
+    node [shape=box, style=filled, fillcolor=orange];
+    system_integration [label="System Integration"];
+
+    pipeline_catalog -> system_integration [label="used by"];
+
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgrey;
+        system_root [label="SystemRoot\nComposition root"];
+        governance [label="Governance Systems\nPipeline validation"];
+        builder [label="System Builder\nPipeline assembly"];
+    }
+
+    system_integration -> system_root;
+    system_integration -> governance;
+    system_integration -> builder;
+}

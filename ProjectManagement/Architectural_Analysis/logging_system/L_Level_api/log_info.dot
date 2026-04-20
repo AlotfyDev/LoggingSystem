@@ -2,74 +2,142 @@ digraph level_api_architecture {
     rankdir=TB;
     node [shape=box, style=filled, fillcolor=lightblue];
     
-    log_info [label="LogInfo\nINFO Level API Entry Point"];
+    log_info [label="LogInfo<TContent, TAssembler, TApiId>\nINFO Level API Façade"];
     
     node [shape=box, style=filled, fillcolor=lightgreen];
-    pipeline_binding [label="Pipeline Binding"];
+    template_params [label="Template Parameters"];
     
-    log_info -> pipeline_binding [label="uses"];
+    log_info -> template_params [label="parameterized by"];
     
-    subgraph cluster_binding {
-        label="InfoPipelineBinding";
+    subgraph cluster_template_params {
+        label="Template Parameters";
         color=lightgrey;
-        info_pipeline [label="PipelineBinding =\nInfoPipelineBinding"];
+        tcontent [label="TContent\nUser Content Type"];
+        tassembler [label="TAssembler\nSpecialized Assembler Type"];
+        tapiid [label="TApiId\nAPI Identity Type"];
     }
     
-    pipeline_binding -> info_pipeline;
-    
-    node [shape=box, style=filled, fillcolor=lightyellow];
-    runner_integration [label="Pipeline Runner"];
-    
-    log_info -> runner_integration [label="uses"];
-    
-    subgraph cluster_runner {
-        label="PipelineRunner";
-        color=lightgrey;
-        runner [label="Runner =\nPipelineRunner<PipelineBinding>"];
-    }
-    
-    runner_integration -> runner;
+    template_params -> tcontent;
+    template_params -> tassembler;
+    template_params -> tapiid;
     
     node [shape=box, style=filled, fillcolor=orange];
-    api_operations [label="API Operations"];
+    api_methods [label="Public API Methods"];
     
-    log_info -> api_operations [label="provides"];
+    log_info -> api_methods [label="provides"];
     
-    subgraph cluster_operations {
-        label="INFO Level Operations";
+    subgraph cluster_api_methods {
+        label="Public Methods";
         color=lightgrey;
-        level_key_op [label="level_key()\nReturns \"INFO\""];
-        resolve_target_op [label="resolve_write_target(module, record)"];
-        build_handoff_op [label="build_write_handoff_event(target)"];
-        resolve_route_op [label="resolve_default_route()"];
+        create_method [label="Create(api_id, assembler)\nStatic Factory"];
+        level_key_method [label="level_key()\nReturns \"INFO\""];
+        api_id_getter [label="api_id()\nIdentity Getter"];
+         accept_log_method [label="AcceptLog(content)\nContent Acceptance"];
+     }
+
+     api_methods -> create_method;
+     api_methods -> level_key_method;
+     api_methods -> api_id_getter;
+     api_methods -> accept_log_method;
+    
+    node [shape=box, style=filled, fillcolor=red];
+    admin_controls [label="Administrative Controls"];
+    
+    log_info -> admin_controls [label="friend access"];
+    
+    subgraph cluster_admin_controls {
+        label="SystemAdmin Controls";
+        color=lightgrey;
+        friend_systemadmin [label="friend class SystemAdmin"];
+        set_api_id [label="set_api_id_(api_id)\nPrivate Setter"];
+        bind_restriction [label="bind_content_type_restriction_<TRestrictedContent>()"];
+        clear_restriction [label="clear_content_type_restriction_()"];
+        is_restricted [label="is_content_type_restricted_()\nStatus Check"];
     }
     
-    api_operations -> level_key_op;
-    api_operations -> resolve_target_op;
-    api_operations -> build_handoff_op;
-    api_operations -> resolve_route_op;
+    admin_controls -> friend_systemadmin;
+    admin_controls -> set_api_id;
+    admin_controls -> bind_restriction;
+    admin_controls -> clear_restriction;
+    admin_controls -> is_restricted;
     
-    subgraph cluster_delegation {
-        label="Operation Delegation";
-        color=lightgreen;
-        runner_delegation [label="Delegates to Runner methods"];
-        level_parameter [label="Passes \"INFO\" as level_key"];
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    assembler_integration [label="Assembler Integration"];
+    
+    log_info -> assembler_integration [label="owns and delegates to"];
+    
+    subgraph cluster_assembler_integration {
+        label="Composition-Owned Assembler";
+        color=lightgrey;
+        assembler_storage [label="TAssembler assembler_\nComposition Storage"];
+        accept_content_delegation [label="assembler_.accept_content(content)\nDelegation Call"];
     }
     
-    resolve_target_op -> runner_delegation;
-    build_handoff_op -> runner_delegation;
-    resolve_route_op -> runner_delegation;
-    resolve_target_op -> level_parameter;
+    assembler_integration -> assembler_storage;
+    assembler_integration -> accept_content_delegation;
     
-    subgraph cluster_integration {
+    subgraph cluster_integration_points {
         label="Integration Points";
         color=lightblue;
-        external_code [label="External INFO Logging Code"];
-        pipeline_system [label="INFO Pipeline System"];
-        state_management [label="H_State LogContainerModule"];
+        external_consumers [label="External INFO Logging Code"];
+        system_admin [label="SystemAdmin\nAdministrative Control"];
+        consuming_surfaces [label="Consuming Surface Components"];
+        content_models [label="Content Family Types"];
+        envelope_preparation [label="Envelope Preparation System"];
     }
     
-    external_code -> log_info [label="uses"];
-    log_info -> pipeline_system [label="provides access to"];
-    state_management -> log_info [label="provides state for"];
+    external_consumers -> log_info [label="uses AcceptLog()"];
+    system_admin -> admin_controls [label="controls via friend"];
+    log_info -> consuming_surfaces [label="provides API surface"];
+    content_models -> accept_log_method [label="accepted as TContent"];
+    accept_content_delegation -> envelope_preparation [label="triggers assembly"];
+}
+
+// Data Flow Diagram
+digraph data_flow_diagram {
+    rankdir=LR;
+    node [shape=box, style=filled, fillcolor=lightblue];
+
+    consumer [label="External Consumer"];
+    api [label="LogInfo API"];
+    validation [label="Content Type\nValidation"];
+    assembler [label="Owned Assembler"];
+    envelope [label="Prepared Envelope"];
+
+    consumer -> api [label="AcceptLog(content)"];
+    api -> validation [label="Check restrictions"];
+    validation -> assembler [label="Valid: delegate"];
+    assembler -> envelope [label="Create envelope"];
+    envelope -> consumer [label="Return envelope"];
+
+    admin [label="SystemAdmin", shape=box, fillcolor=red];
+    admin -> validation [label="Set restrictions"];
+
+    {rank=same; consumer; admin;}
+}
+
+// Logic Flow Diagram
+digraph logic_flow_diagram {
+    rankdir=TB;
+    node [shape=diamond, style=filled, fillcolor=yellow];
+
+    start [label="AcceptLog Called", shape=ellipse];
+    check_restriction [label="Content Type\nRestricted?"];
+    validate [label="Validate Content\nType"];
+    valid_check [label="Valid Type?"];
+    delegate [label="Delegate to\nAssembler", shape=box, fillcolor=green];
+    process [label="Process Content"];
+    return_success [label="Return Envelope", shape=ellipse, fillcolor=green];
+    return_error [label="Error Response", shape=ellipse, fillcolor=red];
+
+    start -> check_restriction;
+    check_restriction -> validate [label="Yes"];
+    check_restriction -> delegate [label="No"];
+
+    validate -> valid_check;
+    valid_check -> delegate [label="Yes"];
+    valid_check -> return_error [label="No"];
+
+    delegate -> process;
+    process -> return_success;
 }

@@ -1,0 +1,65 @@
+digraph metadata_injector_concept_architecture {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+
+    metadata_injector_concept [label="MetadataInjectorConcept\nC++17 Contract Definition"];
+
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    contract_requirements [label="Contract Requirements"];
+
+    metadata_injector_concept -> contract_requirements [label="defines"];
+
+    subgraph cluster_requirements {
+        label="Required Type Traits";
+        color=lightgrey;
+        metadata_type_trait [label="has_metadata_type<T>\nMetadataType nested alias"];
+        get_method_trait [label="has_get_metadata_method<T>\nget_metadata() const"];
+        inject_method_trait [label="has_inject_into_method<T>\nTemplated inject_into()"];
+        main_contract [label="is_metadata_injector<T>\nCombined contract check"];
+        helper_alias [label="is_metadata_injector_v<T>\nHelper variable template"];
+    }
+
+    contract_requirements -> metadata_type_trait;
+    contract_requirements -> get_method_trait;
+    contract_requirements -> inject_method_trait;
+    contract_requirements -> main_contract;
+    contract_requirements -> helper_alias;
+
+    node [shape=box, style=filled, fillcolor=orange];
+    sfinae_implementation [label="SFINAE Implementation"];
+
+    metadata_injector_concept -> sfinae_implementation [label="uses"];
+
+    subgraph cluster_sfinae {
+        label="Substitution Failure Techniques";
+        color=lightgrey;
+        void_t_usage [label="std::void_t<...>\nSFINAE detection"];
+        declval_usage [label="std::declval<T&>().method()\nExpression validity"];
+        enable_if_t [label="std::enable_if_t<...>\nConditional compilation"];
+        is_same_check [label="std::is_same_v<...>\nType compatibility"];
+    }
+
+    sfinae_implementation -> void_t_usage;
+    sfinae_implementation -> declval_usage;
+    sfinae_implementation -> enable_if_t;
+    sfinae_implementation -> is_same_check;
+
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    composition_integration [label="Composition Integration"];
+
+    metadata_injector_concept -> composition_integration [label="enables"];
+
+    subgraph cluster_integration {
+        label="Assembler Composition";
+        color=lightgrey;
+        envelope_assembler [label="EnvelopeAssemblerBase\nTMetadataInjector parameter"];
+        concrete_injectors [label="DefaultMetadataInjector\nContract-compliant implementation"];
+        type_safety [label="Compile-time Validation\nTemplate constraints"];
+        injection_patterns [label="Injection Strategies\nProvider + Injector patterns"];
+    }
+
+    composition_integration -> envelope_assembler;
+    composition_integration -> concrete_injectors;
+    composition_integration -> type_safety;
+    composition_integration -> injection_patterns;
+}

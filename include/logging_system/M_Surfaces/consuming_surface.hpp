@@ -1,298 +1,211 @@
 #pragma once
 
-
-
-#pragma once
-
 /*
 ------------------------------------------------------------------------------
 M_Surfaces/consuming_surface.hpp
 
 Reference Version
 -----------------
-MULTI_LEVEL_CONSUMING_SURFACE_BASELINE_V1
+CONSUMING_PIPELINES_CORRECTION_BASELINE_V1
 
 Role in the architecture
 ------------------------
-ConsumingSurface is the consuming-side compile-time façade over the currently
-closed per-level pipeline slices.
+ConsumingSurface is the consuming-side façade over the dedicated level API
+objects.
 
 It answers narrow questions such as:
-    "How does external code consume dedicated log-level pipelines without
-     touching pipeline internals directly?"
-    "How can finalized per-level paths be reached through one consuming-side
-     surface without reintroducing a monolithic shared service root?"
+    "How does external code consume dedicated log-level APIs without touching
+     assembler internals directly?"
+    "How can the system expose per-level consumer-facing entrypoints while
+     preserving thin APIs and avoiding generic shared service.log(level=...)
+     convergence?"
+    "How can the consuming surface remain a surface object over owned level APIs
+     rather than a runtime façade over records and dispatch paths?"
 
 Why this file exists in this stage
 ----------------------------------
-The system now has closed per-level baselines for:
-- INFO
-- DEBUG
-- WARN
-- ERROR
-- FATAL
-- TRACE
+The consuming-pipeline correction clarified that:
+- level APIs must no longer be record-driven façades
+- each level API is an independent object surface
+- each level API owns its specialized assembler by composition
+- the consumer should see only content-facing methods
+- schema/configuration concerns must remain hidden from the consumer
+- the consuming surface should expose the level APIs, not bypass them
 
-Each level now exposes a dedicated thin entrypoint over its own pipeline slice.
-At this stage, the consuming surface must expand from:
-- an INFO-only consuming façade
+This means the consuming surface must evolve from:
+- a static record-driven façade over pipeline runners
 
 into:
-- a multi-level consuming façade that reflects all closed level baselines while
-  preserving:
-  - dedicated per-level entrypoints
-  - compile-time composition
-  - no central service.log(level=...) convergence
+- an object surface over owned level API objects
+- with consumer-facing content-only calls
+- no direct record/runtime exposure
 
 Current minimal scope
 ---------------------
 This file currently provides:
-- `ConsumingSurface`
-- INFO:
-  - `log_info(...)`
-  - `admit_and_log_info(...)`
-- DEBUG:
-  - `log_debug(...)`
-  - `admit_and_log_debug(...)`
-- WARN:
-  - `log_warn(...)`
-  - `admit_and_log_warn(...)`
-- ERROR:
-  - `log_error(...)`
-  - `admit_and_log_error(...)`
-- FATAL:
-  - `log_fatal(...)`
-  - `admit_and_log_fatal(...)`
-- TRACE:
-  - `log_trace(...)`
-  - `admit_and_log_trace(...)`
+- `ConsumingSurface<TLogDebug, TLogInfo, TLogWarn, TLogError, TLogFatal, TLogTrace>`
+- owned API objects for:
+  - debug
+  - info
+  - warn
+  - error
+  - fatal
+  - trace
+- consumer-facing forwarding methods:
+  - `LogDebug(...)`
+  - `LogInfo(...)`
+  - `LogWarn(...)`
+  - `LogError(...)`
+  - `LogFatal(...)`
+  - `LogTrace(...)`
 
-The intended usage split is preserved per level:
-- `log_<level>(...)`
-    direct record-driven runnable helper path
-- `admit_and_log_<level>(...)`
-    admitted-runtime path for the finalized slice
+Each method accepts content only and forwards it to the owned level API object.
 
 What this file should contain in its fuller form later
 ------------------------------------------------------
 Later expansions may include:
-- raw-content submission helpers once preparation/admission entry is promoted
-- readonly inspection/query helpers
-- notification/subscription helpers
-- consuming-side convenience helpers for CLI/application integration
-- eventual alignment with broader role-separated consuming contracts
+- default aliases over default level API types
+- readonly/query-oriented consuming helpers
+- event/subscription helpers
+- CLI/application-oriented façade aliases
+- stronger compile-time constraints over owned API objects
 
 What should NOT live here
 -------------------------
 This file must NOT:
 - become a system root
-- own shared state
-- own adapter registries
-- own governance/configuration
-- collapse dedicated level APIs into generic central convergence
-- reimplement pipeline internals
-- perform runtime level switching through string/enum multiplexing
+- own registry state
+- own dispatch/runtime logic
+- expose schema-level administrative controls to consumers
+- collapse dedicated level APIs into a generic shared level switch
+- reintroduce record-driven consumer entrypoints
 
 Design rule
 -----------
-This file is a consuming-side compile-time façade over existing per-level entry
-points.
-It exposes pipeline-local behavior upward without erasing pipeline boundaries
-or collapsing the architecture back into a shared runtime convergence point.
+This file defines the consuming-side façade over dedicated level API objects.
+
+The consuming surface owns per-level API objects.
+Each level API remains the only consumer-visible entry to its own owned
+assembler.
+The consuming surface forwards content to those APIs and nothing more.
 ------------------------------------------------------------------------------
 */
 
-#include <optional>
-#include <string>
-
-#include "logging_system/L_Level_api/log_debug.hpp"
-#include "logging_system/L_Level_api/log_error.hpp"
-#include "logging_system/L_Level_api/log_fatal.hpp"
-#include "logging_system/L_Level_api/log_info.hpp"
-#include "logging_system/L_Level_api/log_trace.hpp"
-#include "logging_system/L_Level_api/log_warn.hpp"
+#include <utility>
 
 namespace logging_system::M_Surfaces {
 
-struct ConsumingSurface final {
-    template <typename TModule, typename TRecord, typename TAdapter>
-    static auto log_info(
-        const TModule& module,
-        const TRecord& record,
-        TAdapter& adapter,
-        const std::optional<std::string>& round_id = std::nullopt) {
-        return logging_system::L_Level_api::LogInfo::run_single(
-            module,
-            record,
-            adapter,
-            round_id);
+template <
+    typename TLogDebug,
+    typename TLogInfo,
+    typename TLogWarn,
+    typename TLogError,
+    typename TLogFatal,
+    typename TLogTrace>
+class ConsumingSurface final {
+public:
+    using LogDebugApi = TLogDebug;
+    using LogInfoApi = TLogInfo;
+    using LogWarnApi = TLogWarn;
+    using LogErrorApi = TLogError;
+    using LogFatalApi = TLogFatal;
+    using LogTraceApi = TLogTrace;
+
+    ConsumingSurface() = default;
+
+    ConsumingSurface(
+        TLogDebug log_debug_in,
+        TLogInfo log_info_in,
+        TLogWarn log_warn_in,
+        TLogError log_error_in,
+        TLogFatal log_fatal_in,
+        TLogTrace log_trace_in)
+        : log_debug_(std::move(log_debug_in)),
+          log_info_(std::move(log_info_in)),
+          log_warn_(std::move(log_warn_in)),
+          log_error_(std::move(log_error_in)),
+          log_fatal_(std::move(log_fatal_in)),
+          log_trace_(std::move(log_trace_in)) {}
+
+    [[nodiscard]] TLogDebug& debug_api() noexcept {
+        return log_debug_;
     }
 
-    template <typename TModule, typename TRecord, typename TAdapter>
-    static auto admit_and_log_info(
-        TModule& module,
-        const TRecord& record,
-        TAdapter& adapter,
-        const std::optional<std::string>& round_id = std::nullopt) {
-        return logging_system::L_Level_api::LogInfo::admit_and_run(
-            module,
-            record,
-            adapter,
-            round_id);
+    [[nodiscard]] const TLogDebug& debug_api() const noexcept {
+        return log_debug_;
     }
 
-    template <typename TModule, typename TRecord, typename TAdapter>
-    static auto log_debug(
-        const TModule& module,
-        const TRecord& record,
-        TAdapter& adapter,
-        const std::optional<std::string>& round_id = std::nullopt) {
-        return logging_system::L_Level_api::LogDebug::run_single(
-            module,
-            record,
-            adapter,
-            round_id);
+    [[nodiscard]] TLogInfo& info_api() noexcept {
+        return log_info_;
     }
 
-    template <typename TModule, typename TRecord, typename TAdapter>
-    static auto admit_and_log_debug(
-        TModule& module,
-        const TRecord& record,
-        TAdapter& adapter,
-        const std::optional<std::string>& round_id = std::nullopt) {
-        return logging_system::L_Level_api::LogDebug::admit_and_run(
-            module,
-            record,
-            adapter,
-            round_id);
+    [[nodiscard]] const TLogInfo& info_api() const noexcept {
+        return log_info_;
     }
 
-    template <typename TModule, typename TRecord, typename TAdapter>
-    static auto log_warn(
-        const TModule& module,
-        const TRecord& record,
-        TAdapter& adapter,
-        const std::optional<std::string>& round_id = std::nullopt) {
-        return logging_system::L_Level_api::LogWarn::run_single(
-            module,
-            record,
-            adapter,
-            round_id);
+    [[nodiscard]] TLogWarn& warn_api() noexcept {
+        return log_warn_;
     }
 
-    template <typename TModule, typename TRecord, typename TAdapter>
-    static auto admit_and_log_warn(
-        TModule& module,
-        const TRecord& record,
-        TAdapter& adapter,
-        const std::optional<std::string>& round_id = std::nullopt) {
-        return logging_system::L_Level_api::LogWarn::admit_and_run(
-            module,
-            record,
-            adapter,
-            round_id);
+    [[nodiscard]] const TLogWarn& warn_api() const noexcept {
+        return log_warn_;
     }
 
-    template <typename TModule, typename TRecord, typename TAdapter>
-    static auto log_error(
-        const TModule& module,
-        const TRecord& record,
-        TAdapter& adapter,
-        const std::optional<std::string>& round_id = std::nullopt) {
-        return logging_system::L_Level_api::LogError::run_single(
-            module,
-            record,
-            adapter,
-            round_id);
+    [[nodiscard]] TLogError& error_api() noexcept {
+        return log_error_;
     }
 
-    template <typename TModule, typename TRecord, typename TAdapter>
-    static auto admit_and_log_error(
-        TModule& module,
-        const TRecord& record,
-        TAdapter& adapter,
-        const std::optional<std::string>& round_id = std::nullopt) {
-        return logging_system::L_Level_api::LogError::admit_and_run(
-            module,
-            record,
-            adapter,
-            round_id);
+    [[nodiscard]] const TLogError& error_api() const noexcept {
+        return log_error_;
     }
 
-    template <typename TModule, typename TRecord, typename TAdapter>
-    static auto log_fatal(
-        const TModule& module,
-        const TRecord& record,
-        TAdapter& adapter,
-        const std::optional<std::string>& round_id = std::nullopt) {
-        return logging_system::L_Level_api::LogFatal::run_single(
-            module,
-            record,
-            adapter,
-            round_id);
+    [[nodiscard]] TLogFatal& fatal_api() noexcept {
+        return log_fatal_;
     }
 
-    template <typename TModule, typename TRecord, typename TAdapter>
-    static auto admit_and_log_fatal(
-        TModule& module,
-        const TRecord& record,
-        TAdapter& adapter,
-        const std::optional<std::string>& round_id = std::nullopt) {
-        return logging_system::L_Level_api::LogFatal::admit_and_run(
-            module,
-            record,
-            adapter,
-            round_id);
+    [[nodiscard]] const TLogFatal& fatal_api() const noexcept {
+        return log_fatal_;
     }
 
-    template <typename TModule, typename TRecord, typename TAdapter>
-    static auto log_trace(
-        const TModule& module,
-        const TRecord& record,
-        TAdapter& adapter,
-        const std::optional<std::string>& round_id = std::nullopt) {
-        return logging_system::L_Level_api::LogTrace::run_single(
-            module,
-            record,
-            adapter,
-            round_id);
+    [[nodiscard]] TLogTrace& trace_api() noexcept {
+        return log_trace_;
     }
 
-    template <typename TModule, typename TRecord, typename TAdapter>
-    static auto admit_and_log_trace(
-        TModule& module,
-        const TRecord& record,
-        TAdapter& adapter,
-        const std::optional<std::string>& round_id = std::nullopt) {
-        return logging_system::L_Level_api::LogTrace::admit_and_run(
-            module,
-            record,
-            adapter,
-            round_id);
+    [[nodiscard]] const TLogTrace& trace_api() const noexcept {
+        return log_trace_;
     }
+
+    [[nodiscard]] auto LogDebug(typename TLogDebug::ContentType content) const {
+        return log_debug_.AcceptLog(std::move(content));
+    }
+
+    [[nodiscard]] auto LogInfo(typename TLogInfo::ContentType content) const {
+        return log_info_.AcceptLog(std::move(content));
+    }
+
+    [[nodiscard]] auto LogWarn(typename TLogWarn::ContentType content) const {
+        return log_warn_.AcceptLog(std::move(content));
+    }
+
+    [[nodiscard]] auto LogError(typename TLogError::ContentType content) const {
+        return log_error_.AcceptLog(std::move(content));
+    }
+
+    [[nodiscard]] auto LogFatal(typename TLogFatal::ContentType content) const {
+        return log_fatal_.AcceptLog(std::move(content));
+    }
+
+    [[nodiscard]] auto LogTrace(typename TLogTrace::ContentType content) const {
+        return log_trace_.AcceptLog(std::move(content));
+    }
+
+private:
+    TLogDebug log_debug_{};
+    TLogInfo log_info_{};
+    TLogWarn log_warn_{};
+    TLogError log_error_{};
+    TLogFatal log_fatal_{};
+    TLogTrace log_trace_{};
 };
 
 }  // namespace logging_system::M_Surfaces
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,0 +1,72 @@
+digraph metadata_injector_architecture {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+
+    metadata_injector [label="MetadataInjector<TMetadata>\nGeneric Base Class"];
+
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    template_parameter [label="Template Parameter"];
+
+    metadata_injector -> template_parameter [label="parameterized by"];
+
+    subgraph cluster_template {
+        label="Template Requirements";
+        color=lightgrey;
+        tmetadata [label="TMetadata\nMetadata value type"];
+    }
+
+    template_parameter -> tmetadata;
+
+    node [shape=box, style=filled, fillcolor=orange];
+    core_interface [label="Core Interface"];
+
+    metadata_injector -> core_interface [label="provides"];
+
+    subgraph cluster_interface {
+        label="Interface Methods";
+        color=lightgrey;
+        constructor [label="MetadataInjector(TMetadata)\nValue constructor"];
+        get_metadata [label="get_metadata() const\nMetadata access"];
+        set_metadata [label="set_metadata(TMetadata)\nMetadata update"];
+        inject_into [label="inject_into<TEnvelope>(...)\nEnvelope injection"];
+    }
+
+    core_interface -> constructor;
+    core_interface -> get_metadata;
+    core_interface -> set_metadata;
+    core_interface -> inject_into;
+
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    inheritance_hierarchy [label="Inheritance Hierarchy"];
+
+    metadata_injector -> inheritance_hierarchy [label="base for"];
+
+    subgraph cluster_hierarchy {
+        label="Derived Classes";
+        color=lightgrey;
+        default_injector [label="DefaultMetadataInjector\nConcrete implementation"];
+        custom_injectors [label="CustomMetadataInjector\nSpecialized variants"];
+    }
+
+    inheritance_hierarchy -> default_injector;
+    inheritance_hierarchy -> custom_injectors;
+
+    node [shape=box, style=filled, fillcolor=lightcyan];
+    contract_compliance [label="Contract Compliance"];
+
+    metadata_injector -> contract_compliance [label="satisfies"];
+
+    subgraph cluster_contract {
+        label="MetadataInjectorConcept";
+        color=lightgrey;
+        metadata_type_trait [label="✓ has_metadata_type"];
+        get_method_trait [label="✓ has_get_metadata_method"];
+        inject_method_trait [label="✓ has_inject_into_method"];
+        full_contract [label="✓ is_metadata_injector"];
+    }
+
+    contract_compliance -> metadata_type_trait;
+    contract_compliance -> get_method_trait;
+    contract_compliance -> inject_method_trait;
+    contract_compliance -> full_contract;
+}

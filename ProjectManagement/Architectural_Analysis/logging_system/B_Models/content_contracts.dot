@@ -1,58 +1,112 @@
-digraph content_contracts_metamodel {
+digraph content_contracts_architecture {
     rankdir=TB;
     node [shape=box, style=filled, fillcolor=lightblue];
-    
-    contracts [label="Content Contracts\nSchema Metamodel"];
-    
+
+    content_contracts [label="ContentContracts\nContract & Family Layer"];
+
     node [shape=box, style=filled, fillcolor=lightgreen];
-    enumerations [label="Type Enumerations"];
-    
-    contracts -> enumerations [label="defines"];
-    
-    subgraph cluster_enums {
-        label="Core Enumerations";
+    contract_vocabulary [label="Contract Descriptor Vocabulary"];
+
+    content_contracts -> contract_vocabulary [label="defines"];
+
+    subgraph cluster_contract_types {
+        label="Contract Types";
         color=lightgrey;
-        content_form [label="ContentForm\n(Scalar, Object, Sequence, NativeStructLike)"];
-        primitive_kind [label="PrimitiveKind\n(StringUtf8, Boolean, Int32, Int64,\nUInt32, UInt64, Float32, Float64,\nBytes, Object, Sequence)"];
+        content_form [label="ContentForm\nEnum"];
+        primitive_kind [label="PrimitiveKind\nEnum"];
+        field_contract [label="FieldContract\nStruct"];
+        content_contract [label="ContentContract\nStruct"];
     }
-    
-    enumerations -> content_form;
-    enumerations -> primitive_kind;
-    
+
+    contract_vocabulary -> content_form;
+    contract_vocabulary -> primitive_kind;
+    contract_vocabulary -> field_contract;
+    contract_vocabulary -> content_contract;
+
     node [shape=box, style=filled, fillcolor=lightyellow];
-    structures [label="Schema Structures"];
-    
-    contracts -> structures [label="provides"];
-    
-    subgraph cluster_structures {
-        label="Contract Structures";
+    content_families [label="Typed Content Families"];
+
+    content_contracts -> content_families [label="provides"];
+
+    subgraph cluster_base {
+        label="Base Interface";
         color=lightgrey;
-        field_contract [label="FieldContract\nField specifications"];
-        content_contract [label="ContentContract\nComplete schemas"];
+        icontent [label="IContent\nMarker Interface"];
     }
-    
-    structures -> field_contract;
-    structures -> content_contract;
-    
-    subgraph cluster_relationships {
-        label="Type Relationships";
-        color=lightgreen;
-        field_to_contract [label="FieldContract[] fields"];
-        lookup_method [label="find_field(name) const"];
+
+    content_families -> icontent;
+
+    subgraph cluster_default_schemas {
+        label="Default Schema Models";
+        color=lightgrey;
+        debug_schema [label="DefaultDebugSchema"];
+        info_schema [label="DefaultInfoSchema"];
+        warn_schema [label="DefaultWarnSchema"];
+        error_schema [label="DefaultErrorSchema"];
+        fatal_schema [label="DefaultFatalSchema"];
+        trace_schema [label="DefaultTraceSchema"];
     }
-    
-    content_contract -> field_to_contract;
-    content_contract -> lookup_method;
-    
-    subgraph cluster_integration {
-        label="Integration Points";
-        color=lightblue;
-        preparation [label="Preparation Layer"];
-        schema_validation [label="Schema Validation"];
-        cross_language [label="Cross-Language Marshalling"];
+
+    content_families -> debug_schema;
+    content_families -> info_schema;
+    content_families -> warn_schema;
+    content_families -> error_schema;
+    content_families -> fatal_schema;
+    content_families -> trace_schema;
+
+    subgraph cluster_family_templates {
+        label="Family Template Wrappers";
+        color=lightgrey;
+        debug_content [label="LogDebugContent<TSchema>"];
+        info_content [label="LogInfoContent<TSchema>"];
+        warn_content [label="LogWarnContent<TSchema>"];
+        error_content [label="LogErrorContent<TSchema>"];
+        fatal_content [label="LogFatalContent<TSchema>"];
+        trace_content [label="LogTraceContent<TSchema>"];
     }
-    
-    contracts -> preparation [label="used in"];
-    contracts -> schema_validation [label="enables"];
-    contracts -> cross_language [label="supports"];
+
+    content_families -> debug_content;
+    content_families -> info_content;
+    content_families -> warn_content;
+    content_families -> error_content;
+    content_families -> fatal_content;
+    content_families -> trace_content;
+
+    node [shape=box, style=filled, fillcolor=orange];
+    default_aliases [label="Built-in Default Aliases"];
+
+    content_contracts -> default_aliases [label="provides"];
+
+    subgraph cluster_defaults {
+        label="Default Family Aliases";
+        color=lightgrey;
+        default_debug [label="DefaultLogDebugContent"];
+        default_info [label="DefaultLogInfoContent"];
+        default_warn [label="DefaultLogWarnContent"];
+        default_error [label="DefaultLogErrorContent"];
+        default_fatal [label="DefaultLogFatalContent"];
+        default_trace [label="DefaultLogTraceContent"];
+    }
+
+    default_aliases -> default_debug;
+    default_aliases -> default_info;
+    default_aliases -> default_warn;
+    default_aliases -> default_error;
+    default_aliases -> default_fatal;
+    default_aliases -> default_trace;
+
+    node [shape=box, style=filled, fillcolor=lightcyan];
+    traits [label="Compile-Time Traits"];
+
+    content_contracts -> traits [label="includes"];
+
+    subgraph cluster_trait_helpers {
+        label="Trait Helpers";
+        color=lightgrey;
+        is_content_family [label="is_content_family<T>"];
+        is_content_family_v [label="is_content_family_v<T>"];
+    }
+
+    traits -> is_content_family;
+    traits -> is_content_family_v;
 }

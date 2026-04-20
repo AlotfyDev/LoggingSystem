@@ -1,0 +1,82 @@
+digraph system_root_architecture {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+
+    system_root [label="SystemRoot<T...>\nSystem Composition Root"];
+
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    template_params [label="Template Parameters"];
+
+    system_root -> template_params [label="parameterized by"];
+
+    subgraph cluster_template_params {
+        label="Composition Components";
+        color=lightgrey;
+        state_core [label="TStateCore\nState management core"];
+        governance [label="TGovernance\nAdministrative governance"];
+        adapter_boundary [label="TAdapterBoundary\nEmission boundary"];
+        surfaces [label="TSurfaces\nUser-facing surfaces"];
+    }
+
+    template_params -> state_core;
+    template_params -> governance;
+    template_params -> adapter_boundary;
+    template_params -> surfaces;
+
+    node [shape=box, style=filled, fillcolor=orange];
+    owned_components [label="Owned Components"];
+
+    system_root -> owned_components [label="owns"];
+
+    subgraph cluster_owned_components {
+        label="Composition Members";
+        color=lightgrey;
+        state_core_instance [label="state_core\nTStateCore instance"];
+        governance_instance [label="governance\nTGovernance instance"];
+        adapter_boundary_instance [label="adapter_boundary\nTAdapterBoundary instance"];
+        profile_registry_instance [label="profile_registry\nProfileRegistry instance"];
+        surfaces_instance [label="surfaces\nTSurfaces instance"];
+    }
+
+    owned_components -> state_core_instance;
+    owned_components -> governance_instance;
+    owned_components -> adapter_boundary_instance;
+    owned_components -> profile_registry_instance;
+    owned_components -> surfaces_instance;
+
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    access_methods [label="Component Access"];
+
+    system_root -> access_methods [label="provides"];
+
+    subgraph cluster_access_methods {
+        label="Access Methods";
+        color=lightgrey;
+        expose_surfaces [label="expose_surfaces()\nSurface access"];
+        expose_state_core [label="expose_state_core()\nState access"];
+        expose_governance [label="expose_governance()\nGovernance access"];
+        expose_adapter_boundary [label="expose_adapter_boundary()\nAdapter access"];
+        expose_profile_registry [label="expose_profile_registry()\nProfile access"];
+    }
+
+    access_methods -> expose_surfaces;
+    access_methods -> expose_state_core;
+    access_methods -> expose_governance;
+    access_methods -> expose_adapter_boundary;
+    access_methods -> expose_profile_registry;
+
+    node [shape=box, style=filled, fillcolor=red];
+    type_aliases [label="Type Aliases"];
+
+    system_root -> type_aliases [label="defines"];
+
+    subgraph cluster_type_aliases {
+        label="Compile-Time Types";
+        color=lightgrey;
+        pipeline_pack [label="PipelinePack\nPipelineCatalog alias"];
+        profile_registry_type [label="ProfileRegistryType\nProfileRegistry alias"];
+    }
+
+    type_aliases -> pipeline_pack;
+    type_aliases -> profile_registry_type;
+}

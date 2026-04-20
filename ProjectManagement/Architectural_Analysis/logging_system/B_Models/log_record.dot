@@ -1,86 +1,76 @@
-digraph log_record_structure {
+digraph log_record_architecture {
     rankdir=TB;
     node [shape=box, style=filled, fillcolor=lightblue];
-    
-    record [label="LogRecord<TPayload>\nTemplate Structure"];
-    
-    node [shape=box, style=filled, fillcolor=lightgreen];
-    template_param [label="Template Parameter"];
-    
-    record -> template_param [label="parameterized by"];
-    
-    subgraph cluster_param {
-        label="Type Parameter";
-        color=lightgrey;
-        payload_type [label="TPayload\nRecord payload data"];
-    }
-    
-    template_param -> payload_type;
-    
+
+    log_record [label="LogRecord<TEnvelope>\nRegistry Slot Template"];
+
     node [shape=box, style=filled, fillcolor=lightyellow];
-    identity_fields [label="Identity Fields"];
-    
-    record -> identity_fields [label="contains"];
-    
-    subgraph cluster_identity {
-        label="Record Identity";
+    record_components [label="Record Components"];
+
+    log_record -> record_components [label="contains"];
+
+    subgraph cluster_components {
+        label="Core Components";
         color=lightgrey;
-        record_id [label="record_id: string"];
-        payload [label="payload: TPayload"];
-        created_at [label="created_at_utc: string"];
+        slot_identity [label="slot_identity: RecordSlotIdentity\nRegistry slot locator"];
+        envelope [label="envelope: TEnvelope\nPrepared envelope"];
+        state [label="state: RecordState\nSlot lifecycle state"];
     }
-    
-    identity_fields -> record_id;
-    identity_fields -> payload;
-    identity_fields -> created_at;
-    
-    node [shape=box, style=filled, fillcolor=lightorange];
-    lifecycle_fields [label="Lifecycle Fields"];
-    
-    record -> lifecycle_fields [label="contains"];
-    
-    subgraph cluster_lifecycle {
-        label="Dispatch Tracking";
-        color=lightgrey;
-        dispatched_at [label="dispatched_at_utc: optional<string>"];
-        adapter_key [label="adapter_key: optional<string>"];
-    }
-    
-    lifecycle_fields -> dispatched_at;
-    lifecycle_fields -> adapter_key;
-    
+
+    record_components -> slot_identity;
+    record_components -> envelope;
+    record_components -> state;
+
     node [shape=box, style=filled, fillcolor=lightgreen];
-    type_access [label="Type Access"];
-    
-    record -> type_access [label="provides"];
-    
-    subgraph cluster_type_access {
-        label="Type Aliases";
+    identity_components [label="Identity Components"];
+
+    slot_identity -> identity_components [label="composed of"];
+
+    subgraph cluster_identity {
+        label="Identity Structure";
         color=lightgrey;
-        payload_alias [label="PayloadType = TPayload"];
+        slot_index [label="slot_index: size_t\nPrimary registry index"];
+        storage_locator [label="storage_locator: optional<StorageLocator>\nBackend-specific locator"];
     }
-    
-    type_access -> payload_alias;
-    
-    subgraph cluster_constructors {
-        label="Construction Methods";
-        color=lightblue;
-        default_ctor [label="LogRecord()"];
-        param_ctor [label="LogRecord(id, payload, created_at, dispatched, adapter)"];
+
+    identity_components -> slot_index;
+    identity_components -> storage_locator;
+
+    node [shape=box, style=filled, fillcolor=orange];
+    state_enumeration [label="State Enumeration"];
+
+    state -> state_enumeration [label="typed as"];
+
+    subgraph cluster_states {
+        label="Record States";
+        color=lightgrey;
+        unknown [label="Unknown - Initial state"];
+        pending [label="Pending - Awaiting processing"];
+        dispatched [label="Dispatched - Sent for execution"];
+        failed [label="Failed - Processing failed"];
+        retired [label="Retired - Processing complete"];
     }
-    
-    record -> default_ctor;
-    record -> param_ctor;
-    
+
+    state_enumeration -> unknown;
+    state_enumeration -> pending;
+    state_enumeration -> dispatched;
+    state_enumeration -> failed;
+    state_enumeration -> retired;
+
+    node [shape=box, style=filled, fillcolor=lightcyan];
+    integration [label="Integration Points"];
+
+    log_record -> integration [label="used in"];
+
     subgraph cluster_integration {
-        label="Integration Points";
-        color=lightgreen;
-        stabilizer [label="RecordStabilizer"];
-        dispatch [label="Dispatch Layer"];
-        storage [label="Repository Layer"];
+        label="Usage Context";
+        color=lightgrey;
+        registry_operations [label="Registry Operations\nSlot management"];
+        resolver_access [label="Resolver Access\nIdentity-based lookup"];
+        dispatcher_processing [label="Dispatcher Processing\nState transitions"];
     }
-    
-    stabilizer -> record [label="creates"];
-    record -> dispatch [label="processed by"];
-    record -> storage [label="persisted in"];
+
+    integration -> registry_operations;
+    integration -> resolver_access;
+    integration -> dispatcher_processing;
 }

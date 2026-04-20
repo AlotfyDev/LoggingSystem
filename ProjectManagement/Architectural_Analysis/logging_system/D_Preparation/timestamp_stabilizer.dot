@@ -1,0 +1,78 @@
+digraph timestamp_stabilizer_architecture {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+
+    timestamp_stabilizer [label="Timestamp Stabilizer\nStrategy Pattern"];
+
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    concept_interface [label="TimestampStabilizer\nConcept Interface"];
+
+    timestamp_stabilizer -> concept_interface [label="defines"];
+
+    subgraph cluster_concept {
+        label="Concept Requirements";
+        color=lightgrey;
+        stabilize_method [label="stabilize() -> int64_t"];
+        default_constructible [label="Default Constructible"];
+    }
+
+    concept_interface -> stabilize_method;
+    concept_interface -> default_constructible;
+
+    node [shape=box, style=filled, fillcolor=orange];
+    base_class [label="TimestampStabilizerBase<TDerived>\nCRTP Base Class"];
+
+    timestamp_stabilizer -> base_class [label="provides"];
+
+    subgraph cluster_base {
+        label="Base Functionality";
+        color=lightgrey;
+        stabilize_into_ref [label="stabilize_into(TEnvelope&)\nReference injection"];
+        stabilize_into_value [label="stabilize_into(TEnvelope) -> TEnvelope\nValue injection"];
+    }
+
+    base_class -> stabilize_into_ref;
+    base_class -> stabilize_into_value;
+
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    concrete_strategies [label="Concrete Strategies"];
+
+    timestamp_stabilizer -> concrete_strategies [label="implements"];
+
+    subgraph cluster_strategies {
+        label="Available Strategies";
+        color=lightgrey;
+        utc_strategy [label="UtcEpochMillisStabilizer\nProduction UTC"];
+        monotonic_strategy [label="MonotonicStabilizer\nRelative time"];
+        fixed_strategy [label="FixedTimeStabilizer\nTesting/Determinism"];
+        custom_strategy [label="CustomTimeSourceStabilizer\nDependency injection"];
+        high_precision_strategy [label="HighPrecisionStabilizer\nMicrosecond precision"];
+        offset_strategy [label="OffsetStabilizer\nDistributed systems"];
+    }
+
+    concrete_strategies -> utc_strategy;
+    concrete_strategies -> monotonic_strategy;
+    concrete_strategies -> fixed_strategy;
+    concrete_strategies -> custom_strategy;
+    concrete_strategies -> high_precision_strategy;
+    concrete_strategies -> offset_strategy;
+
+    node [shape=box, style=filled, fillcolor=lightcyan];
+    composition_usage [label="Composition Usage"];
+
+    timestamp_stabilizer -> composition_usage [label="used in"];
+
+    subgraph cluster_usage {
+        label="Integration Points";
+        color=lightgrey;
+        envelope_assembler [label="EnvelopeAssemblerBase\nTTimestampStabilizer"];
+        testing_frameworks [label="Testing Frameworks\nFixed/Custom strategies"];
+        production_systems [label="Production Systems\nUTC/HighPrecision"];
+        distributed_systems [label="Distributed Systems\nOffset strategy"];
+    }
+
+    composition_usage -> envelope_assembler;
+    composition_usage -> testing_frameworks;
+    composition_usage -> production_systems;
+    composition_usage -> distributed_systems;
+}

@@ -2,389 +2,430 @@
 
 ## Architectural Diagrams
 
-### Graphviz (.dot) - Data Structure Relationships
+### Graphviz (.dot) - Envelope Model Architecture
 ```dot
-digraph log_envelope_structure {
+digraph log_envelope_architecture {
     rankdir=TB;
     node [shape=box, style=filled, fillcolor=lightblue];
-    
-    envelope [label="LogEnvelope<TContent, TContext, TMetadata>\nTemplate Structure"];
-    
-    node [shape=box, style=filled, fillcolor=lightgreen];
-    template_params [label="Template Parameters"];
-    
-    envelope -> template_params [label="parameterized by"];
-    
-    subgraph cluster_params {
-        label="Type Parameters";
-        color=lightgrey;
-        content_type [label="TContent\nPrimary log data"];
-        context_type [label="TContext\nExecution context"];
-        metadata_type [label="TMetadata\nDescriptive information"];
-    }
-    
-    template_params -> content_type;
-    template_params -> context_type;
-    template_params -> metadata_type;
-    
-    node [shape=box, style=filled, fillcolor=lightyellow];
-    data_fields [label="Data Fields"];
-    
-    envelope -> data_fields [label="contains"];
-    
-    subgraph cluster_fields {
-        label="Envelope Fields";
-        color=lightgrey;
-        content_field [label="content: TContent"];
-        context_field [label="context: TContext"];
-        metadata_field [label="metadata: TMetadata"];
-        timestamp_field [label="created_at_utc: string"];
-        schema_field [label="content_schema_id: string"];
-    }
-    
-    data_fields -> content_field;
-    data_fields -> context_field;
-    data_fields -> metadata_field;
-    data_fields -> timestamp_field;
-    data_fields -> schema_field;
-    
-    node [shape=box, style=filled, fillcolor=lightgreen];
-    type_aliases [label="Type Aliases"];
-    
-    envelope -> type_aliases [label="provides"];
-    
-    subgraph cluster_aliases {
-        label="Type Access";
-        color=lightgrey;
-        content_alias [label="ContentType = TContent"];
-        context_alias [label="ContextType = TContext"];
-        metadata_alias [label="MetadataType = TMetadata"];
-    }
-    
-    type_aliases -> content_alias;
-    type_aliases -> context_alias;
-    type_aliases -> metadata_alias;
-    
-    subgraph cluster_constructors {
-        label="Construction Methods";
-        color=lightblue;
-        default_ctor [label="LogEnvelope()"];
-        param_ctor [label="LogEnvelope(content, context, metadata, timestamp, schema)"];
-    }
-    
-    envelope -> default_ctor;
-    envelope -> param_ctor;
-    
-    subgraph cluster_integration {
-        label="Integration Points";
-        color=lightgreen;
-        preparation [label="Preparation Layer"];
-        assembler [label="EnvelopeAssembler"];
-        injector [label="Various Injectors"];
-    }
-    
-    envelope -> preparation [label="used throughout"];
-    preparation -> assembler [label="constructs"];
-    preparation -> injector [label="modifies"];
-}
 
-### Mermaid - Field Relationships Flow
+    log_envelope [label="LogEnvelope<TContent, TMetadata>\nPrepared Envelope Template"];
+
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    envelope_components [label="Envelope Components"];
+
+    log_envelope -> envelope_components [label="contains"];
+
+    subgraph cluster_components {
+        label="Core Components";
+        color=lightgrey;
+        content [label="content: TWrappedContent\nTyped content family"];
+        metadata [label="metadata: TMetadata\nAdministrative metadata"];
+        timestamp [label="content_updated_at_epoch: int64\nContent update timestamp"];
+        schema_id [label="content_schema_id: string\nSchema identity"];
+    }
+
+    envelope_components -> content;
+    envelope_components -> metadata;
+    envelope_components -> timestamp;
+    envelope_components -> schema_id;
+
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    operations [label="Envelope Operations"];
+
+    log_envelope -> operations [label="provides"];
+
+    subgraph cluster_operations {
+        label="Operation Methods";
+        color=lightgrey;
+        constructors [label="Constructors\nDefault + Parameterized"];
+        assign_content [label="assign_content(TContent)\nContent replacement"];
+        assign_metadata [label="assign_metadata(TMetadata)\nMetadata assignment"];
+        assign_schema_id [label="assign_content_schema_id(string)\nSchema identity"];
+        refresh_timestamp [label="refresh_content_timestamp()\nTimestamp update"];
+    }
+
+    operations -> constructors;
+    operations -> assign_content;
+    operations -> assign_metadata;
+    operations -> assign_schema_id;
+    operations -> refresh_timestamp;
+
+    node [shape=box, style=filled, fillcolor=orange];
+    type_aliases [label="Type Aliases & Specializations"];
+
+    log_envelope -> type_aliases [label="enables"];
+
+    subgraph cluster_aliases {
+        label="Built-in Aliases";
+        color=lightgrey;
+        level_envelopes [label="Debug/Info/Warn/Error/Fatal/Trace\nLogEnvelope<TSchema, LogMetadata>"];
+        default_envelopes [label="DefaultDebug/Info/Warn/Error/Fatal/Trace\nLogEnvelope<DefaultSchema, LogMetadata>"];
+    }
+
+    type_aliases -> level_envelopes;
+    type_aliases -> default_envelopes;
+
+    node [shape=box, style=filled, fillcolor=lightcyan];
+    integration [label="Integration Points"];
+
+    log_envelope -> integration [label="used in"];
+
+    subgraph cluster_integration {
+        label="Usage Context";
+        color=lightgrey;
+        envelope_assembly [label="Envelope Assembly\nEnvelope creation"];
+        record_creation [label="Record Creation\nEnvelope containment"];
+        registry_admission [label="Registry Admission\nPrepared package"];
+    }
+
+    integration -> envelope_assembly;
+    integration -> record_creation;
+    integration -> registry_admission;
+}
+```
+
+### Mermaid - Envelope Model Flow
 ```mermaid
-graph TD
-    A[LogEnvelope Template] --> B[Template Parameters]
-    A --> C[Data Fields]
-    A --> D[Type Aliases]
-    A --> E[Constructors]
-    
-    B --> F[TContent - Primary log data]
-    B --> G[TContext - Execution context]
-    B --> H[TMetadata - Descriptive information]
-    
-    C --> I[content: TContent]
-    C --> J[context: TContext]
-    C --> K[metadata: TMetadata]
-    C --> L[created_at_utc: string]
-    C --> M[content_schema_id: string]
-    
-    D --> N[ContentType = TContent]
-    D --> O[ContextType = TContext]
-    D --> P[MetadataType = TMetadata]
-    
-    E --> Q[Default Constructor]
-    E --> R[Parameterized Constructor]
-    
-    R --> S[Move construct all fields]
-    
-    S --> T[Envelope Ready]
-    T --> U[Used in preparation pipeline]
-    
-    subgraph "Template Type System"
-        F
-        G
-        H
-    end
-    
-    subgraph "Envelope Content"
-        I
-        J
-        K
-        L
-        M
-    end
-    
-    subgraph "Type Access"
-        N
-        O
-        P
-    end
-    
-    subgraph "Construction"
-        Q
-        R
-        S
-    end
-    
-    V[EnvelopeAssembler] --> R
-    W[MetadataInjector] --> K
-    X[TimestampStabilizer] --> L
-    Y[SchemaApplier] --> M
-    
-    Z[Preparation Pipeline] --> V
-    Z --> W
-    Z --> X
-    Z --> Y
+flowchart TD
+    A[LogEnvelope<TContent, TMetadata>] --> B[Template Structure]
+
+    B --> C[content: TWrappedContent]
+    B --> D[metadata: TMetadata]
+    B --> E[content_updated_at_epoch: int64]
+    B --> F[content_schema_id: string]
+
+    C --> G[Typed Content Family]
+    D --> H[Administrative Metadata]
+    E --> I[Content Update Timestamp]
+    F --> J[Schema Identity]
+
+    A --> K[Operation Methods]
+
+    K --> L[Constructors]
+    K --> M[assign_content()]
+    K --> N[assign_metadata()]
+    K --> O[assign_content_schema_id()]
+    K --> P[refresh_content_timestamp()]
+
+    L --> Q[Default + Parameterized]
+    M --> R[Content Replacement + Auto-timestamp]
+    N --> S[Metadata Assignment]
+    O --> T[Schema Identity Setting]
+    P --> U[Manual Timestamp Refresh]
+
+    A --> V[Type Specializations]
+
+    V --> W[Level Envelopes]
+    V --> X[Default Envelopes]
+
+    W --> Y[Debug/Info/Warn/Error/Fatal/Trace\nLogEnvelope<TSchema, LogMetadata>]
+    X --> Z[DefaultDebug/Info/Warn/Error/Fatal/Trace\nLogEnvelope<DefaultSchema, LogMetadata>]
+
+    A --> AA[Integration Points]
+
+    AA --> BB[Envelope Assembly]
+    AA --> CC[Record Creation]
+    AA --> DD[Registry Admission]
+
+    BB --> EE[Envelope construction with metadata/timestamp]
+    CC --> FF[Envelope contained in LogRecord]
+    DD --> GG[Prepared package for registry admission]
+
+    EE --> HH[Prepared semantic package]
+    FF --> II[Registry slot entry]
+    GG --> JJ[Admission-ready envelope]
 ```
 
 ## File Overview
 **Location:** `D:\CppBridgeVSC\LoggingSystem\include\logging_system\B_Models\log_envelope.hpp`  
-**Purpose:** Defines the LogEnvelope template structure for containing structured log data with metadata.  
+**Purpose:** Defines the unified envelope model for the consuming pipelines - the prepared package before registry admission.  
 **Language:** C++17  
-**Dependencies:** `<string>`, `<utility>` (standard library)  
+**Dependencies:** `content_contracts.hpp`, `log_metadata.hpp`, `utc_now_iso.hpp`  
 
 ## Architectural Role
 
-### Core Design Pattern: Structured Data Container
-This file implements **Generic Data Encapsulation**, providing a template-based container that structures log data into well-defined components. The `LogEnvelope` serves as:
+### Core Design Pattern: Unified Envelope Template
+This file implements **Prepared Envelope Pattern**, providing a unified template that represents the semantic prepared package produced by envelope assembly. The `LogEnvelope<TWrappedContent, TMetadata>` serves as:
 
-- **Structured data container** for log entries with multiple facets
-- **Type-safe envelope template** supporting heterogeneous content types
-- **Metadata aggregation point** combining content, context, and metadata
-- **Temporal and schema annotation** framework for log entries
+- **Prepared envelope template** containing content, metadata, timestamp, and schema identity
+- **Registry admission package** - the complete prepared entry before record creation
+- **Type-safe content specialization** through template parameters while maintaining structural unity
+- **Content-update timestamp tracking** that refreshes automatically on content changes
 
-### Models Layer Architecture
-The `LogEnvelope` provides the core data structure for prepared log entries:
+### B_Models Layer Architecture (Data Models)
+The `log_envelope.hpp` provides the envelope model that answers:
 
-- **Content**: The primary log data payload
-- **Context**: Execution context information (request, session, etc.)
-- **Metadata**: Additional descriptive information about the log entry
-- **Temporal Information**: Creation timestamp in UTC
-- **Schema Identification**: Content schema reference for validation and processing
+- **What is the prepared package produced by envelope assembly before registry admission?**
+- **How can the envelope remain structurally unified while preserving type-safe level/content-family specialization?**
+- **How can content-update time be represented numerically and refreshed automatically when envelope content changes?**
+- **What is the boundary between envelope (prepared package) and record (registry slot)?**
 
 ## Structural Analysis
 
-### Template Structure
+### Envelope Template Structure
 ```cpp
-template <typename TContent, typename TContext, typename TMetadata>
+template <typename TWrappedContent, typename TMetadata>
 struct LogEnvelope final {
-    using ContentType = TContent;
-    using ContextType = TContext;
+    using WrappedContentType = TWrappedContent;
     using MetadataType = TMetadata;
 
-    TContent content{};
-    TContext context{};
+    TWrappedContent content{};
     TMetadata metadata{};
-
-    std::string created_at_utc{};
+    std::int64_t content_updated_at_epoch{0};
     std::string content_schema_id{};
 
-    LogEnvelope() = default;
-
-    LogEnvelope(
-        TContent content_in,
-        TContext context_in,
-        TMetadata metadata_in,
-        std::string created_at_utc_in,
-        std::string content_schema_id_in)
-        : content(std::move(content_in)),
-          context(std::move(context_in)),
-          metadata(std::move(metadata_in)),
-          created_at_utc(std::move(created_at_utc_in)),
-          content_schema_id(std::move(content_schema_id_in)) {}
+    // Constructors and operations...
 };
 ```
 
 **Design Characteristics:**
-- **Template parameters**: Three generic types for content, context, and metadata
-- **Type aliases**: Clear access to the template parameter types
-- **Default constructible**: Supports default initialization
-- **Move constructor**: Efficient construction with ownership transfer
-- **Immutable by design**: No setters, data set at construction time
+- **Template parameters**: `TWrappedContent` and `TMetadata` for type-safe specialization
+- **Four core fields**: Content, metadata, timestamp, schema identity
+- **Automatic timestamp refresh**: Content changes automatically update timestamp
+- **Type aliases**: `WrappedContentType` and `MetadataType` for introspection
+
+### Envelope Operations
+```cpp
+// Construction
+LogEnvelope() = default;
+LogEnvelope(TWrappedContent, TMetadata, std::string) // Auto-timestamp
+
+// Content management
+void assign_content(TWrappedContent) // Auto-refreshes timestamp
+void assign_metadata(TMetadata)
+void assign_content_schema_id(std::string)
+void refresh_content_timestamp() // Manual timestamp refresh
+
+// Internal timestamp helper
+static std::int64_t current_epoch_millis() // UTC epoch milliseconds
+```
+
+**Operation Design:**
+- **Automatic timestamping**: Content assignment automatically refreshes timestamp
+- **Manual override**: `refresh_content_timestamp()` for explicit updates
+- **Move semantics**: Efficient assignment of content and metadata
+- **UTC timing**: Uses `utc_now_epoch_millis()` for consistent timing
+
+### Type Aliases and Specializations
+```cpp
+// Level-specific envelope templates
+template <typename TSchema>
+using DebugLogEnvelope = LogEnvelope<LogDebugContent<TSchema>, LogMetadata>;
+
+// Built-in default envelopes
+using DefaultDebugLogEnvelope = DebugLogEnvelope<DefaultDebugSchema>;
+using DefaultInfoLogEnvelope  = InfoLogEnvelope<DefaultInfoSchema>;
+// ... similar for all levels
+```
+
+**Specialization Strategy:**
+- **Level-specific aliases**: Each logging level has its envelope type
+- **Default convenience**: Pre-built aliases using default schemas
+- **Template composition**: Combines content families with metadata model
+- **Type safety**: Compile-time enforcement of envelope compatibility
 
 ### Include Dependencies
 ```cpp
-#include <string>   // For timestamp and schema ID strings
-#include <utility>  // For std::move
+#include <cstdint>    // For int64_t timestamp type
+#include <string>     // For schema_id string type
+#include <utility>    // For std::move move semantics
+
+#include "logging_system/B_Models/content_contracts.hpp"  // Content families
+#include "logging_system/B_Models/log_metadata.hpp"       // Metadata model
+#include "logging_system/B_Models/utc_now_iso.hpp"        // Time utilities
 ```
 
-**Minimal Dependencies:** Only essential standard library support.
+**Architectural Dependencies:** Links to other B_Models components for complete envelope definition.
 
 ## Integration with Architecture
 
-### Envelope Lifecycle
-The LogEnvelope flows through the architectural pipeline as follows:
+### Envelope in Pipeline Flow
+The envelope model integrates into the pipeline flow as follows:
 
 ```
-Raw Data → Preparation → Envelope Creation → Schema Application → Record Stabilization
-     ↓            ↓             ↓             ↓             ↓
-  Components → Policies → LogEnvelope → Schema ID → LogRecord
+Content Families → Metadata → Envelope Assembly → LogEnvelope → Record Creation
+      ↓              ↓              ↓              ↓              ↓
+   Typed Content → Admin Metadata → Assembly Process → Prepared Envelope → Registry Slot
+   Schema + Data → Writer Identity → Timestamp + Injection → Semantic Package → Admission
 ```
 
 **Integration Points:**
-- **Preparation Layer**: Created by `DefaultEnvelopeAssembler`
-- **Schema Application**: Modified by `DefaultContentSchemaApplier`
-- **Timestamp Injection**: Modified by `DefaultTimestampStabilizer`
-- **Record Creation**: Source for `DefaultRecordStabilizer.stabilize_from_envelope()`
+- **Envelope Assembly**: Creates `LogEnvelope` instances with content, metadata, timestamp
+- **Record Creation**: `LogEnvelope` becomes the core content of `LogRecord`
+- **Registry Admission**: Prepared envelope is admitted to registry as complete package
+- **Pipeline Operations**: May produce or consume envelope instances
 
 ### Usage Pattern
 ```cpp
-// Type-safe envelope creation
-using UserActionEnvelope = LogEnvelope<
-    UserActionData,     // TContent
-    RequestContext,     // TContext
-    UserMetadata        // TMetadata
->;
+// Envelope assembly from components
+LogInfoContent<MySchema> content{my_schema_data};
+LogMetadata metadata{"writer_service_v1"};
 
-// Envelope construction
-UserActionEnvelope envelope{
-    user_action,           // content
-    http_request_context,  // context
-    user_profile_metadata, // metadata
-    "2024-01-01T12:00:00Z", // created_at_utc
-    "user_action_v1"       // content_schema_id
+LogEnvelope envelope{
+    content,
+    metadata,
+    "my_schema_v1"  // schema_id (timestamp auto-generated)
 };
 
-// Type-safe access
-auto& content = envelope.content;      // UserActionData
-auto& context = envelope.context;      // RequestContext
-auto& metadata = envelope.metadata;    // UserMetadata
+// Content updates automatically refresh timestamp
+envelope.assign_content(LogInfoContent<MySchema>{updated_data});
+
+// Manual timestamp refresh if needed
+envelope.refresh_content_timestamp();
+
+// Use in record creation
+LogRecord record{some_identity, envelope, RecordState::Pending};
 ```
 
 ## Quality Assurance
 
 ### Code Quality Metrics
-- **Cyclomatic Complexity:** 1 (minimal)
-- **Lines of Code:** 26
-- **Dependencies:** 2 standard library headers
-- **Template Complexity:** Simple template with type aliases
+- **Cyclomatic Complexity:** 1 (minimal, data structure with simple operations)
+- **Lines of Code:** ~95 (template + aliases + operations)
+- **Dependencies:** 6 headers (3 std + 3 internal)
+- **Template Complexity:** Single template with type aliases
 
 ### Architectural Compliance
-✅ **Multi-Tier Architecture:** Layer B (Models) - core data structure template  
-✅ **No Hardcoded Values:** All data provided through template parameters and construction  
-✅ **Helper Methods:** N/A (data-only template struct)  
-✅ **Cross-Language Interface:** Template-based, potential for marshalling with concrete types  
+✅ **Multi-Tier Architecture:** Layer B (Models) - complex data structures  
+✅ **No Hardcoded Values:** All configuration through template parameters  
+✅ **Helper Methods:** Envelope operations and timestamp management  
+✅ **Cross-Language Interface:** N/A (C++ template system)  
 
 ### Error Analysis
 **Status:** No syntax or logical errors detected.  
 
 **Architectural Correctness Verification:**
-- **Template Design:** Clean separation of content, context, and metadata types
-- **Constructor Design:** Both default and move constructors provided
-- **Type Aliases:** Proper exposure of template parameter types
-- **Move Semantics:** Correct use of `std::move` for ownership transfer
+- **Template Design:** Proper template parameter usage and type aliases
+- **Move Semantics:** Correct use of `std::move` for efficient assignment
+- **Timestamp Logic:** Automatic refresh on content changes, manual override available
+- **Type Safety:** Template specialization maintains type relationships
+- **Memory Management:** Standard library handles memory automatically
 
 **Potential Issues Considered:**
-- **Template Instantiation:** Requires concrete types for all template parameters
-- **Move Requirements:** Types must support move construction
-- **Memory Layout:** Template affects memory layout based on type parameters
-- **Copy Operations:** No copy constructor (move-only by design)
+- **Template Instantiation:** Each envelope type requires explicit instantiation
+- **Timestamp Precision:** Millisecond precision may need microsecond extension
+- **Time Zone Handling:** UTC-only may need localization support
+- **Content Validation**: No validation in envelope (belongs in preparation layer)
 
-**Root Cause Analysis:** N/A (code is correct)  
+**Root Cause Analysis:** N/A (code is architecturally sound)  
 **Resolution Suggestions:** N/A  
 
 ## Design Rationale
 
-### Three-Component Architecture
-**Why Content, Context, and Metadata:**
-- **Content**: Core log data that represents the event or state change
-- **Context**: Execution context (request ID, session, user, etc.) for correlation
-- **Metadata**: Descriptive information (severity, tags, categories, etc.)
-- **Separation of Concerns**: Each component serves distinct purposes in log processing
+### Unified Envelope Template
+**Why Unified Template Structure:**
+- **Structural Consistency**: All envelopes have the same fundamental structure
+- **Type Safety**: Template parameters enforce content-metadata compatibility
+- **Semantic Clarity**: Clear separation between envelope (prepared) and record (slot)
+- **Assembly Boundary**: Envelope represents the output of assembly phase
 
-**Benefits:**
-- **Type Safety:** Template parameters ensure compile-time type checking
-- **Flexibility:** Different log types can use different component types
-- **Optimization:** Components can be optimized independently
-- **Queryability:** Context enables efficient log filtering and correlation
+**Template vs Inheritance:**
+- **Templates**: Zero runtime overhead, maximum type safety
+- **Explicit Types**: Clear content-metadata relationships
+- **Specialization**: Level-specific aliases provide convenient naming
+- **Defaults**: Pre-built combinations for common use cases
 
-### Temporal and Schema Information
-**Why Built-in Fields:**
-- **Temporal Ordering:** `created_at_utc` enables proper chronological sorting
-- **Schema Awareness:** `content_schema_id` enables content validation and evolution
-- **Standardization:** Consistent timestamp and schema fields across all envelopes
-- **Processing Support:** Fields support routing, filtering, and transformation decisions
+### Content-Update Timestamp
+**Why Content-Update Timestamp:**
+- **Semantic Accuracy**: Timestamp represents when content was last meaningful
+- **Automatic Refresh**: Content changes automatically update timestamp
+- **Envelope Reusability**: Envelopes may be updated before registry admission
+- **Query Support**: Timestamps enable time-based envelope operations
 
-### Move-Only Design
-**Why Move Semantics:**
-- **Performance:** Avoids expensive copies of potentially large content objects
-- **Ownership Transfer:** Clear ownership semantics from construction to consumption
-- **Resource Management:** Proper cleanup of source objects after envelope creation
-- **Immutable Envelope:** Once created, envelope contents don't change
+**Timestamp vs Object Creation:**
+- **Content Update**: Represents meaningful content changes
+- **Object Creation**: When envelope object was instantiated
+- **Envelope Lifecycle**: Envelopes may exist longer than their current content
+- **Query Semantics**: Content timestamp more useful for filtering/sorting
+
+### Envelope vs Record Boundary
+**Why Separate Envelope and Record:**
+- **Semantic Difference**: Envelope is prepared package, record is registry slot
+- **Reusability**: Envelopes may be prepared before slot assignment
+- **State Separation**: Record adds slot state, envelope is stateless prepared data
+- **Assembly Boundary**: Envelope completes assembly, record begins registry lifecycle
+
+**Envelope Responsibilities:**
+- **Content Containment**: Holds the typed content family
+- **Metadata Integration**: Includes administrative metadata
+- **Schema Identity**: Tracks content schema for validation
+- **Timestamp Tracking**: Content update time for ordering
 
 ## Performance Characteristics
 
 ### Compile-Time Performance
-- **Template Instantiation:** Lightweight template with simple member variables
-- **Type Resolution:** Straightforward template parameter substitution
-- **Inlining Opportunity:** Constructor operations easily inlined
+- **Template Instantiation:** Per-envelope-type template instantiation
+- **Type Resolution:** Complex template relationships require resolution
+- **Include Chain:** Dependencies on multiple B_Models components
+- **Optimization**: Template specialization enables full inlining
 
 ### Runtime Performance
-- **Memory Layout:** Contiguous memory layout for all members
-- **Move Construction:** Efficient ownership transfer during construction
-- **Access Performance:** Direct member access with no indirection
-- **Cache Efficiency:** Related data grouped together in memory
+- **Memory Layout:** Predictable memory layout through template specialization
+- **Move Operations:** Efficient content and metadata assignment
+- **Timestamp Generation:** Fast UTC epoch millisecond calculation
+- **No Dynamic Allocation:** All operations use existing memory
 
 ## Evolution and Maintenance
 
-### Envelope Extension
-Adding new envelope features requires:
-1. Add new member variables to the template
-2. Update constructors to initialize new fields
-3. Update dependent code (assemblers, stabilizers, etc.)
-4. Maintain backward compatibility through default values
+### Envelope Extensions
+Future expansions may include:
+- **Additional Metadata**: Extended metadata fields beyond writer identity
+- **Content Validation**: Optional envelope-level validation markers
+- **Envelope Annotations**: Processing hints and routing information
+- **Schema Evolution**: Version compatibility and migration markers
+- **Performance Metadata**: Processing time and resource usage tracking
 
-### Alternative Envelope Designs
-Considered alternatives:
-- **Inheritance Hierarchy:** Would complicate template usage and serialization
-- **Variant Types:** `std::variant` would add runtime overhead and complexity
-- **Separate Structures:** Multiple structs would complicate the API
-- **Current Design:** Single template provides optimal flexibility and performance
+### Timestamp Enhancements
+- **Microsecond Precision**: Support for higher-resolution timestamps
+- **Monotonic Timestamps**: Alternative timing for relative measurements
+- **Time Zone Support**: Localization beyond UTC-only
+- **Timestamp Validation**: Sanity checks for timestamp values
+
+### Type Specialization Evolution
+- **Custom Metadata Types**: Beyond LogMetadata for specialized use cases
+- **Envelope Traits**: Compile-time envelope property detection
+- **Envelope Composition**: Building complex envelopes from simpler ones
+- **Envelope Serialization**: Cross-language envelope representation
+
+### What This File Should NOT Contain
+This file must NOT:
+- **Validate Content**: Validation belongs in preparation layer
+- **Inject Metadata**: Metadata injection belongs in assembly
+- **Generate Timestamps**: Time generation belongs in utilities
+- **Manage State**: State management belongs in records
+- **Perform I/O**: Data-only, no external operations
 
 ### Testing Strategy
-Envelope tests should verify:
-- Template instantiation works with various type combinations
-- Default construction initializes all members to default values
-- Move construction properly transfers ownership
-- Type aliases correctly expose template parameter types
-- Member access works correctly for all field types
-- Memory layout is stable and predictable
-- Copy operations behave correctly (if added in future)
+Envelope model testing should verify:
+- Template instantiation works for all envelope type combinations
+- Constructor operations correctly initialize all fields
+- Content assignment automatically refreshes timestamps
+- Metadata and schema assignment work correctly
+- Move semantics for efficient content/metadata transfer
+- Timestamp generation and refresh operations
+- Type aliases resolve to correct template specializations
+- Integration with envelope assembly and record creation
 
 ## Related Components
 
 ### Depends On
-- `<string>` - For timestamp and schema ID string fields
-- `<utility>` - For `std::move` operations
+- `<cstdint>` - For `int64_t` timestamp type
+- `<string>` - For schema_id string handling
+- `<utility>` - For `std::move` move semantics
+- `content_contracts.hpp` - Content family types and traits
+- `log_metadata.hpp` - Metadata model for envelope
+- `utc_now_iso.hpp` - Time utilities for timestamp generation
 
 ### Used By
-- `D_Preparation/default_envelope_assembler.hpp` - For envelope construction
-- `D_Preparation/default_timestamp_stabilizer.hpp` - For timestamp injection
-- `D_Preparation/default_content_schema_applier.hpp` - For schema annotation
-- `D_Preparation/default_record_stabilizer.hpp` - As source for record creation
-- Higher-level processing components that work with envelope data
+- **Envelope Assembly**: Creates envelope instances during preparation
+- **Record Creation**: Envelopes become core content of LogRecord
+- **Registry Operations**: Prepared envelopes admitted to registry
+- **Pipeline Operations**: May produce or consume envelope instances
+- **Query Operations**: Envelope timestamps used for filtering/sorting
 
 ---
 
-**Analysis Version:** 1.0  
-**Analysis Date:** 2026-04-19  
-**Architectural Layer:** B_Models (Core Data Structures)  
-**Status:** ✅ Analyzed, No Issues
+**Analysis Version:** 2.0  
+**Analysis Date:** 2026-04-20  
+**Architectural Layer:** B_Models (Data Models)  
+**Status:** ✅ Analyzed, Updated for Current Implementation

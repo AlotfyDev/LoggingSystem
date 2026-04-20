@@ -1,0 +1,53 @@
+digraph utc_now_iso_architecture {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+
+    utc_utilities [label="UTC Time Utilities\nTime Extraction Helpers"];
+
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    time_functions [label="Time Functions"];
+
+    utc_utilities -> time_functions [label="provides"];
+
+    subgraph cluster_functions {
+        label="Function Set";
+        color=lightgrey;
+        epoch_millis [label="utc_now_epoch_millis()\nNumeric UTC timestamp"];
+        iso_string [label="utc_now_iso()\nHuman-readable UTC string"];
+    }
+
+    time_functions -> epoch_millis;
+    time_functions -> iso_string;
+
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    time_formats [label="Time Formats"];
+
+    utc_utilities -> time_formats [label="supports"];
+
+    subgraph cluster_formats {
+        label="Format Types";
+        color=lightgrey;
+        numeric_epoch [label="Epoch Milliseconds\nint64_t for ordering/querying"];
+        iso_8601 [label="ISO-8601 String\n\"YYYY-MM-DDTHH:MM:SSZ\" format"];
+    }
+
+    time_formats -> numeric_epoch;
+    time_formats -> iso_8601;
+
+    node [shape=box, style=filled, fillcolor=orange];
+    integration [label="Integration Points"];
+
+    utc_utilities -> integration [label="used in"];
+
+    subgraph cluster_integration {
+        label="Usage Context";
+        color=lightgrey;
+        envelope_timestamps [label="Envelope Timestamps\nContent update tracking"];
+        model_timestamps [label="Model Timestamps\nData model time fields"];
+        preparation_layer [label="Preparation Layer\nTimestamp injection"];
+    }
+
+    integration -> envelope_timestamps;
+    integration -> model_timestamps;
+    integration -> preparation_layer;
+}

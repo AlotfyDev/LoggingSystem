@@ -1,0 +1,63 @@
+digraph profile_registry_architecture {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+
+    profile_registry [label="ProfileRegistry\nRuntime Profile Identity"];
+
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    profile_state [label="Profile State"];
+
+    profile_registry -> profile_state [label="manages"];
+
+    subgraph cluster_profile_state {
+        label="Profile Identity State";
+        color=lightgrey;
+        active_production [label="active_production_profile_id\nOptional<string>"];
+        runtime_profiles [label="runtime_profile_ids\nvector<string>"];
+        production_profiles [label="production_profile_ids\nvector<string>"];
+    }
+
+    profile_state -> active_production;
+    profile_state -> runtime_profiles;
+    profile_state -> production_profiles;
+
+    node [shape=box, style=filled, fillcolor=orange];
+    profile_operations [label="Profile Operations"];
+
+    profile_registry -> profile_operations [label="provides"];
+
+    subgraph cluster_operations {
+        label="State Management";
+        color=lightgrey;
+        set_active [label="set_active_production_profile()\nSet active profile"];
+        clear_active [label="clear_active_production_profile()\nClear active profile"];
+        get_active [label="get_active_production_profile()\nGet active profile"];
+        list_runtime [label="list_runtime_profiles()\nGet runtime profiles"];
+        list_production [label="list_production_profiles()\nGet production profiles"];
+    }
+
+    profile_operations -> set_active;
+    profile_operations -> clear_active;
+    profile_operations -> get_active;
+    profile_operations -> list_runtime;
+    profile_operations -> list_production;
+
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    system_integration [label="System Integration"];
+
+    profile_registry -> system_integration [label="used by"];
+
+    subgraph cluster_integration {
+        label="Integration Points";
+        color=lightgrey;
+        system_root [label="SystemRoot\nProfile visibility"];
+        governance [label="Governance Systems\nProfile CRUD"];
+        builder [label="System Builder\nProfile application"];
+        monitoring [label="Monitoring Systems\nProfile metrics"];
+    }
+
+    system_integration -> system_root;
+    system_integration -> governance;
+    system_integration -> builder;
+    system_integration -> monitoring;
+}

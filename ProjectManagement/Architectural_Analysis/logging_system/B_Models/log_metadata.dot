@@ -1,0 +1,51 @@
+digraph log_metadata_architecture {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+
+    metadata_model [label="LogMetadata\nAdministrative Metadata Model"];
+
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    metadata_fields [label="Metadata Fields"];
+
+    metadata_model -> metadata_fields [label="contains"];
+
+    subgraph cluster_fields {
+        label="Required Fields";
+        color=lightgrey;
+        writer_id [label="writer_id: string\nAdministrative writer identity"];
+    }
+
+    metadata_fields -> writer_id;
+
+    node [shape=box, style=filled, fillcolor=orange];
+    helper_operations [label="Helper Operations"];
+
+    metadata_model -> helper_operations [label="provides"];
+
+    subgraph cluster_operations {
+        label="Operation Set";
+        color=lightgrey;
+        has_writer_id [label="has_writer_id()\nCheck if writer ID is set"];
+        assign_writer_id [label="assign_writer_id(string)\nSet administrative writer ID"];
+    }
+
+    helper_operations -> has_writer_id;
+    helper_operations -> assign_writer_id;
+
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    integration [label="Integration Points"];
+
+    metadata_model -> integration [label="used by"];
+
+    subgraph cluster_integration {
+        label="Architectural Usage";
+        color=lightgrey;
+        assemblers [label="Envelope Assemblers\nMetadata injection"];
+        envelopes [label="LogEnvelope\nMetadata carrier"];
+        admin_systems [label="Administrative Systems\nMetadata assignment"];
+    }
+
+    integration -> assemblers;
+    integration -> envelopes;
+    integration -> admin_systems;
+}
