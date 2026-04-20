@@ -2,6 +2,8 @@
 
 #include <type_traits>
 
+#include "logging_system/A_Core/binding_tags.hpp"
+
 namespace logging_system::A_Core {
 
 template <typename T>

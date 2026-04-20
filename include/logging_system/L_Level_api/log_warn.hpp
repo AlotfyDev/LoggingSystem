@@ -6,134 +6,151 @@ L_Level_api/log_warn.hpp
 
 Reference Version
 -----------------
-WARN_SLICE_BASELINE_V1
+CONSUMING_PIPELINES_CORRECTION_BASELINE_V1
 
 Role in the architecture
 ------------------------
-LogWarn is the finalized thin dedicated WARN-level entrypoint over the WARN
-pipeline slice.
+LogWarn is the thin dedicated WARN-level API façade for the consuming pipeline.
 
 It answers narrow questions such as:
-    "How does external code submit work into the WARN pipeline without passing
-     through a generic shared service.log(level=...) convergence point?"
-    "How does the WARN pipeline expose both a direct runnable helper path and a
-     state-admission-aware path through one thin per-level entry surface?"
+    "How does external code submit WARN-family content without passing through
+     a generic shared service.log(level=...) convergence point?"
+    "How can the WARN API remain an independent user-visible surface while
+     owning its specialized assembler by composition?"
+    "How can the API stay generic by default over content type, while still
+     allowing higher layers to instantiate it with a concrete content type and
+     a concrete specialized assembler?"
 
 Why this file exists in this stage
 ----------------------------------
-The WARN slice now has:
-- WARN preparation binding
-- WARN resolver binding
-- WARN dispatch binding
-- WARN repository route
-- WARN pipeline binding
-- a runnable pipeline runner
-- a minimal adapter boundary
-- a consuming surface above it
+The consuming-pipeline correction clarified that:
+- the level API must no longer be record-driven
+- the API should accept content only
+- the API is an independent surface object
+- the assembler is an owned hidden dependency inside the API
+- the user should see only the API
+- the API forwards content to its owned assembler
+- metadata comes from administrative assignment into the assembler
+- content validation, if enabled, belongs to the validating assembler variant
+- schema and specialized content-type administrative controls must remain
+  outside the consumer-visible API surface
 
-At this stage, the WARN entrypoint must evolve from:
-- a very thin helper wrapper
-
-into:
-- a finalized thin WARN-level entry that reflects the now-upgraded runner and
-  the admitted-runtime path of the slice.
+It was also clarified that:
+- the API–assembler relationship is permanent and one-to-one
+- repeated external lookup is unnecessary
+- composition-based ownership is the cleanest binding model here
+- administrative and managerial layers may restrict content type from the
+  source, but the default API shape remains template-based
 
 Current minimal scope
 ---------------------
 This file currently provides:
-- `LogWarn`
+- `LogWarn<TContent, TAssembler, TApiId>`
 - fixed `level_key()`
-- `resolve_default_route()`
-- `run_single(...)`
-- `admit_and_run(...)`
+- one user-visible thin method:
+  - `AcceptLog(...)`
+- API identity:
+  - public getter
+  - private setter
+- private administrative content-type/schema control placeholders
+- a static factory method for controlled API construction
 
-The intended usage split is:
-- `run_single(...)`
-    direct record-driven runnable helper path
-- `admit_and_run(...)`
-    state-admission-aware WARN path for the finalized slice
-
-This closes the dedicated WARN entrypoint for the current slice without
-reintroducing:
-- generic shared level switching
-- a monolithic logging service root
-- central service.log(...) convergence
+The consumer sees only:
+- a ready API object
+- `AcceptLog(ContentType content)`
 
 What this file should contain in its fuller form later
 ------------------------------------------------------
 Later expansions may include:
-- raw-content submission helpers that invoke preparation/stabilization before
-  admission
-- WARN-specific convenience overloads
-- CLI/application-oriented helper aliases
-- integration hooks for broader consuming surfaces
-- stronger compile-time validation against pipeline-local contracts
+- WARN-specific convenience aliases
+- concrete default aliases for default WARN content wrappers
+- stronger compile-time constraints for content/assembler compatibility
+- integration with broader consuming surfaces
+- final administrative schema/content-type control semantics once SystemAdmin
+  is fully defined
 
 What should NOT live here
 -------------------------
 This file must NOT:
-- become a shared level multiplexer
-- own shared state
-- own adapter registry logic
-- own governance/configuration
-- implement pipeline internals directly
-- collapse back into generic service.log(...) routing
+- own registry state
+- own dispatch/runtime logic
+- own governance/configuration logic
+- perform content validation itself
+- inject metadata itself
+- expose schema-level administrative concerns to consumers
+- collapse back into shared `service.log(...)` routing
 
 Design rule
 -----------
-This file is a thin per-level entrypoint only.
-Its job is to make the WARN pipeline directly reachable as its own dedicated
-path, while delegating actual pipeline behavior to the WARN pipeline runner.
+This file defines a thin WARN-level API façade only.
+
+The API is independent as a user-visible surface.
+Its specialized assembler is owned internally by composition.
+The consumer sees only content acceptance.
+Administrative controls over identity and specialized content/schema binding
+remain hidden behind private members and friend access.
 ------------------------------------------------------------------------------
 */
 
-#include <optional>
-#include <string>
-
-#include "logging_system/K_Pipelines/warn_pipeline_binding.hpp"
-#include "logging_system/K_Pipelines/pipeline_runner.hpp"
+#include <utility>
 
 namespace logging_system::L_Level_api {
 
-struct LogWarn final {
-    using PipelineBinding = logging_system::K_Pipelines::WarnPipelineBinding;
-    using Runner = logging_system::K_Pipelines::PipelineRunner<PipelineBinding>;
+class SystemAdmin;
+
+template <typename TContent, typename TAssembler, typename TApiId>
+class LogWarn final {
+public:
+    using ContentType = TContent;
+    using AssemblerType = TAssembler;
+    using ApiIdType = TApiId;
+
+    LogWarn() = default;
+
+    [[nodiscard]] static LogWarn Create(
+        TApiId api_id,
+        TAssembler assembler) {
+        LogWarn api{};
+        api.assembler_ = std::move(assembler);
+        api.set_api_id_(std::move(api_id));
+        return api;
+    }
 
     static constexpr const char* level_key() noexcept {
         return "WARN";
     }
 
-    static auto resolve_default_route() {
-        return Runner::resolve_default_route();
+    [[nodiscard]] const TApiId& api_id() const noexcept {
+        return api_id_;
     }
 
-    template <typename TModule, typename TRecord, typename TAdapter>
-    static auto run_single(
-        const TModule& module,
-        const TRecord& record,
-        TAdapter& adapter,
-        const std::optional<std::string>& round_id = std::nullopt) {
-        return Runner::run_single(
-            module,
-            level_key(),
-            record,
-            adapter,
-            round_id);
+    [[nodiscard]] auto AcceptLog(TContent content) const {
+        return assembler_.accept_content(std::move(content));
     }
 
-    template <typename TModule, typename TRecord, typename TAdapter>
-    static auto admit_and_run(
-        TModule& module,
-        const TRecord& record,
-        TAdapter& adapter,
-        const std::optional<std::string>& round_id = std::nullopt) {
-        return Runner::admit_and_run(
-            module,
-            level_key(),
-            record,
-            adapter,
-            round_id);
+private:
+    friend class SystemAdmin;
+
+    void set_api_id_(TApiId api_id_in) {
+        api_id_ = std::move(api_id_in);
     }
+
+    template <typename TRestrictedContent>
+    void bind_content_type_restriction_() {
+        content_type_restricted_ = true;
+    }
+
+    void clear_content_type_restriction_() {
+        content_type_restricted_ = false;
+    }
+
+    [[nodiscard]] bool is_content_type_restricted_() const noexcept {
+        return content_type_restricted_;
+    }
+
+    TApiId api_id_{};
+    TAssembler assembler_{};
+    bool content_type_restricted_{false};
 };
 
 }  // namespace logging_system::L_Level_api

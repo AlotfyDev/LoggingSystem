@@ -1,0 +1,17 @@
+CompileFlags:
+  Add:
+    - -std=c++17
+    - -Iinclude
+    - -isystem
+    - C:/msys64/mingw64/include/c++/15.2.0
+    - -isystem
+    - C:/msys64/mingw64/include/c++/15.2.0/x86_64-w64-mingw32
+    - -isystem
+    - C:/msys64/mingw64/include
+    - -D_DEBUG
+    - -D_UNICODE
+    - -D_WIN32
+    - -DWIN32_LEAN_AND_MEAN
+    - -DNOMINMAX
+    - -DWINVER=0x0A00
+    - -D_WIN32_WINNT=0x0A00

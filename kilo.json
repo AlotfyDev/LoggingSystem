@@ -1,0 +1,28 @@
+{
+  "$schema": "https://app.kilo.ai/config.json",
+  "skills": {
+    "strategic-compact": {
+      "enabled": true,
+      "thresholds": {
+        "default": 40,
+        "aggressive": 25
+      },
+      "active_threshold": "aggressive",
+      "integrate_context_saver": true,
+      "suppress_during": [
+        "debugging",
+        "active_implementation"
+      ],
+      "boundary_events": [
+        "task_completion",
+        "git_commit",
+        "phase_transition",
+        "feature_boundary"
+      ]
+    }
+  },
+  "compaction": {
+    "auto": false,
+    "prune": true
+  }
+}
