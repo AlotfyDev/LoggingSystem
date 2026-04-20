@@ -2,336 +2,421 @@
 
 ## Architectural Diagrams
 
-### Graphviz (.dot) - Level API Architecture
+### GraphViz (.dot) - DEBUG Level API Architecture
 ```dot
 digraph log_debug_architecture {
     rankdir=TB;
     node [shape=box, style=filled, fillcolor=lightblue];
-    
-    log_debug [label="LogDebug\nDEBUG Level API Entry Point"];
-    
-    node [shape=box, style=filled, fillcolor=lightgreen];
-    pipeline_binding_integration [label="Pipeline Binding Integration"];
-    
-    log_debug -> pipeline_binding_integration [label="uses"];
-    
-    subgraph cluster_binding {
-        label="DebugPipelineBinding";
-        color=lightgrey;
-        debug_pipeline [label="PipelineBinding =\nDebugPipelineBinding"];
-    }
-    
-    pipeline_binding_integration -> debug_pipeline;
-    
+
+    log_debug_api [label="LogDebug<TContent, TAssembler, TApiId>\nDEBUG Level API Façade"];
+
     node [shape=box, style=filled, fillcolor=lightyellow];
-    runner_integration [label="Pipeline Runner"];
-    
-    log_debug -> runner_integration [label="uses"];
-    
-    subgraph cluster_runner {
-        label="PipelineRunner";
+    template_params [label="Template Parameters"];
+
+    log_debug_api -> template_params [label="parameterized by"];
+
+    subgraph cluster_template_params {
+        label="Composition Types";
         color=lightgrey;
-        runner [label="Runner =\nPipelineRunner<PipelineBinding>"];
+        tcontent [label="TContent\nContent type"];
+        tassembler [label="TAssembler\nAssembler type"];
+        tapiid [label="TApiId\nAPI identity type"];
     }
-    
-    runner_integration -> runner;
-    
+
+    template_params -> tcontent;
+    template_params -> tassembler;
+    template_params -> tapiid;
+
     node [shape=box, style=filled, fillcolor=orange];
-    api_operations [label="API Operations"];
-    
-    log_debug -> api_operations [label="provides"];
-    
-    subgraph cluster_operations {
-        label="DEBUG Level Operations";
+    public_interface [label="Public Interface"];
+
+    log_debug_api -> public_interface [label="exposes"];
+
+    subgraph cluster_public_interface {
+        label="User-Visible Methods";
         color=lightgrey;
-        level_key_op [label="level_key()\nReturns \"DEBUG\""];
-        resolve_target_op [label="resolve_write_target(module, record)"];
-        build_handoff_op [label="build_write_handoff_event(target)"];
-        resolve_route_op [label="resolve_default_route()"];
-        admit_and_run_op [label="admit_and_run(module, record, adapter, round_id)"];
+        create_method [label="Create(api_id, assembler)\nFactory construction"];
+        level_key_method [label="level_key()\nReturns 'DEBUG'"];
+        api_id_getter [label="api_id()\nIdentity access"];
+        accept_log_method [label="AcceptLog(content)\nContent acceptance"];
     }
-    
-    api_operations -> level_key_op;
-    api_operations -> resolve_target_op;
-    api_operations -> build_handoff_op;
-    api_operations -> resolve_route_op;
-    api_operations -> admit_and_run_op;
+
+    public_interface -> create_method;
+    public_interface -> level_key_method;
+    public_interface -> api_id_getter;
+    public_interface -> accept_log_method;
+
+    node [shape=box, style=filled, fillcolor=red];
+    composition_ownership [label="Composition Ownership"];
+
+    log_debug_api -> composition_ownership [label="owns"];
+
+    subgraph cluster_composition {
+        label="Internal Components";
+        color=lightgrey;
+        assembler_owned [label="TAssembler assembler_\nOwned assembler"];
+        api_id_owned [label="TApiId api_id_\nAPI identity"];
+        admin_controls [label="Administrative controls\nContent restrictions"];
+    }
+
+    composition_ownership -> assembler_owned;
+    composition_ownership -> api_id_owned;
+    composition_ownership -> admin_controls;
+
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    architectural_integration [label="Architectural Integration"];
+
+    log_debug_api -> architectural_integration [label="connects"];
+
+    subgraph cluster_integration {
+        label="System Relationships";
+        color=lightgrey;
+        consuming_surface [label="ConsumingSurface\nAPI aggregation"];
+        envelope_assembler [label="EnvelopeAssembler\nContent processing"];
+        system_admin [label="SystemAdmin\nAdministrative control"];
+        preparation_layer [label="D_Preparation\nAssembly components"];
+    }
+
+    architectural_integration -> consuming_surface;
+    architectural_integration -> envelope_assembler;
+    architectural_integration -> system_admin;
+    architectural_integration -> preparation_layer;
 }
 ```
 
 ### Mermaid - DEBUG Level API Flow
+
 ```mermaid
 flowchart TD
-    A[External Code] --> B{Level Selection}
-    
-    B --> C[LogDebug]
-    C --> D[Direct Path]
-    D --> E[run_single]
-    E --> F[PipelineRunner::run_single]
-    F --> G[Record → Dispatch]
-    G --> H[Adapter Emission]
-    
-    C --> I[Admitted Path]
-    I --> J[admit_and_run]
-    J --> K[PipelineRunner::admit_and_run]
-    K --> L[Enqueue → Drain → Batch]
-    L --> M[Dispatch → Feedback]
-    M --> N[State Update]
-    
-    B --> O[Other Levels]
-    O --> P[LogInfo, etc.]
-    
-    H --> Q[FileAdapter]
-    H --> R[NoOpAdapter]
-    N --> S[Commit/Requeue/MarkFailed]
+    A[Consuming Code] --> B[ConsumingSurface.LogDebug(content)]
+    B --> C[LogDebug API]
+    C --> D{API State}
+    D --> E[Content Type Valid?]
+    E -->|Invalid| F[Error/Undefined]
+    E -->|Valid| G[Forward to Assembler]
+
+    G --> H[TAssembler assembler_.accept_content(content)]
+    H --> I[EnvelopeAssemblerBase.accept_content_impl()]
+    I --> J[Metadata Injector + Timestamp Stabilizer]
+    J --> K[Envelope Construction/Assignment]
+    K --> L[Prepared Envelope]
+    L --> M[Return to Consumer]
+
+    subgraph "Administrative Setup"
+        N[SystemAdmin] --> O[Create LogDebug API]
+        O --> P[Assign Assembler]
+        P --> Q[Set API Identity]
+    end
+
+    subgraph "Composition Pattern"
+        R[TAssembler assembler_] --> H
+        S[TApiId api_id_] --> C
+    end
+
+    subgraph "Template Flexibility"
+        T[TContent] --> B
+        U[Concrete Assembler] --> R
+        V[Concrete API ID] --> S
+    end
 ```
 
 ## File Overview
 **Location:** `D:\CppBridgeVSC\LoggingSystem\include\logging_system\L_Level_api\log_debug.hpp`  
-**Purpose:** LogDebug is the finalized thin dedicated DEBUG-level entrypoint over the DEBUG pipeline slice.  
+**Purpose:** LogDebug provides the thin dedicated DEBUG-level API façade for the consuming pipeline, enabling content-only submission to DEBUG-specific processing while maintaining composition ownership of specialized assemblers.  
 **Language:** C++17  
-**Dependencies:** `<optional>`, `<string>`, `debug_pipeline_binding.hpp`, `pipeline_runner.hpp`  
+**Dependencies:** `<utility>` (standard library)
 
 ## Architectural Role
 
-### Core Design Pattern: Finalized Level Entrypoint
-This file implements **Finalized Level Entrypoint Pattern** providing complete DEBUG pipeline access. The `LogDebug` serves as:
+### Core Design Pattern: Template-Based API Façade with Composition
+This file implements the **DEBUG Level API Façade Pattern** as part of the consuming pipelines correction, providing a template-based surface that owns specialized assemblers while exposing only content acceptance to consumers.
 
-- **Finalized entrypoint** reflecting upgraded runner and admitted-runtime path
-- **Dual-path exposure** for both direct helper and state-admission-aware execution
-- **Per-level specialization** with hardcoded DEBUG-specific configuration
-- **Thin delegation layer** over pipeline runner functionality
+The `LogDebug<TContent, TAssembler, TApiId>` provides:
+- **Template Flexibility**: Generic over content, assembler, and identity types
+- **Composition Ownership**: Internal assembler ownership with external construction control
+- **Content-Only Interface**: Pure consumer-facing content acceptance
+- **Administrative Controls**: Identity management and content type restrictions
+- **Type Safety**: Compile-time verification of component compatibility
 
-### Level API Layer Architecture (L_Level_api)
-The `LogDebug` answers questions about finalized DEBUG pipeline access:
+### L_Level_api Layer Architecture Context
+The LogDebug answers specific architectural questions about DEBUG-level processing:
 
-- **How does external code submit work into the DEBUG pipeline without generic routing?**
-- **How does the DEBUG pipeline expose both direct and state-admission-aware paths?**
-- **What is the thin API for triggering DEBUG pipeline execution with proper state handling?**
+- **How does DEBUG content reach specialized DEBUG processing without generic level routing?**
+- **How can DEBUG APIs maintain independence while participating in system composition?**
+- **How does DEBUG processing remain configurable through assembler specialization?**
 
 ## Structural Analysis
 
-### Level API Structure
+### Template Class Structure
 ```cpp
-struct LogDebug final {
-    using PipelineBinding = logging_system::K_Pipelines::DebugPipelineBinding;
-    using Runner = logging_system::K_Pipelines::PipelineRunner<PipelineBinding>;
+template <typename TContent, typename TAssembler, typename TApiId>
+class LogDebug final {
+public:
+    using ContentType = TContent;
+    using AssemblerType = TAssembler;
+    using ApiIdType = TApiId;
 
-    static constexpr const char* level_key() noexcept {
-        return "DEBUG";
-    }
+    // Construction and identity
+    LogDebug() = default;
+    [[nodiscard]] static LogDebug Create(TApiId api_id, TAssembler assembler);
+    [[nodiscard]] const TApiId& api_id() const noexcept;
+    static constexpr const char* level_key() noexcept;
 
-    static auto resolve_default_route() {
-        return Runner::resolve_default_route();
-    }
+    // Content processing
+    [[nodiscard]] auto AcceptLog(TContent content) const;
 
-    template <typename TModule, typename TRecord, typename TAdapter>
-    static auto run_single(
-        const TModule& module,
-        const TRecord& record,
-        TAdapter& adapter,
-        const std::optional<std::string>& round_id = std::nullopt) {
-        return Runner::run_single(
-            module,
-            level_key(),
-            record,
-            adapter,
-            round_id);
-    }
+private:
+    // Administrative controls
+    friend class SystemAdmin;
+    void set_api_id_(TApiId api_id_in);
+    template <typename TRestrictedContent> void bind_content_type_restriction_();
+    void clear_content_type_restriction_();
+    [[nodiscard]] bool is_content_type_restricted_() const noexcept;
 
-    template <typename TModule, typename TRecord, typename TAdapter>
-    static auto admit_and_run(
-        TModule& module,
-        const TRecord& record,
-        TAdapter& adapter,
-        const std::optional<std::string>& round_id = std::nullopt) {
-        return Runner::admit_and_run(
-            module,
-            level_key(),
-            record,
-            adapter,
-            round_id);
-    }
+    // Composition members
+    TApiId api_id_{};
+    TAssembler assembler_{};
+    bool content_type_restricted_{false};
 };
 ```
 
-**Component Integration:**
-- **`PipelineBinding`**: Uses DebugPipelineBinding for complete DEBUG pipeline access
-- **`Runner`**: Uses PipelineRunner specialized for DEBUG pipeline execution
-- **Level Constant**: Hardcoded "DEBUG" level key for specialization
-- **Dual Operations**: `run_single` (direct) and `admit_and_run` (state-admission-aware)
+**Design Characteristics:**
+- **Template Parameters**: Three-parameter flexibility for different use cases
+- **Factory Construction**: Controlled instantiation through static `Create()` method
+- **Minimal Public Interface**: Only essential methods exposed to consumers
+- **Administrative Friend Access**: SystemAdmin can modify internal state
+- **Composition Ownership**: Assembler owned internally, not injected per call
+
+### Construction and Factory Pattern
+
+#### Default Construction
+```cpp
+LogDebug() = default;
+```
+**Purpose:** Enables default-constructible usage in containers and templates
+
+#### Factory Construction
+```cpp
+[[nodiscard]] static LogDebug Create(TApiId api_id, TAssembler assembler)
+```
+**Purpose:** Controlled construction ensuring proper assembler ownership and identity assignment
+
+**Construction Flow:**
+1. Create empty API instance
+2. Move assembler into composition ownership
+3. Set API identity through private setter
+4. Return fully configured API object
+
+### Identity and Level Management
+
+#### Level Identification
+```cpp
+static constexpr const char* level_key() noexcept
+```
+**Returns:** `"DEBUG"` - Compile-time level identification
+
+#### API Identity Access
+```cpp
+[[nodiscard]] const TApiId& api_id() const noexcept
+```
+**Purpose:** Read-only access to API identity for consumer inspection
+
+### Content Processing Interface
+
+#### Content Acceptance
+```cpp
+[[nodiscard]] auto AcceptLog(TContent content) const
+```
+**Purpose:** Primary consumer interface for DEBUG content submission
+
+**Processing Flow:**
+1. Forward content to owned assembler via `assembler_.accept_content()`
+2. Assembler handles envelope preparation (metadata injection, timestamp stabilization)
+3. Return prepared envelope to consumer
+
+### Administrative Controls
+
+#### Identity Management
+```cpp
+friend class SystemAdmin;
+void set_api_id_(TApiId api_id_in);
+```
+**Purpose:** Administrative API identity modification through friend access
+
+#### Content Type Restrictions
+```cpp
+template <typename TRestrictedContent> void bind_content_type_restriction_();
+void clear_content_type_restriction_();
+[[nodiscard]] bool is_content_type_restricted_() const noexcept;
+```
+**Purpose:** Administrative control over acceptable content types for specialized DEBUG processing
 
 ## Integration with Architecture
 
-### DEBUG Level API in Logging Entry Flow
-The LogDebug integrates into the logging entry flow with dual paths:
-
-**Direct Record Path:**
+### DEBUG Processing Pipeline
 ```
-External Code → Level API → Pipeline Runner → DEBUG Pipeline → Dispatch Emission
-       ↓              ↓              ↓              ↓              ↓
-   DEBUG Logging → LogDebug::run_single → Runner::run_single → Resolver → Adapter
-   API Calls → Direct Delegation → DEBUG Context → Resolution → Emission
-```
-
-**Admitted-Runtime Path:**
-```
-External Code → Level API → State Admission → Batch Processing → State Feedback
-       ↓              ↓              ↓              ↓              ↓
-   DEBUG Logging → LogDebug::admit_and_run → enqueue_pending → drain_pending → commit/
-   API Calls → State-Aware Path → shared state → batch execution → requeue/
-                                                           mark-failed
+Consumer → LogDebug.AcceptLog(content) → TAssembler.accept_content(content)
+    ↓              ↓                              ↓
+Content → API Validation → EnvelopeAssemblerBase.accept_content_impl()
+    ↓              ↓                              ↓
+Forward → Admin Controls → MetadataInjector + TimestampStabilizer
+    ↓              ↓                              ↓
+Envelope → Preparation → Registry Admission → DEBUG Pipeline Processing
 ```
 
-**Integration Points:**
-- **Level APIs**: Direct consumer of PipelineRunner for DEBUG-specific operations
-- **Consuming Surfaces**: Can use LogDebug directly or through consuming surface façade
-- **Pipeline Runner**: Uses admitted-runtime capabilities for state management
-- **State Modules**: LogContainerModule provides admission/drain/commit state operations
+### Integration Points
+- **ConsumingSurface**: Aggregates LogDebug API with other level APIs
+- **EnvelopeAssemblerBase**: Processes content through composed injector and stabilizer
+- **SystemAdmin**: Administrative configuration and identity management
+- **Preparation Layer**: Metadata and timestamp preparation components
+- **DEBUG Pipeline**: Specialized DEBUG processing through owned assembler
 
 ### Usage Pattern
 ```cpp
-// DEBUG logging operations
-std::string level = LogDebug::level_key();  // "DEBUG"
+// Administrative setup
+auto debug_assembler = EnvelopeAssemblerBase<
+    DebugEnvelopeAssembler,
+    DebugLogEnvelope,
+    LogMetadata,
+    UtcEpochMillisStabilizer,
+    DefaultMetadataInjector>::Create(/* params */);
 
-// Direct record-to-dispatch execution (bypasses state admission)
-auto direct_result = LogDebug::run_single(
-    log_container_module,    // const TModule& - read-only state access
-    debug_record,            // TRecord - finalized log record
-    file_adapter,            // TAdapter - emission target
-    std::optional<std::string>{"round_123"} // optional round_id
-);
+LogDebug debug_api = LogDebug::Create("debug_api_v1", std::move(debug_assembler));
 
-// Admitted-runtime execution (with state admission and feedback)
-auto admitted_result = LogDebug::admit_and_run(
-    log_container_module,    // TModule& - read-write state access
-    debug_record,            // TRecord - record to admit and process
-    file_adapter,            // TAdapter - emission target
-    std::optional<std::string>{"batch_001"} // optional round_id
-);
-
-// Get default DEBUG route for setup
-auto route = LogDebug::resolve_default_route();
+// Consumer usage
+DebugLogContent content{"Debug information"};
+auto envelope = debug_api.AcceptLog(std::move(content));
+// Envelope now contains: content + metadata + timestamp + schema
 ```
 
 ## Quality Assurance
 
 ### Code Quality Metrics
-- **Cyclomatic Complexity:** 1 (minimal, dual delegation paths)
-- **Lines of Code:** 36 (core struct) + 71 (documentation comments)
-- **Dependencies:** 4 headers (2 std, 2 internal)
-- **Template Complexity:** Two template methods with parameter forwarding
+- **Cyclomatic Complexity:** 1 (simple delegation and access methods)
+- **Lines of Code:** ~110 total (template class with comprehensive documentation)
+- **Dependencies:** 1 standard header (`<utility>`)
+- **Template Complexity:** Moderate (three template parameters with simple relationships)
 
 ### Architectural Compliance
-✅ **Multi-Tier Architecture:** Layer L (Level APIs) - level-specific entry points  
-✅ **No Hardcoded Values:** Level key appropriately hardcoded for DEBUG specialization  
-✅ **Helper Methods:** DEBUG-specific operations with proper delegation  
-✅ **Cross-Language Interface:** N/A (internal logging API)  
+✅ **Multi-Tier Architecture:** Layer L (Level_api) - level-specific API façades  
+✅ **No Hardcoded Values:** Level key and identity provided through templates/parameters  
+✅ **Helper Methods:** Factory construction and administrative control methods  
+✅ **Cross-Language Interface:** N/A (C++ template API)
 
 ### Error Analysis
-**Status:** No syntax or logical errors detected.  
+**Status:** No syntax or logical errors detected.
 
 **Architectural Correctness Verification:**
-- **Template Design:** Dual methods with appropriate parameter signatures
-- **Delegation Pattern:** Both methods properly delegate to PipelineRunner
-- **Level Constant**: Correct "DEBUG" level key for specialization
-- **Optional Parameters**: Proper std::optional usage for round_id
+- **Template Design**: Proper separation of content, assembler, and identity types
+- **Factory Pattern**: Correct controlled construction with composition ownership
+- **Friend Access**: Appropriate administrative controls through SystemAdmin
+- **Const-Correctness**: Proper const qualification for read-only operations
 
 **Potential Issues Considered:**
-- **Template Instantiation**: Requires concrete types for TModule/TRecord/TAdapter
-- **Dependency Chain**: Relies on complete DEBUG pipeline availability
-- **State Access Patterns**: Clear distinction between read-only and read-write access
-- **Level Key Consistency**: "DEBUG" vs "debug" casing consistency
+- **Template Instantiation**: Requires concrete types for all template parameters
+- **Move Semantics**: Proper ownership transfer in factory method
+- **Exception Safety**: Operations are noexcept or exception-safe
 
-**Root Cause Analysis:** N/A (code is architecturally sound)  
-**Resolution Suggestions:** N/A  
+**Root Cause Analysis:** N/A (template class follows established patterns)  
+**Resolution Suggestions:** N/A
 
 ## Design Rationale
 
-### Finalized DEBUG Level Entrypoint
-**Why Finalized Entrypoint:**
-- **Runner Evolution Reflection**: Mirrors upgraded runner's admitted-runtime capabilities
-- **Dual Path Exposure**: Provides both direct helper and state-admission-aware paths
-- **Slice Completion**: Closes dedicated DEBUG entrypoint for current architecture
-- **Per-Level Specialization**: DEBUG-specific paths without runtime level switching
+### Template-Based API Façade
+**Why Template Parameters:**
+- **Type Safety**: Compile-time verification of content/assembler compatibility
+- **Flexibility**: Different DEBUG processing configurations through template specialization
+- **Performance**: Optimal code generation for specific type combinations
+- **Composition**: Enables assembler ownership without runtime polymorphism
 
-**Design Intent:**
-- **Complete DEBUG Access**: Exposes all DEBUG pipeline execution capabilities
-- **State-Aware Options**: Supports both stateless and state-admission-aware usage
-- **Thin Delegation Layer**: Minimal coordination while preserving boundaries
-- **No Central Convergence**: Maintains per-level separation and specialization
+**Why Three Template Parameters:**
+- **TContent**: Enables different DEBUG content schemas (text, structured, binary)
+- **TAssembler**: Allows specialized DEBUG assemblers (validating, high-performance, etc.)
+- **TApiId**: Supports different identity schemes (string, UUID, custom types)
 
-### Dual Path Architecture
-**Why Both Execution Paths:**
-- **Immediate Execution**: `run_single` for direct record processing without state overhead
-- **State Management**: `admit_and_run` for proper state admission, batching, and feedback
-- **Performance Options**: Allows choosing appropriate execution model per use case
-- **Backward Compatibility**: Direct path available for simple use cases
+### Composition Ownership Pattern
+**Why Owned Assembler:**
+- **Performance**: Direct assembler access without indirection
+- **Type Safety**: Compile-time assembler compatibility verification
+- **Lifetime Management**: Assembler lifetime tied to API lifetime
+- **Configuration**: Assembler configured once at API construction
 
-**Path Selection Guidelines:**
-- **Use `run_single`**: When you have pre-processed records and want immediate dispatch
-- **Use `admit_and_run`**: When you want full state management, batching, and failure recovery
+**Why Factory Construction:**
+- **Controlled Instantiation**: Ensures proper assembler ownership setup
+- **Identity Assignment**: Guarantees API identity is set during construction
+- **Move Optimization**: Efficient transfer of assembler ownership
+- **Construction Validation**: Single point for API construction validation
+
+### Administrative Controls
+**Why Friend Access Pattern:**
+- **Encapsulation**: Administrative operations hidden from consumers
+- **Type Safety**: SystemAdmin can perform type-safe operations
+- **Audit Trail**: Administrative changes traceable through SystemAdmin
+- **Security**: Prevents accidental consumer modification of administrative state
+
+**Why Content Type Restrictions:**
+- **Specialization**: Enables DEBUG-specific content validation rules
+- **Performance**: Allows optimized processing for restricted content types
+- **Flexibility**: Administrative control over acceptable DEBUG content
+- **Evolution**: Foundation for future DEBUG-specific processing rules
 
 ## Performance Characteristics
 
 ### Compile-Time Performance
-- **Template Instantiation:** Lightweight delegation through existing APIs
-- **Type Resolution:** Direct parameter forwarding to PipelineRunner
-- **No Additional Templates:** Uses existing pipeline infrastructure
-- **Inlining Opportunity:** Static methods easily optimized
+- **Template Instantiation**: Minimal overhead for DEBUG API specialization
+- **Inline Optimization**: Small methods easily inlined by compiler
+- **Type Resolution**: Fast resolution of template parameters
+- **Code Generation**: Optimal code for specific DEBUG processing configurations
 
 ### Runtime Performance
-- **Delegation Overhead:** Minimal function call to PipelineRunner entrypoints
-- **No State Management:** Pure coordination (except in admitted path)
-- **Parameter Forwarding:** Efficient pass-through of all arguments
-- **Pipeline Performance:** Actual performance determined by underlying pipeline components
+- **Zero Overhead**: Pure composition with direct assembler delegation
+- **No Dynamic Dispatch**: Template resolution eliminates virtual calls
+- **Memory Efficiency**: Minimal memory footprint (assembler + identity + flag)
+- **Cache Friendly**: Small object with predictable access patterns
 
 ## Evolution and Maintenance
 
-### DEBUG Level API Extension
-Later expansions may include:
-- **Raw-Content Submission Helpers**: When preparation/admission entry is promoted
-- **DEBUG-Specific Convenience Overloads**: Specialized DEBUG logging helpers
-- **CLI/Application-Oriented Helper Aliases**: Command-line interface support
-- **Integration Hooks**: For broader consuming surfaces and monitoring
-- **Stronger Compile-Time Validation**: Against pipeline-local contracts
+### DEBUG API Extensions
+Future expansions may include:
+- **DEBUG-Specific Content Types**: Specialized schemas for DEBUG information
+- **Conditional Processing**: DEBUG level filtering and sampling
+- **Performance Monitoring**: DEBUG operation metrics collection
+- **Context Propagation**: DEBUG context passing through processing pipeline
+- **Integration Hooks**: DEBUG-specific external system integration
 
-### What This File Should NOT Contain
-This file must NOT:
-- **Become Shared Level Multiplexer**: No runtime level switching logic
-- **Own Shared State**: No global state management for DEBUG logging
-- **Own Adapter Registry Logic**: No adapter discovery or management
-- **Own Governance/Configuration**: No DEBUG pipeline policy or configuration
-- **Implement Pipeline Internals**: No duplication of existing pipeline logic
+### Template Specializations
+- **High-Performance DEBUG**: Optimized for high-volume DEBUG logging
+- **Structured DEBUG**: Support for complex DEBUG data structures
+- **Distributed DEBUG**: DEBUG logging across distributed systems
+- **Conditional DEBUG**: Runtime-enabled DEBUG processing
 
 ### Testing Strategy
-DEBUG level API testing should verify:
-- level_key() returns correct "DEBUG" string
-- run_single correctly delegates to PipelineRunner with DEBUG level
-- admit_and_run correctly delegates with state-admission parameters
-- Template instantiation works with various TModule, TRecord, TAdapter combinations
-- Optional round_id parameter handling works in both execution paths
-- No state management or overhead introduced by level API layer
-- Integration with DEBUG pipeline components works properly
+DEBUG API testing should verify:
+- Template instantiation with various content/assembler/identity combinations
+- Factory construction properly sets up composition ownership
+- Content acceptance correctly delegates to owned assembler
+- Administrative controls work through SystemAdmin friend access
+- Const-correctness of public interface methods
+- Move semantics in construction and content passing
 
 ## Related Components
 
 ### Depends On
-- `<optional>` - For optional round_id parameter support
-- `<string>` - For round_id string type definition
-- `logging_system/K_Pipelines/debug_pipeline_binding.hpp` - DEBUG pipeline binding dependency
-- `logging_system/K_Pipelines/pipeline_runner.hpp` - Pipeline runner dependency
+- **SystemAdmin**: Friend class for administrative operations
+- **EnvelopeAssemblerBase**: Target of assembler delegation
+- **MetadataInjector**: Used in assembler composition
+- **TimestampStabilizer**: Used in assembler composition
 
 ### Used By
-- External applications requiring DEBUG-level logging
-- Consuming surfaces that provide unified logging interfaces
-- Testing frameworks needing DEBUG output
-- Development and debugging tools
-- Higher-level application logging components
+- **ConsumingSurface**: Aggregates DEBUG API with other level APIs
+- **System Builders**: Construct DEBUG APIs with appropriate assemblers
+- **Test Frameworks**: Create DEBUG APIs with test-specific configurations
+- **Administrative Tools**: Configure DEBUG processing through SystemAdmin
+- **Monitoring Systems**: Track DEBUG API usage and performance
 
 ---
 
 **Analysis Version:** 1.0  
-**Analysis Date:** 2026-04-19  
-**Architectural Layer:** L_Level_api (Level Entry Points)  
-**Status:** ✅ Analyzed, DEBUG Slice Level API
+**Analysis Date:** 2026-04-20  
+**Architectural Layer:** L_Level_api (Level-Specific API Surfaces)  
+**Status:** ✅ Analyzed, New DEBUG Level API Documentation

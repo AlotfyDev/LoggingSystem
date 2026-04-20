@@ -1,53 +1,78 @@
 digraph log_warn_architecture {
     rankdir=TB;
     node [shape=box, style=filled, fillcolor=lightblue];
-    
-    log_warn [label="LogWarn\nWARN Level API Entry Point"];
-    
-    node [shape=box, style=filled, fillcolor=lightgreen];
-    pipeline_binding_integration [label="Pipeline Binding Integration"];
-    
-    log_warn -> pipeline_binding_integration [label="uses"];
-    
-    subgraph cluster_binding {
-        label="WarnPipelineBinding";
-        color=lightgrey;
-        warn_pipeline [label="PipelineBinding =\nWarnPipelineBinding"];
-    }
-    
-    pipeline_binding_integration -> warn_pipeline;
-    
+
+    log_warn_api [label="LogWarn<TContent, TAssembler, TApiId>\nWARN Level API Façade"];
+
     node [shape=box, style=filled, fillcolor=lightyellow];
-    runner_integration [label="Pipeline Runner"];
-    
-    log_warn -> runner_integration [label="uses"];
-    
-    subgraph cluster_runner {
-        label="PipelineRunner";
+    template_params [label="Template Parameters"];
+
+    log_warn_api -> template_params [label="parameterized by"];
+
+    subgraph cluster_template_params {
+        label="Composition Types";
         color=lightgrey;
-        runner [label="Runner =\nPipelineRunner<PipelineBinding>"];
+        tcontent [label="TContent\nContent type"];
+        tassembler [label="TAssembler\nAssembler type"];
+        tapiid [label="TApiId\nAPI identity type"];
     }
-    
-    runner_integration -> runner;
-    
+
+    template_params -> tcontent;
+    template_params -> tassembler;
+    template_params -> tapiid;
+
     node [shape=box, style=filled, fillcolor=orange];
-    api_operations [label="API Operations"];
-    
-    log_warn -> api_operations [label="provides"];
-    
-    subgraph cluster_operations {
-        label="WARN Level Operations";
+    public_interface [label="Public Interface"];
+
+    log_warn_api -> public_interface [label="exposes"];
+
+    subgraph cluster_public_interface {
+        label="User-Visible Methods";
         color=lightgrey;
-        level_key_op [label="level_key()\nReturns \"WARN\""];
-        resolve_target_op [label="resolve_write_target(module, record)"];
-        build_handoff_op [label="build_write_handoff_event(target)"];
-        resolve_route_op [label="resolve_default_route()"];
-        admit_and_run_op [label="admit_and_run(module, record, adapter, round_id)"];
+        create_method [label="Create(api_id, assembler)\nFactory construction"];
+        level_key_method [label="level_key()\nReturns 'WARN'"];
+        api_id_getter [label="api_id()\nIdentity access"];
+        accept_log_method [label="AcceptLog(content)\nContent acceptance"];
     }
-    
-    api_operations -> level_key_op;
-    api_operations -> resolve_target_op;
-    api_operations -> build_handoff_op;
-    api_operations -> resolve_route_op;
-    api_operations -> admit_and_run_op;
+
+    public_interface -> create_method;
+    public_interface -> level_key_method;
+    public_interface -> api_id_getter;
+    public_interface -> accept_log_method;
+
+    node [shape=box, style=filled, fillcolor=red];
+    composition_ownership [label="Composition Ownership"];
+
+    log_warn_api -> composition_ownership [label="owns"];
+
+    subgraph cluster_composition {
+        label="Internal Components";
+        color=lightgrey;
+        assembler_owned [label="TAssembler assembler_\nOwned assembler"];
+        api_id_owned [label="TApiId api_id_\nAPI identity"];
+        admin_controls [label="Administrative controls\nContent restrictions"];
+    }
+
+    composition_ownership -> assembler_owned;
+    composition_ownership -> api_id_owned;
+    composition_ownership -> admin_controls;
+
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    architectural_integration [label="Architectural Integration"];
+
+    log_warn_api -> architectural_integration [label="connects"];
+
+    subgraph cluster_integration {
+        label="System Relationships";
+        color=lightgrey;
+        consuming_surface [label="ConsumingSurface\nAPI aggregation"];
+        envelope_assembler [label="EnvelopeAssembler\nContent processing"];
+        system_admin [label="SystemAdmin\nAdministrative control"];
+        preparation_layer [label="D_Preparation\nAssembly components"];
+    }
+
+    architectural_integration -> consuming_surface;
+    architectural_integration -> envelope_assembler;
+    architectural_integration -> system_admin;
+    architectural_integration -> preparation_layer;
 }

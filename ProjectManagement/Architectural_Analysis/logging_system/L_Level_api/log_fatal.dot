@@ -1,48 +1,78 @@
-digraph fatal_level_api {
+digraph log_fatal_architecture {
     rankdir=TB;
     node [shape=box, style=filled, fillcolor=lightblue];
 
-    log_fatal [label="LogFatal\nLevel API Struct"];
-
-    node [shape=box, style=filled, fillcolor=lightgreen];
-    pipeline_ref [label="Pipeline Reference"];
-    log_fatal -> pipeline_ref [label="uses"];
-
-    subgraph cluster_pipeline {
-        label="Pipeline Binding";
-        color=lightgrey;
-        fatal_pipeline [label="FatalPipelineBinding"];
-        runner [label="PipelineRunner"];
-    }
-
-    pipeline_ref -> fatal_pipeline;
-    fatal_pipeline -> runner;
+    log_fatal_api [label="LogFatal<TContent, TAssembler, TApiId>\nFATAL Level API Façade"];
 
     node [shape=box, style=filled, fillcolor=lightyellow];
-    methods [label="API Methods"];
-    log_fatal -> methods [label="provides"];
+    template_params [label="Template Parameters"];
 
-    subgraph cluster_methods {
-        label="Method Set";
+    log_fatal_api -> template_params [label="parameterized by"];
+
+    subgraph cluster_template_params {
+        label="Composition Types";
         color=lightgrey;
-        level_key_method [label="level_key()"];
-        resolve_route [label="resolve_default_route()"];
-        run_single [label="run_single(...)"];
-        admit_and_run [label="admit_and_run(...)"];
+        tcontent [label="TContent\nContent type"];
+        tassembler [label="TAssembler\nAssembler type"];
+        tapiid [label="TApiId\nAPI identity type"];
     }
 
-    methods -> level_key_method;
-    methods -> resolve_route;
-    methods -> run_single;
-    methods -> admit_and_run;
+    template_params -> tcontent;
+    template_params -> tassembler;
+    template_params -> tapiid;
+
+    node [shape=box, style=filled, fillcolor=orange];
+    public_interface [label="Public Interface"];
+
+    log_fatal_api -> public_interface [label="exposes"];
+
+    subgraph cluster_public_interface {
+        label="User-Visible Methods";
+        color=lightgrey;
+        create_method [label="Create(api_id, assembler)\nFactory construction"];
+        level_key_method [label="level_key()\nReturns 'FATAL'"];
+        api_id_getter [label="api_id()\nIdentity access"];
+        accept_log_method [label="AcceptLog(content)\nContent acceptance"];
+    }
+
+    public_interface -> create_method;
+    public_interface -> level_key_method;
+    public_interface -> api_id_getter;
+    public_interface -> accept_log_method;
+
+    node [shape=box, style=filled, fillcolor=red];
+    composition_ownership [label="Composition Ownership"];
+
+    log_fatal_api -> composition_ownership [label="owns"];
+
+    subgraph cluster_composition {
+        label="Internal Components";
+        color=lightgrey;
+        assembler_owned [label="TAssembler assembler_\nOwned assembler"];
+        api_id_owned [label="TApiId api_id_\nAPI identity"];
+        admin_controls [label="Administrative controls\nContent restrictions"];
+    }
+
+    composition_ownership -> assembler_owned;
+    composition_ownership -> api_id_owned;
+    composition_ownership -> admin_controls;
+
+    node [shape=box, style=filled, fillcolor=lightgreen];
+    architectural_integration [label="Architectural Integration"];
+
+    log_fatal_api -> architectural_integration [label="connects"];
 
     subgraph cluster_integration {
-        label="Integration Points";
+        label="System Relationships";
         color=lightgrey;
-        consumer [label="External Code"];
-        system [label="Logging System"];
+        consuming_surface [label="ConsumingSurface\nAPI aggregation"];
+        envelope_assembler [label="EnvelopeAssembler\nContent processing"];
+        system_admin [label="SystemAdmin\nAdministrative control"];
+        preparation_layer [label="D_Preparation\nAssembly components"];
     }
 
-    consumer -> log_fatal [label="uses"];
-    log_fatal -> system [label="provides access to"];
+    architectural_integration -> consuming_surface;
+    architectural_integration -> envelope_assembler;
+    architectural_integration -> system_admin;
+    architectural_integration -> preparation_layer;
 }
