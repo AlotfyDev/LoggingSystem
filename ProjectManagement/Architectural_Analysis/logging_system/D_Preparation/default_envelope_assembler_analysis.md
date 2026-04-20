@@ -35,13 +35,17 @@ digraph envelope_assembler_architecture {
     subgraph cluster_base {
         label="Base Components";
         color=lightgrey;
-        metadata_storage [label="metadata_: TMetadata\nAdministrative metadata"];
         binding_storage [label="binding_info_: ApiFacadeBindingInfo\nFacade binding context"];
+        schema_storage [label="content_schema_id_: string\nInternal schema identifier"];
+        timestamp_stabilizer [label="timestamp_stabilizer_: TTimestampStabilizer\nComposed timestamp stabilizer"];
+        metadata_injector [label="metadata_injector_: TMetadataInjector\nComposed metadata injector"];
         type_aliases [label="Type aliases\nEnvelopeType, MetadataType, WrappedContentType"];
     }
 
-    base_assembler -> metadata_storage;
     base_assembler -> binding_storage;
+    base_assembler -> schema_storage;
+    base_assembler -> timestamp_stabilizer;
+    base_assembler -> metadata_injector;
     base_assembler -> type_aliases;
 
     node [shape=box, style=filled, fillcolor=orange];
@@ -279,17 +283,24 @@ struct ApiFacadeBindingInfo final {
 
 ### CRTP Base Assembler
 ```cpp
-template <typename TDerived, typename TEnvelope, typename TMetadata>
+template <
+    typename TDerived,
+    typename TEnvelope,
+    typename TTimestampStabilizer = UtcEpochMillisStabilizer,
+    typename TMetadataInjector = DefaultMetadataInjector>
 class EnvelopeAssemblerBase {
     // Type aliases for template introspection
     using EnvelopeType = TEnvelope;
-    using MetadataType = TMetadata;
+    using TimestampStabilizerType = TTimestampStabilizer;
+    using MetadataInjectorType = TMetadataInjector;
+    using MetadataType = typename TMetadataInjector::MetadataType;
     using WrappedContentType = typename TEnvelope::WrappedContentType;
 
     // Stored administrative data
-    TMetadata metadata_{};
     ApiFacadeBindingInfo binding_info_{};
     std::string content_schema_id_{};
+    TTimestampStabilizer timestamp_stabilizer_{};
+    TMetadataInjector metadata_injector_{};
 
     // Public interface methods...
     // Protected helper methods...

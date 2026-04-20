@@ -2,87 +2,99 @@
 
 ## Architectural Diagrams
 
-### Graphviz (.dot) - Policy Structure
+### GraphViz (.dot) - Default Metadata Injector Architecture
 ```dot
-digraph metadata_injector_policy {
+digraph default_metadata_injector_architecture {
     rankdir=TB;
     node [shape=box, style=filled, fillcolor=lightblue];
-    
-    policy [label="DefaultMetadataInjector\nPolicy Class"];
-    
-    node [shape=box, style=filled, fillcolor=lightgreen];
-    methods [label="Injection Methods"];
-    
-    policy -> methods [label="provides"];
-    
-    subgraph cluster_methods {
-        label="Method Signatures";
-        color=lightgrey;
-        inject [label="inject(TMetadata)\n-> TMetadata"];
-        inject_into [label="inject_into(TEnvelope, TMetadata)\n-> TEnvelope"];
-    }
-    
-    methods -> inject;
-    methods -> inject_into;
-    
-    subgraph cluster_behavior {
-        label="Default Behavior";
-        color=lightyellow;
-        passthrough [label="Pass-through\n(no modification)"];
-        assignment [label="Field Assignment\nenvelope.metadata = metadata"];
-    }
-    
-    inject -> passthrough;
-    inject_into -> assignment;
-    
-    subgraph cluster_usage {
-        label="Usage Context";
-        color=lightgreen;
-        preparation [label="PreparationBinding"];
-        pipeline [label="Preparation Pipeline"];
-    }
-    
-    policy -> preparation [label="used as TMetadataInjector"];
-    preparation -> pipeline [label="part of"];
-}
 
-### Mermaid - Injection Flow
-```mermaid
-flowchart TD
-    A[DefaultMetadataInjector] --> B{inject method}
-    A --> C{inject_into method}
-    
-    B --> D[Receive metadata]
-    C --> E[Receive envelope + metadata]
-    
-    D --> F[Return metadata unchanged]
-    E --> G[Assign metadata to envelope.metadata]
-    
-    G --> H[Return modified envelope]
-    
-    F --> I[Metadata Ready]
-    H --> J[Envelope with Metadata]
-    
-    I --> K[Used in preparation pipeline]
-    J --> K
-    
-    subgraph "Pass-through Behavior"
-        D
-        F
-        I
-    end
-    
-    subgraph "Envelope Integration"
-        E
-        G
-        H
-        J
-    end
-    
-    L[PreparationBinding] --> A
-    L --> M[Other Policies]
-    M --> N[Complete Preparation]
-    N --> K
+    default_injector [label="DefaultMetadataInjector\nConcrete Implementation"];
+
+    node [shape=box, style=filled, fillcolor=lightyellow];
+    inheritance [label="Inheritance Relationship"];
+
+    default_injector -> inheritance [label="inherits from"];
+
+    subgraph cluster_inheritance {
+        label="Base Class";
+        color=lightgrey;
+        base_injector [label="MetadataInjector<LogMetadata>\nGeneric template"];
+        metadata_type [label="MetadataType = LogMetadata\nType binding"];
+    }
+
+    inheritance -> base_injector;
+    inheritance -> metadata_type;
+
+    node [shape=box, style=filled, fillcolor=orange];
+    injection_specialization [label="Injection Specialization"];
+
+    default_injector -> injection_specialization [label="overrides"];
+
+    subgraph cluster_specialization {
+        label="Custom Injection Behavior";
+        color=lightgrey;
+        inject_override [label="inject_into<TEnvelope>(...)\nCustom override"];
+        assign_metadata [label="envelope.assign_metadata(metadata)\nDefault assignment"];
+        return_statement [label="Standard metadata injection\nNo special processing"];
+    }
+
+    injection_specialization -> inject_override;
+    injection_specialization -> assign_metadata;
+    injection_specialization -> return_statement;
+
+    node [shape=box, style=filled, fillcolor=purple];
+    contract_satisfaction [label="Contract Satisfaction"];
+
+    default_injector -> contract_satisfaction [label="satisfies"];
+
+    subgraph cluster_contract {
+        label="MetadataInjectorConcept Compliance";
+        color=lightgrey;
+        metadata_type_trait [label="✓ has_metadata_type"];
+        get_method_trait [label="✓ has_get_metadata_method"];
+        inject_method_trait [label="✓ has_inject_into_method"];
+        full_contract [label="✓ is_metadata_injector"];
+    }
+
+    contract_satisfaction -> metadata_type_trait;
+    contract_satisfaction -> get_method_trait;
+    contract_satisfaction -> inject_method_trait;
+    contract_satisfaction -> full_contract;
+
+    node [shape=box, style=filled, fillcolor=pink];
+    assembler_integration [label="Assembler Integration"];
+
+    default_injector -> assembler_integration [label="used by"];
+
+    subgraph cluster_integration {
+        label="EnvelopeAssemblerBase Usage";
+        color=lightgrey;
+        template_default [label="DefaultMetadataInjector\nTMetadataInjector default"];
+        injection_calls [label="inject_into(envelope)\nRuntime injection"];
+        type_safety [label="Compile-time validation\nContract compliance"];
+    }
+
+    assembler_integration -> template_default;
+    assembler_integration -> injection_calls;
+    assembler_integration -> type_safety;
+
+    node [shape=box, style=filled, fillcolor=lightcyan];
+    extensibility_points [label="Extensibility Points"];
+
+    default_injector -> extensibility_points [label="provides"];
+
+    subgraph cluster_extensibility {
+        label="Customization Options";
+        color=lightgrey;
+        subclass_override [label="Subclass override inject_into\nSpecialized injection"];
+        template_specialize [label="Template specialization\nDifferent metadata types"];
+        policy_injection [label="Policy-based injection\nAlternative strategies"];
+    }
+
+    extensibility_points -> subclass_override;
+    extensibility_points -> template_specialize;
+    extensibility_points -> policy_injection;
+}
 ```
 
 ## File Overview

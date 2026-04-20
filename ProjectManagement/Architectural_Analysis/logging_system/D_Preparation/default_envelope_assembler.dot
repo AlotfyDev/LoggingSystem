@@ -29,7 +29,6 @@ digraph envelope_assembler_architecture {
     subgraph cluster_base {
         label="Base Components";
         color=lightgrey;
-        metadata_storage [label="metadata_: TMetadata\nAdministrative metadata"];
         binding_storage [label="binding_info_: ApiFacadeBindingInfo\nFacade binding context"];
         schema_storage [label="content_schema_id_: string\nInternal schema identifier"];
         timestamp_stabilizer [label="timestamp_stabilizer_: TTimestampStabilizer\nComposed timestamp stabilizer"];
@@ -37,7 +36,6 @@ digraph envelope_assembler_architecture {
         type_aliases [label="Type aliases\nEnvelopeType, MetadataType, WrappedContentType"];
     }
 
-    base_assembler -> metadata_storage;
     base_assembler -> binding_storage;
     base_assembler -> schema_storage;
     base_assembler -> timestamp_stabilizer;
@@ -114,19 +112,19 @@ digraph data_flow_diagram {
     crtp_dispatch -> derived_assembler [label="Specialized logic"];
     derived_assembler -> envelope_construction [label="Create/Update envelope"];
 
-    metadata [label="TMetadata", shape=box, fillcolor=orange];
     schema [label="content_schema_id", shape=box, fillcolor=orange];
     binding [label="ApiFacadeBindingInfo", shape=box, fillcolor=orange];
     timestamp_comp [label="TTimestampStabilizer", shape=box, fillcolor=purple];
     metadata_comp [label="TMetadataInjector", shape=box, fillcolor=purple];
+    contract_validation [label="Contract Validation", shape=diamond, fillcolor=yellow];
 
-    metadata -> metadata_comp [label="Provided to injector"];
+    contract_validation -> metadata_comp [label="is_metadata_injector_v<T>"];
     schema -> envelope_construction;
     binding -> envelope_construction;
     timestamp_comp -> envelope_construction [label="stabilize_into()"];
     metadata_comp -> envelope_construction [label="inject_into()"];
 
-    {rank=same; metadata; schema; binding;}
+    {rank=same; schema; binding;}
 }
 
 // Logic Flow Diagram

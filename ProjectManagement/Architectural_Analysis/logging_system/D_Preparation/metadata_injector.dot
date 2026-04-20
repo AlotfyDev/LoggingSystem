@@ -2,71 +2,94 @@ digraph metadata_injector_architecture {
     rankdir=TB;
     node [shape=box, style=filled, fillcolor=lightblue];
 
-    metadata_injector [label="MetadataInjector<TMetadata>\nGeneric Base Class"];
+    metadata_injector [label="MetadataInjector<TMetadata>\nGeneric Injector Template"];
 
     node [shape=box, style=filled, fillcolor=lightyellow];
-    template_parameter [label="Template Parameter"];
+    provision_interface [label="Provision Interface"];
 
-    metadata_injector -> template_parameter [label="parameterized by"];
+    metadata_injector -> provision_interface [label="provides"];
 
-    subgraph cluster_template {
-        label="Template Requirements";
+    subgraph cluster_provision {
+        label="Metadata Provision Methods";
         color=lightgrey;
-        tmetadata [label="TMetadata\nMetadata value type"];
+        metadata_type [label="MetadataType = TMetadata\nType alias"];
+        get_metadata [label="get_metadata() const noexcept\nConst access to metadata"];
+        set_metadata [label="set_metadata(TMetadata)\nUpdate metadata value"];
+        metadata_storage [label="TMetadata metadata_\nPrivate storage"];
     }
 
-    template_parameter -> tmetadata;
+    provision_interface -> metadata_type;
+    provision_interface -> get_metadata;
+    provision_interface -> set_metadata;
+    provision_interface -> metadata_storage;
 
     node [shape=box, style=filled, fillcolor=orange];
-    core_interface [label="Core Interface"];
+    injection_interface [label="Injection Interface"];
 
-    metadata_injector -> core_interface [label="provides"];
+    metadata_injector -> injection_interface [label="provides"];
 
-    subgraph cluster_interface {
-        label="Interface Methods";
+    subgraph cluster_injection {
+        label="Envelope Injection Methods";
         color=lightgrey;
-        constructor [label="MetadataInjector(TMetadata)\nValue constructor"];
-        get_metadata [label="get_metadata() const\nMetadata access"];
-        set_metadata [label="set_metadata(TMetadata)\nMetadata update"];
-        inject_into [label="inject_into<TEnvelope>(...)\nEnvelope injection"];
+        inject_into_templated [label="inject_into<TEnvelope>(...)\nTemplated injection"];
+        inject_into_convenience [label="inject_into<TEnvelope>()\nConvenience overload"];
+        default_implementation [label="Default assign_metadata()\nEnvelope integration"];
     }
 
-    core_interface -> constructor;
-    core_interface -> get_metadata;
-    core_interface -> set_metadata;
-    core_interface -> inject_into;
+    injection_interface -> inject_into_templated;
+    injection_interface -> inject_into_convenience;
+    injection_interface -> default_implementation;
 
     node [shape=box, style=filled, fillcolor=lightgreen];
-    inheritance_hierarchy [label="Inheritance Hierarchy"];
+    inheritance_extensibility [label="Inheritance Extensibility"];
 
-    metadata_injector -> inheritance_hierarchy [label="base for"];
+    metadata_injector -> inheritance_extensibility [label="supports"];
 
-    subgraph cluster_hierarchy {
-        label="Derived Classes";
+    subgraph cluster_extensibility {
+        label="CRTP and Inheritance Support";
         color=lightgrey;
-        default_injector [label="DefaultMetadataInjector\nConcrete implementation"];
-        custom_injectors [label="CustomMetadataInjector\nSpecialized variants"];
+        protected_metadata [label="protected TMetadata metadata_\nSubclass access"];
+        virtual_injection [label="virtual inject_into override\nSpecialized behavior"];
+        template_specialization [label="Template specialization\nType-specific behavior"];
     }
 
-    inheritance_hierarchy -> default_injector;
-    inheritance_hierarchy -> custom_injectors;
+    inheritance_extensibility -> protected_metadata;
+    inheritance_extensibility -> virtual_injection;
+    inheritance_extensibility -> template_specialization;
 
-    node [shape=box, style=filled, fillcolor=lightcyan];
+    node [shape=box, style=filled, fillcolor=purple];
     contract_compliance [label="Contract Compliance"];
 
     metadata_injector -> contract_compliance [label="satisfies"];
 
     subgraph cluster_contract {
-        label="MetadataInjectorConcept";
+        label="MetadataInjectorConcept Requirements";
         color=lightgrey;
-        metadata_type_trait [label="✓ has_metadata_type"];
-        get_method_trait [label="✓ has_get_metadata_method"];
-        inject_method_trait [label="✓ has_inject_into_method"];
-        full_contract [label="✓ is_metadata_injector"];
+        has_metadata_type [label="has_metadata_type<T>\n✓ Satisfied"];
+        has_get_method [label="has_get_metadata_method<T>\n✓ Satisfied"];
+        has_inject_method [label="has_inject_into_method<T>\n✓ Satisfied"];
+        is_injector_contract [label="is_metadata_injector<T>\n✓ Satisfied"];
     }
 
-    contract_compliance -> metadata_type_trait;
-    contract_compliance -> get_method_trait;
-    contract_compliance -> inject_method_trait;
-    contract_compliance -> full_contract;
+    contract_compliance -> has_metadata_type;
+    contract_compliance -> has_get_method;
+    contract_compliance -> has_inject_method;
+    contract_compliance -> is_injector_contract;
+
+    node [shape=box, style=filled, fillcolor=pink];
+    assembler_integration [label="Assembler Integration"];
+
+    metadata_injector -> assembler_integration [label="enables"];
+
+    subgraph cluster_integration {
+        label="EnvelopeAssemblerBase Usage";
+        color=lightgrey;
+        template_parameter [label="TMetadataInjector parameter\nType-safe composition"];
+        metadata_injection [label="inject_into(envelope)\nEnvelope preparation"];
+        compile_validation [label="Contract validation\nCompile-time safety"];
+    }
+
+    assembler_integration -> template_parameter;
+    assembler_integration -> metadata_injection;
+    assembler_integration -> compile_validation;
 }

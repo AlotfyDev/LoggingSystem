@@ -14,6 +14,7 @@ digraph metadata_injector_concept_architecture {
         color=lightgrey;
         metadata_type_trait [label="has_metadata_type<T>\nMetadataType nested alias"];
         get_method_trait [label="has_get_metadata_method<T>\nget_metadata() const"];
+        envelope_type_trait [label="has_envelope_type<T>\nEnvelopeType nested alias"];
         inject_method_trait [label="has_inject_into_method<T>\nTemplated inject_into()"];
         main_contract [label="is_metadata_injector<T>\nCombined contract check"];
         helper_alias [label="is_metadata_injector_v<T>\nHelper variable template"];
@@ -21,6 +22,7 @@ digraph metadata_injector_concept_architecture {
 
     contract_requirements -> metadata_type_trait;
     contract_requirements -> get_method_trait;
+    contract_requirements -> envelope_type_trait;
     contract_requirements -> inject_method_trait;
     contract_requirements -> main_contract;
     contract_requirements -> helper_alias;

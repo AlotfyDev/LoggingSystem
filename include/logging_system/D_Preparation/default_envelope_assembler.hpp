@@ -6,7 +6,7 @@ D_Preparation/default_envelope_assembler.hpp
 
 Reference Version
 -----------------
-CONSUMING_PIPELINES_CORRECTION_BASELINE_V2
+CONSUMING_PIPELINES_CONSISTENCY_FIX_V1
 
 Role in the architecture
 ------------------------
@@ -14,8 +14,8 @@ This file defines the minimal envelope assembler model for consuming pipelines.
 
 It answers narrow questions such as:
     "What is the preparation component directly bound to a level API façade?"
-    "How can plain and validating assemblers share common metadata and binding
-     context without collapsing into one monolithic implementation?"
+    "How can plain and validating assemblers share common binding context
+     without collapsing into one monolithic implementation?"
     "What should the API know about the assembler, and what should remain
      hidden behind the assembler boundary?"
 
@@ -27,7 +27,8 @@ The corrected consuming-pipeline model clarified that:
 - the assembler is owned by the API through composition
 - the user sees only the API
 - the consumer-facing path must expose content only
-- metadata is administratively assigned and stored in the assembler
+- metadata is administratively assigned and should be provided through a
+  metadata injector/provider path
 - the envelope carries content, metadata, and content-update timestamp
 - plain and validating assembly should be separate variants
 - activation of validating vs plain behavior is a configuration concern, not an
@@ -35,11 +36,16 @@ The corrected consuming-pipeline model clarified that:
 - schema/config/binding details must live inside the assembler, not in the API
   call
 
+The later consistency review additionally clarified that:
+- timestamp authority should live in the envelope, not in the assembler
+- metadata authority should live in the injector/provider, not in a duplicated
+  raw assembler field
+
 This means the assembler layer must provide:
 - a common base assembler model
-- bound metadata object
 - bound façade/API identity info
-- optional schema/content binding context held internally
+- internal schema/content binding context
+- a metadata injector/provider dependency
 - a standard `accept_content(...)` entry shape
 - plain and validating specialized descendants
 - static factory methods
@@ -51,14 +57,14 @@ Current minimal scope
 ---------------------
 This file currently provides:
 - `ApiFacadeBindingInfo`
-- `EnvelopeAssemblerBase<TDerived, TEnvelope, TMetadata>`
-- `PlainEnvelopeAssembler<TEnvelope, TMetadata>`
-- `ValidatingEnvelopeAssembler<TEnvelope, TMetadata>`
+- `EnvelopeAssemblerBase<TDerived, TEnvelope, TTimestampStabilizer, TMetadataInjector>`
+- `PlainEnvelopeAssembler<TEnvelope, TTimestampStabilizer, TMetadataInjector>`
+- `ValidatingEnvelopeAssembler<TEnvelope, TTimestampStabilizer, TMetadataInjector>`
 
 The current model is intentionally minimal:
 - plain assembler accepts content and materializes/updates the envelope
-- validating assembler currently has the same consumer-facing shape, but is
-  reserved for future validation-aware specialization
+- validating assembler keeps the same public API shape, but reserves an
+  architecturally distinct slot for future internal contract enforcement
 - the API is expected to know only that it can call `accept_content(...)`
 
 What this file should contain in its fuller form later
@@ -89,6 +95,9 @@ The API remains an independent user-visible surface.
 The assembler remains a hidden owned dependency that accepts content and
 materializes/updates the envelope.
 
+Timestamp authority remains with the envelope.
+Metadata authority remains with the metadata injector/provider path.
+
 This file uses CRTP for shared assembler behavior instead of runtime virtual
 dispatch.
 ------------------------------------------------------------------------------
@@ -97,8 +106,8 @@ dispatch.
 #include <string>
 #include <utility>
 
-#include "logging_system/D_Preparation/timestamp_stabilizer.hpp"
 #include "logging_system/D_Preparation/default_metadata_injector.hpp"
+#include "logging_system/D_Preparation/timestamp_stabilizer.hpp"
 
 namespace logging_system::D_Preparation {
 
@@ -118,37 +127,45 @@ struct ApiFacadeBindingInfo final {
           binding_key(std::move(binding_key_in)) {}
 };
 
-template <typename TDerived, typename TEnvelope, typename TMetadata, typename TTimestampStabilizer, typename TMetadataInjector>
+template <
+    typename TDerived,
+    typename TEnvelope,
+    typename TTimestampStabilizer = UtcEpochMillisStabilizer,
+    typename TMetadataInjector = DefaultMetadataInjector>
 class EnvelopeAssemblerBase {
 public:
     using EnvelopeType = TEnvelope;
-    using MetadataType = TMetadata;
     using WrappedContentType = typename TEnvelope::WrappedContentType;
+    using TimestampStabilizerType = TTimestampStabilizer;
+    using MetadataInjectorType = TMetadataInjector;
+    using MetadataType = typename TMetadataInjector::MetadataType;
 
     EnvelopeAssemblerBase() = default;
 
     EnvelopeAssemblerBase(
-        TMetadata metadata_in,
         ApiFacadeBindingInfo binding_info_in,
+        TMetadataInjector metadata_injector_in = {},
         std::string content_schema_id_in = {},
-        TTimestampStabilizer timestamp_stabilizer_in = {},
-        TMetadataInjector metadata_injector_in = {})
-        : metadata_(std::move(metadata_in)),
-          binding_info_(std::move(binding_info_in)),
+        TTimestampStabilizer timestamp_stabilizer_in = {})
+        : binding_info_(std::move(binding_info_in)),
+          metadata_injector_(std::move(metadata_injector_in)),
           content_schema_id_(std::move(content_schema_id_in)),
-          timestamp_stabilizer_(std::move(timestamp_stabilizer_in)),
-          metadata_injector_(std::move(metadata_injector_in)) {}
-
-    [[nodiscard]] const TMetadata& metadata() const noexcept {
-        return metadata_;
-    }
+          timestamp_stabilizer_(std::move(timestamp_stabilizer_in)) {}
 
     [[nodiscard]] const ApiFacadeBindingInfo& binding_info() const noexcept {
         return binding_info_;
     }
 
+    [[nodiscard]] const TMetadataInjector& metadata_injector() const noexcept {
+        return metadata_injector_;
+    }
+
     [[nodiscard]] const std::string& content_schema_id() const noexcept {
         return content_schema_id_;
+    }
+
+    [[nodiscard]] const TTimestampStabilizer& timestamp_stabilizer() const noexcept {
+        return timestamp_stabilizer_;
     }
 
     [[nodiscard]] TEnvelope accept_content(
@@ -167,23 +184,19 @@ public:
 protected:
     [[nodiscard]] TEnvelope make_envelope_from_content(
         WrappedContentType content) const {
-        TEnvelope envelope{
+        return TEnvelope{
             std::move(content),
-            metadata_,
+            metadata_injector_.get_metadata(),
             content_schema_id_
         };
-        metadata_injector_.inject_into(envelope, metadata_);
-        timestamp_stabilizer_.stabilize_into(envelope);
-        return envelope;
     }
 
     void assign_content_to_envelope(
         TEnvelope& envelope,
         WrappedContentType content) const {
         envelope.assign_content(std::move(content));
-        metadata_injector_.inject_into(envelope, metadata_);
+        envelope.assign_metadata(metadata_injector_.get_metadata());
         envelope.assign_content_schema_id(content_schema_id_);
-        timestamp_stabilizer_.stabilize_into(envelope);
     }
 
 private:
@@ -191,41 +204,43 @@ private:
         return static_cast<const TDerived&>(*this);
     }
 
-    TMetadata metadata_{};
     ApiFacadeBindingInfo binding_info_{};
+    TMetadataInjector metadata_injector_{};
     std::string content_schema_id_{};
     TTimestampStabilizer timestamp_stabilizer_{};
-    TMetadataInjector metadata_injector_{};
 };
 
-template <typename TEnvelope, typename TMetadata>
+template <
+    typename TEnvelope,
+    typename TTimestampStabilizer = UtcEpochMillisStabilizer,
+    typename TMetadataInjector = DefaultMetadataInjector>
 class PlainEnvelopeAssembler final
     : public EnvelopeAssemblerBase<
-          PlainEnvelopeAssembler<TEnvelope, TMetadata>,
+          PlainEnvelopeAssembler<TEnvelope, TTimestampStabilizer, TMetadataInjector>,
           TEnvelope,
-          TMetadata,
-          UtcEpochMillisStabilizer,
-          DefaultMetadataInjector> {
+          TTimestampStabilizer,
+          TMetadataInjector> {
 public:
     using Base = EnvelopeAssemblerBase<
-        PlainEnvelopeAssembler<TEnvelope, TMetadata>,
+        PlainEnvelopeAssembler<TEnvelope, TTimestampStabilizer, TMetadataInjector>,
         TEnvelope,
-        TMetadata,
-        UtcEpochMillisStabilizer,
-        DefaultMetadataInjector>;
+        TTimestampStabilizer,
+        TMetadataInjector>;
 
     using WrappedContentType = typename Base::WrappedContentType;
 
     using Base::Base;
 
     [[nodiscard]] static PlainEnvelopeAssembler CreatePlain(
-        TMetadata metadata,
         ApiFacadeBindingInfo binding_info,
-        std::string content_schema_id = {}) {
+        TMetadataInjector metadata_injector = {},
+        std::string content_schema_id = {},
+        TTimestampStabilizer timestamp_stabilizer = {}) {
         return PlainEnvelopeAssembler{
-            std::move(metadata),
             std::move(binding_info),
-            std::move(content_schema_id)
+            std::move(metadata_injector),
+            std::move(content_schema_id),
+            std::move(timestamp_stabilizer)
         };
     }
 
@@ -246,42 +261,46 @@ private:
     using Base::Base;
 };
 
-template <typename TEnvelope, typename TMetadata>
+template <
+    typename TEnvelope,
+    typename TTimestampStabilizer = UtcEpochMillisStabilizer,
+    typename TMetadataInjector = DefaultMetadataInjector>
 class ValidatingEnvelopeAssembler final
     : public EnvelopeAssemblerBase<
-          ValidatingEnvelopeAssembler<TEnvelope, TMetadata>,
+          ValidatingEnvelopeAssembler<TEnvelope, TTimestampStabilizer, TMetadataInjector>,
           TEnvelope,
-          TMetadata,
-          UtcEpochMillisStabilizer,
-          DefaultMetadataInjector> {
+          TTimestampStabilizer,
+          TMetadataInjector> {
 public:
     using Base = EnvelopeAssemblerBase<
-        ValidatingEnvelopeAssembler<TEnvelope, TMetadata>,
+        ValidatingEnvelopeAssembler<TEnvelope, TTimestampStabilizer, TMetadataInjector>,
         TEnvelope,
-        TMetadata,
-        UtcEpochMillisStabilizer,
-        DefaultMetadataInjector>;
+        TTimestampStabilizer,
+        TMetadataInjector>;
 
     using WrappedContentType = typename Base::WrappedContentType;
 
     using Base::Base;
 
     [[nodiscard]] static ValidatingEnvelopeAssembler CreateValidating(
-        TMetadata metadata,
         ApiFacadeBindingInfo binding_info,
-        std::string content_schema_id = {}) {
+        TMetadataInjector metadata_injector = {},
+        std::string content_schema_id = {},
+        TTimestampStabilizer timestamp_stabilizer = {}) {
         return ValidatingEnvelopeAssembler{
-            std::move(metadata),
             std::move(binding_info),
-            std::move(content_schema_id)
+            std::move(metadata_injector),
+            std::move(content_schema_id),
+            std::move(timestamp_stabilizer)
         };
     }
 
     [[nodiscard]] TEnvelope accept_content_impl(
         WrappedContentType content) const {
         // Validation-aware specialization is intentionally deferred.
-        // The validating variant keeps the same consumer-facing shape while
-        // reserving the internal path for future contract enforcement.
+        // The validating variant keeps the same public API shape while
+        // reserving an architecturally distinct internal path for future
+        // contract enforcement.
         return this->make_envelope_from_content(std::move(content));
     }
 
@@ -294,8 +313,8 @@ public:
             std::move(content));
     }
 
-//private:
-//    using Base::Base;
+private:
+    using Base::Base;
 };
 
 }  // namespace logging_system::D_Preparation

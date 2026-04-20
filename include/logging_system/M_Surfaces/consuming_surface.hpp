@@ -6,7 +6,7 @@ M_Surfaces/consuming_surface.hpp
 
 Reference Version
 -----------------
-CONSUMING_PIPELINES_CORRECTION_BASELINE_V1
+CONSUMING_PIPELINES_CONSISTENCY_FIX_V1
 
 Role in the architecture
 ------------------------
@@ -58,6 +58,7 @@ This file currently provides:
   - `LogError(...)`
   - `LogFatal(...)`
   - `LogTrace(...)`
+- a static factory method for controlled surface construction
 
 Each method accepts content only and forwards it to the owned level API object.
 
@@ -126,6 +127,23 @@ public:
           log_error_(std::move(log_error_in)),
           log_fatal_(std::move(log_fatal_in)),
           log_trace_(std::move(log_trace_in)) {}
+
+    [[nodiscard]] static ConsumingSurface Create(
+        TLogDebug log_debug,
+        TLogInfo log_info,
+        TLogWarn log_warn,
+        TLogError log_error,
+        TLogFatal log_fatal,
+        TLogTrace log_trace) {
+        return ConsumingSurface{
+            std::move(log_debug),
+            std::move(log_info),
+            std::move(log_warn),
+            std::move(log_error),
+            std::move(log_fatal),
+            std::move(log_trace)
+        };
+    }
 
     [[nodiscard]] TLogDebug& debug_api() noexcept {
         return log_debug_;
